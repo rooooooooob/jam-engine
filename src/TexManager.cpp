@@ -8,6 +8,7 @@ namespace je
 {
 
 TexManager *TexManager::man = NULL;
+unsigned int TexManager::references = 0;
 
 TexManager::TexManager()
 {
@@ -21,15 +22,19 @@ TexManager::~TexManager()
 
 void TexManager::load()
 {
+	++references;
     if (!man)
         man = new TexManager();
 }
 
 void TexManager::unload()
 {
-    if (man)
-        delete man;
-    man = NULL;
+	if (--references <= 0)
+	{
+		if (man)
+			delete man;
+		man = NULL;
+	}
 }
 
 const sf::Texture& TexManager::get(const std::string& id)

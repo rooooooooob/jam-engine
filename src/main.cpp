@@ -2,6 +2,6 @@
 
 int main()
 {
-	je::Game game;
+	je::Game game(640, 480, 60);
     return game.execute();
 }

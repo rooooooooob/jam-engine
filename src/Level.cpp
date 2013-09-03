@@ -24,7 +24,7 @@ void Level::draw(sf::RenderTarget& target) const
 {
     for (auto it = entities.begin(); it != entities.end(); ++it)
         (*it)->draw(target);
-	onDraw();
+	onDraw(target);
 }
 
 void Level::update()
@@ -51,7 +51,7 @@ Entity* Level::collision(const Entity *caller, Entity::Type type, float xoffset,
         if (*it != caller && (*it)->getType() == type && caller->intersects(**it, xoffset, yoffset))
             return *it;
     }
-    return NULL;
+    return nullptr;
 }
 
 void Level::collision(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset, float yoffset) const
@@ -89,6 +89,14 @@ void Level::onUpdate()
 }
 
 void Level::onDraw(sf::RenderTarget& target) const
+{
+}
+
+void Level::loadTiles(const std::string& layerName, int tileWidth, int tileHeight, int tilesAcross, int tilesHigh, unsigned int const * const * tiles)
+{
+}
+
+void Level::loadEntities(const std::string& layerName, const std::vector<EntityPrototype>& prototypes)
 {
 }
 

@@ -22,6 +22,7 @@ private:
 	std::unordered_map<std::string, sf::Texture*> textures;
 
 	static TexManager *man;
+	static unsigned int references;
 };
 
 }
