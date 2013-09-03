@@ -3,6 +3,7 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
+#include "Input.hpp"
 
 namespace je
 {
@@ -12,7 +13,7 @@ class Level;
 class Game
 {
 public:
-	Game();
+	Game(int width, int height, int framerate);
 	~Game();
 
 	int execute();
@@ -21,10 +22,13 @@ public:
 	
 	void setTitle(const std::string& title);
 
+	Input& getInput();
+
 private:
 	sf::RenderWindow window;
 	Level *level;
 	std::string title;
+	Input input;
 };
 
 }

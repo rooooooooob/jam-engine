@@ -30,7 +30,7 @@ class Level
 
 	protected:
 		virtual void onUpdate();
-		virtual void onDraw();
+		virtual void onDraw(sf::RenderTarget& target) const;
 
     private:
         std::vector<Entity*> entities;

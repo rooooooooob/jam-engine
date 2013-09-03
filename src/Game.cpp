@@ -1,16 +1,16 @@
 #include "Game.hpp"
 
 #include "Level.hpp"
-#include "Input.hpp"
 #include "TexManager.hpp"
 
 namespace je
 {
 
-Game::Game()
-	:window(sf::VideoMode(640, 480), "Ludumdare 27 - 10 Seconds")
+Game::Game(int width, int height, int framerate)
+	:window(sf::VideoMode(width, height), "")
 	,level(nullptr)
 {
+	window.setFramerateLimit(framerate);
 	TexManager::load();
 }
 
@@ -23,7 +23,6 @@ Game::~Game()
 
 int Game::execute()
 {
-	Input input;
 	while (window.isOpen())
     {
         sf::Event event;
@@ -62,6 +61,11 @@ void Game::setTitle(const std::string& title)
 {
 	this->title = title;
 	window.setTitle(title);
+}
+
+Input& Game::getInput()
+{
+	return input;
 }
 
 }

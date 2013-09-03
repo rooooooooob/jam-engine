@@ -24,6 +24,7 @@ void Level::draw(sf::RenderTarget& target) const
 {
     for (auto it = entities.begin(); it != entities.end(); ++it)
         (*it)->draw(target);
+	onDraw();
 }
 
 void Level::update()
@@ -40,6 +41,7 @@ void Level::update()
         else
             ++it;
     }
+	onUpdate();
 }
 
 Entity* Level::collision(const Entity *caller, Entity::Type type, float xoffset, float yoffset) const
@@ -86,7 +88,7 @@ void Level::onUpdate()
 {
 }
 
-void Level::onDraw()
+void Level::onDraw(sf::RenderTarget& target) const
 {
 }
 

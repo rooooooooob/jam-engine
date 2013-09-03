@@ -1,40 +1,44 @@
-#ifndef INPUT_HPP
-#define INPUT_HPP
+#ifndef JE_INPUT_HPP
+#define JE_INPUT_HPP
 
 #include <SFML/Window/Joystick.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Mouse.hpp>
 
 namespace je
 {
 
-static const int PLAYERS = 4;
-static const int BUTTONS = 9;
-
 class Input
 {
-    public:
-        typedef sf::Joystick::Axis Axis;
-        enum Action {Right, Left, Jump, Crouch, Sword, Throw, Sprint, Up, Down};
-        Input();
-        ~Input();
+public:        
+	Input();
 
-        void update();
+    void update();
 
-        static bool isKeyPressed(int id, Action action);
-        static bool isKeyReleased(int id, Action action);
-        static bool isKeyHeld(int id, Action action);
+	/*			keyboard		*/
+    bool isKeyPressed(sf::Keyboard::Key key) const;
+    bool isKeyReleased(sf::Keyboard::Key key) const;
+    bool isKeyHeld(sf::Keyboard::Key key) const;
 
-        static bool isGamepad(int id);
+	/*			mouse			*/
+	bool isButtonPressed(sf::Mouse::Button button) const;
+	bool isButtonReleased(sf::Mouse::Button button) const;
+	bool isButtonHeld(sf::Mouse::Button button) const;
 
-        static float axis(int id, Axis axis);
+	/*			joystick		*/
+	bool isJoyButtonPressed(unsigned int joyID, unsigned int button) const;
+	bool isJoyButtonReleased(unsigned int joyID, unsigned int button) const;
+	bool isJoyButtonHeld(unsigned int JoyID, unsigned int button) const;
 
-    private:
-        int up[PLAYERS][BUTTONS];
-        int down[PLAYERS][BUTTONS];
-        bool gamepad[PLAYERS];
-        unsigned int key[PLAYERS][BUTTONS];
-        unsigned int gamepadID[PLAYERS];
+    float axis(int joyID, sf::Joystick::Axis axis) const ;
 
-        static Input *input;
+private:
+	int keyUp[sf::Keyboard::KeyCount];
+	int keyDown[sf::Keyboard::KeyCount];
+	int buttonUp[sf::Mouse::ButtonCount];
+	int buttonDown[sf::Mouse::ButtonCount];
+	int joyUp[sf::Joystick::Count][sf::Joystick::ButtonCount];
+	int joyDown[sf::Joystick::Count][sf::Joystick::ButtonCount];
 
 };
 
