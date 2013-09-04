@@ -10,7 +10,16 @@ Level::Level(Game * const game, int width, int height)
 	,height(height)
 	,game(game)
 {
-    //  load the file and shit
+}
+
+Level::Level(Game * const game, const std::string& filename, int width, int height)
+	:width(width)
+	,height(height)
+	,game(game)
+{
+	//	TODO (max):
+	//	load the code here and then call loadEntities() and loadTiles()
+	//	based on the data loaded
 }
 
 Level::~Level()
@@ -86,18 +95,22 @@ Game * const Level::getGame() const
 
 void Level::onUpdate()
 {
+	//	purposefully empty - meant for subclass-specific behaviour
 }
 
 void Level::onDraw(sf::RenderTarget& target) const
 {
+	//	purposefully empty - meant for subclass-specific behaviour
 }
 
 void Level::loadTiles(const std::string& layerName, int tileWidth, int tileHeight, int tilesAcross, int tilesHigh, unsigned int const * const * tiles)
 {
+	//	TODO: create tilemaps here
 }
 
 void Level::loadEntities(const std::string& layerName, const std::vector<EntityPrototype>& prototypes)
 {
+	//	purposefully empty - meant for subclass-specific behaviour
 }
 
 }

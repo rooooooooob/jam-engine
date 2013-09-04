@@ -68,12 +68,17 @@ public:
 	Game * const getGame() const;
 
 protected:
+	/**
+	 * Represents the data loaded from a Tiled map file. loadEntities should
+	 * be overridden to read a vector of EntityPrototypes and create actual
+	 * Entity objects out of them.
+	 */
 	struct EntityPrototype
 	{
-		unsigned int id;
-		int x, y;
-		std::string name;
-		std::string type;
+		unsigned int id;	//	Tiled object gid
+		int x, y;			//	position
+		std::string name;	//	tiled name field
+		std::string type;	//	tiled type field
 	};
 	
 	virtual void onUpdate();
@@ -82,7 +87,7 @@ protected:
 	
 	/**
 	 * Defines how to handle the tile layers when maps are loaded. If this isn't overridden
-	 * then TileMaps will be created and added to the level.
+	 * then TileMaps will be created and added to the level using layerName as the texture filename.
 	 * @param layerName The layer's name
 	 * @param tileWidth The width in pixels of each tile
 	 * @param tileHeight The height in pixels of each tile
