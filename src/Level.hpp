@@ -3,7 +3,9 @@
 
 #include <vector>
 #include <string>
+#include <map>
 #include "Entity.hpp"
+#include "TileGrid.hpp"
 
 namespace je
 {
@@ -43,7 +45,7 @@ public:
 	 * @Param yoffset The vertical offset away from caller to query at
 	 * @return The first Entity found that collides, or nullptr if none were found
 	 */
-	Entity* collision(const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0) const;
+	Entity* testCollision(const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0) const;
 
 	/**
 	 * Queries the level for collisions
@@ -53,7 +55,7 @@ public:
 	 * @param xoffset The horizontal offset away from caller to query at
 	 * @Param yoffset The vertical offset away from caller to query at
 	 */
-	void collision(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0) const;
+	void findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0) const;
 	
 	/**
 	 * Adds an Entity into the Level. The Level now assumes ownership of the Entity
@@ -66,6 +68,16 @@ public:
 	int getHeight() const;
 		
 	Game * const getGame() const;
+
+	const sf::Rect<int>& getCameraBounds() const;
+	
+	void setCameraBounds(const sf::Rect<int>& newBounds);
+
+	sf::Vector2f getCameraPosition() const;
+
+	void setCameraPosition(const sf::Vector2f& cameraPosition);
+
+	void moveCamera(const sf::Vector2f& cameraPosition);
 
 protected:
 	/**
@@ -104,8 +116,14 @@ protected:
 	 */
 	virtual void loadEntities(const std::string& layerName, const std::vector<EntityPrototype>& prototypes);
 
+	virtual void createTiles(const std::string& filename, int tileWidth, int tileHeight, int tilesAcross, int tilesHigh);
+
 private:
+
 	std::vector<Entity*> entities;
+	std::map<std::string, TileGrid*> tileLayers;
+	std::vector<sf::Sprite> tileSprites;
+	sf::Rect<int> cameraBounds;
 	int width;
 	int height;
 	Game * const game;

@@ -29,7 +29,7 @@ class Entity
 		bool intersects(const Entity& other, float xoffset = 0, float yoffset = 0) const;
 
 	protected:
-		Entity(Level * const stage, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset = sf::Vector2i(0, 0));
+		Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset = sf::Vector2i(0, 0));
 
 
 		//!The level the Entity is currently in

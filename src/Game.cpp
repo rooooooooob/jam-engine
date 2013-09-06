@@ -8,6 +8,7 @@ namespace je
 
 Game::Game(int width, int height, int framerate)
 	:window(sf::VideoMode(width, height), "")
+	,view(sf::Vector2f(width / 2, height / 2), sf::Vector2f(width, height))
 	,level(nullptr)
 {
 	window.setFramerateLimit(framerate);
@@ -41,7 +42,14 @@ int Game::execute()
 		if (level)
 		{
 			level->update();
+			
+			view.setCenter(level->getCameraPosition());
+
+			window.setView(view);
+
 			level->draw(window);
+
+			window.setView(window.getDefaultView());
 		}
 
         window.display();

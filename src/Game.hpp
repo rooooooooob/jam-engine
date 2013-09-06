@@ -26,6 +26,7 @@ public:
 
 private:
 	sf::RenderWindow window;
+	sf::View view;
 	Level *level;
 	std::string title;
 	Input input;
