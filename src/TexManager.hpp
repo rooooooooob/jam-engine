@@ -15,6 +15,9 @@ public:
 	static void unload();
 
 	static const sf::Texture& get(const std::string& id);
+
+	static void setPath(const std::string& pathname);
+
 private:
 	TexManager();
 	~TexManager();
@@ -23,6 +26,7 @@ private:
 
 	static TexManager *man;
 	static unsigned int references;
+	static std::string path;
 };
 
 }

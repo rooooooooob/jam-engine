@@ -9,6 +9,7 @@ namespace je
 
 TexManager *TexManager::man = NULL;
 unsigned int TexManager::references = 0;
+std::string TexManager::path("img");
 
 TexManager::TexManager()
 {
@@ -42,12 +43,17 @@ const sf::Texture& TexManager::get(const std::string& id)
     if (!man->textures[id])
     {
         man->textures[id] = new sf::Texture();
-        man->textures[id]->loadFromFile("img/" + id);
+        man->textures[id]->loadFromFile(path + id);
 #ifdef JE_DEBUG
         std::cout << "Loaded " << id << std::endl;
 #endif
     }
     return *(man->textures[id]);
+}
+
+void TexManager::setPath(const std::string& pathname)
+{
+	path = pathname;
 }
 
 }
