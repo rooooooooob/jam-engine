@@ -123,7 +123,7 @@ private:
 
 	std::vector<Entity*> entities;
 	std::map<std::string, TileGrid*> tileLayers;
-	std::vector<sf::Sprite> tileSprites;
+	mutable std::vector<sf::Sprite> tileSprites;
 	sf::Rect<int> cameraBounds;
 	int width;
 	int height;

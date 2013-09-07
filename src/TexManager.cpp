@@ -23,8 +23,7 @@ const sf::Texture& TexManager::get(const std::string& id)
     if (!textures[id])
     {
         textures[id] = new sf::Texture();
-        if (!textures[id]->loadFromFile(path + id))
-			std::cerr << "FFFFFFFFF" << path << id;
+        textures[id]->loadFromFile(path + id);
 #ifdef JE_DEBUG
         std::cout << "Loaded " << id << std::endl;
 #endif
