@@ -119,6 +119,8 @@ protected:
 
 	virtual void createTiles(const std::string& filename, int tileWidth, int tileHeight, int tilesAcross, int tilesHigh);
 
+	virtual void transformTiles(const std::string& layerName, int tilesAcross, int tilesHigh, unsigned  **tiles);
+
 private:
 
 	std::vector<Entity*> entities;

@@ -71,7 +71,7 @@ void TileGrid::draw(sf::RenderTarget& target) const
 		for (int j = visibleTilesByIndices.top; j < visibleTilesByIndices.height; ++j)
 		{
 			if (tiles[i][j])
-			{std::cout << "(" << i << "," << j << ")";
+			{
 				tiles[i][j]->setPosition(left + i * cellSizeX, top + j * cellSizeY);
 				target.draw(*tiles[i][j]);
 			}

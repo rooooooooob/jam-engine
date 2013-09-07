@@ -109,11 +109,7 @@ Level::Level(Game * const game, const std::string& filename)
                 int layerWidth = atoi(attr->value());
                 attr = attr->next_attribute();
                 std::cout << attr->value() << "\n";
-                int layerHeight = atoi(attr->value());	//<HACK>: FIX LATER:
-	tileWidth = 16;
-	tileHeight = 16;
-	//</HACK>
-
+                int layerHeight = atoi(attr->value());
                 xml_node<> *layerData = layer->first_node("data");
                 attr = layerData->first_attribute();
                 std::cout << attr->value() << "\n";
@@ -123,10 +119,10 @@ Level::Level(Game * const game, const std::string& filename)
                 std::stringstream sstream (tileFieldText);
                 std::string fieldValue;
 
-                unsigned int **tileLayer = new unsigned int* [layerHeight];
-                for(int g = 0; g < layerHeight; ++g)
+                unsigned int **tileLayer = new unsigned int* [layerWidth];
+                for(int g = 0; g < layerWidth; ++g)
                 {
-                    tileLayer[g] = new unsigned int[layerWidth];
+                    tileLayer[g] = new unsigned int[layerHeight];
                 }
                 std::cout << "\n\n---height: " << tileHeight << "   width: " << tileWidth << "\n";
 
@@ -136,7 +132,7 @@ Level::Level(Game * const game, const std::string& filename)
                 while (std::getline(sstream, fieldValue, ','))
                 {
                     //std::cout << "i: " << i << "  j: " << j << "\n";
-                    tileLayer[i][j] = atoi (fieldValue.c_str());
+                    tileLayer[j][i] = atoi (fieldValue.c_str());
                     ++j;
                     if (j == layerWidth)
                     {
@@ -147,15 +143,15 @@ Level::Level(Game * const game, const std::string& filename)
                 }
                 //std::cout << "\n";
 
-                loadTiles(tileLayerName, tileHeight, tileWidth, layerHeight, layerWidth, tileLayer);
-                for (int a = 0; a < layerHeight; ++a)
+                loadTiles(tileLayerName, tileWidth, tileHeight, layerWidth, layerHeight, tileLayer);
+                /*for (int a = 0; a < layerHeight; ++a)
                 {
                     for (int b = 0; b < layerWidth; ++b)
                     {
                         std::cout << (tileLayer[a][b] ? "X" : " ");
                     }
                     std::cout << "\n";
-                }
+                }*/
             }
 
             std::cout << "test\n";
@@ -249,14 +245,14 @@ void Level::draw(sf::RenderTarget& target) const
     for (auto it = entities.begin(); it != entities.end(); ++it)
         (*it)->draw(target);
 	onDraw(target);
-	std::cout << "tileSprites.size() = " << tileSprites.size() << "\n";
+	/*std::cout << "tileSprites.size() = " << tileSprites.size() << "\n";
 	for (int i = 0; i < tileSprites.size(); ++i)
 	{
 		sf::Sprite& s = tileSprites[i];
 		//std::cout << "(" << s.getGlobalBounds().width << "," << s.getGlobalBounds().height << ")";
 		tileSprites[i].setPosition(sf::Vector2f(i * 16, 0));
 		target.draw(tileSprites[i]);
-	}
+	}*/
 }
 
 void Level::update()
@@ -359,10 +355,6 @@ void Level::onDraw(sf::RenderTarget& target) const
 
 void Level::loadTiles(const std::string& layerName, int tileWidth, int tileHeight, int tilesAcross, int tilesHigh, unsigned int const * const * tiles)
 {
-	//<HACK>: FIX LATER:
-	//tileWidth = 16;
-	//tileHeight = 16;
-	//</HACK>
 	//	TODO: create tilemaps here
 	tileLayers[layerName] = new TileGrid(this, 0, 0, tilesAcross, tilesHigh, tileWidth, tileHeight);
 	TileGrid* grid = tileLayers[layerName];
@@ -371,7 +363,7 @@ void Level::loadTiles(const std::string& layerName, int tileWidth, int tileHeigh
 		for (int y = 0; y < tilesHigh; ++y)
 		{
             //std::cout << "x: " << x << "  y: " << y << "\n";
-            std::cout << (tiles[x][y] ? "X" : " ");
+            //std::cout << (tiles[x][y] ? "X" : " ");
 			if (tiles[x][y])
 				grid->setTexture(x, y, tileSprites[tiles[x][y]]);
 		}
@@ -387,18 +379,14 @@ void Level::loadEntities(const std::string& layerName, const std::vector<EntityP
 
 void Level::createTiles(const std::string& filename, int tileWidth, int tileHeight, int tilesAcross, int tilesHigh)
 {
-	//<HACK>: FIX LATER:
-	//tileWidth = 16;
-	//tileHeight = 16;
-	//</HACK>
 	std::cout << "tileWidth : " << tileWidth << "\nTileHeight" << tileHeight << "\n";
 	const sf::Texture& texture = getGame().getTexManager().get(filename);
 	const int w = texture.getSize().x / tileWidth;
 	const int h = texture.getSize().y / tileHeight;
 	std::cout << "should create " << w * h << " sprites created\n";
-	for (int x = 0; x < w; ++x)
+	for (int y = 0; y < h; ++y)
 	{
-		for (int y = 0; y < h; ++y)
+		for (int x = 0; x < w; ++x)
 		{
 		    //std::cout << "x:" << x << "  y: " << y << "\n";
 			tileSprites.push_back(sf::Sprite(texture));
@@ -406,6 +394,11 @@ void Level::createTiles(const std::string& filename, int tileWidth, int tileHeig
 		}
 	}
     std::cout << "\n";
+}
+
+void Level::transformTiles(const std::string& layerName, int tilesAcross, int tilesHigh, unsigned  **tiles)
+{
+	//	no transform is done here
 }
 
 }
