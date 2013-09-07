@@ -26,15 +26,13 @@ public:
 	 * Constructs a level with the given width and height using the passed in .tmx file
 	 * @param game The game the level belongs to
 	 * @param filename The .tmx file to load assets from
-	 * @param width The width of the level in pixels (if -1 the largest tile layer width in the .tmx file will be used)
-	 * @param height The height of the level in pixels (if -1 the largest tile layer height in the .tmx file will be used)
 	 */
-	Level(Game * const game, const std::string& filename, int width, int height);
-	
+	Level(Game * const game, const std::string& filename);
+
 	virtual ~Level();
 
 	void draw(sf::RenderTarget& target) const;
-	
+
 	void update();
 
 	/**
@@ -56,7 +54,7 @@ public:
 	 * @Param yoffset The vertical offset away from caller to query at
 	 */
 	void findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0) const;
-	
+
 	/**
 	 * Adds an Entity into the Level. The Level now assumes ownership of the Entity
 	 * @param instance The Entity to add
@@ -64,13 +62,13 @@ public:
 	void addEntity(Entity *instance);
 
 	int getWidth() const;
-	
+
 	int getHeight() const;
-		
+
 	Game * const getGame() const;
 
 	const sf::Rect<int>& getCameraBounds() const;
-	
+
 	void setCameraBounds(const sf::Rect<int>& newBounds);
 
 	sf::Vector2f getCameraPosition() const;
@@ -78,6 +76,8 @@ public:
 	void setCameraPosition(const sf::Vector2f& cameraPosition);
 
 	void moveCamera(const sf::Vector2f& cameraPosition);
+
+    void parse ();
 
 protected:
 	/**
@@ -92,11 +92,11 @@ protected:
 		std::string name;	//	tiled name field
 		std::string type;	//	tiled type field
 	};
-	
+
 	virtual void onUpdate();
-	
+
 	virtual void onDraw(sf::RenderTarget& target) const;
-	
+
 	/**
 	 * Defines how to handle the tile layers when maps are loaded. If this isn't overridden
 	 * then TileMaps will be created and added to the level using layerName as the texture filename.
