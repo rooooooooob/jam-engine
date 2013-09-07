@@ -7,11 +7,8 @@
 namespace je
 {
 
-TexManager *TexManager::man = NULL;
-unsigned int TexManager::references = 0;
-std::string TexManager::path("img");
-
 TexManager::TexManager()
+	:path("img")
 {
 }
 
@@ -21,34 +18,18 @@ TexManager::~TexManager()
         delete it->second;
 }
 
-void TexManager::load()
-{
-	++references;
-    if (!man)
-        man = new TexManager();
-}
-
-void TexManager::unload()
-{
-	if (--references <= 0)
-	{
-		if (man)
-			delete man;
-		man = NULL;
-	}
-}
-
 const sf::Texture& TexManager::get(const std::string& id)
 {
-    if (!man->textures[id])
+    if (!textures[id])
     {
-        man->textures[id] = new sf::Texture();
-        man->textures[id]->loadFromFile(path + id);
+        textures[id] = new sf::Texture();
+        if (!textures[id]->loadFromFile(path + id))
+			std::cerr << "FFFFFFFFF" << path << id;
 #ifdef JE_DEBUG
         std::cout << "Loaded " << id << std::endl;
 #endif
     }
-    return *(man->textures[id]);
+    return *textures[id];
 }
 
 void TexManager::setPath(const std::string& pathname)

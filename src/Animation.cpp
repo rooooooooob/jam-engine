@@ -5,12 +5,11 @@
 namespace je
 {
 
-Animation::Animation(const std::string& fname, int width, int height, std::initializer_list<unsigned int> times, bool repeat)
+Animation::Animation(const sf::Texture& texture, int width, int height, std::initializer_list<unsigned int> times, bool repeat)
 	:frameProgress(0)
 	,frame(0)
 	,repeating(repeat)
 {
-	const sf::Texture& texture = TexManager::get(fname);
 	int x = 0;
 	for (unsigned int length : times)
 	{

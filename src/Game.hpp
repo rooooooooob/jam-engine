@@ -4,6 +4,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "Input.hpp"
+#include "TexManager.hpp"
 
 namespace je
 {
@@ -19,10 +20,12 @@ public:
 	int execute();
 
 	void setLevel(Level *level);
-	
+
 	void setTitle(const std::string& title);
 
 	Input& getInput();
+
+	TexManager& getTexManager();
 
 private:
 	sf::RenderWindow window;
@@ -30,6 +33,7 @@ private:
 	Level *level;
 	std::string title;
 	Input input;
+	TexManager texMan;
 };
 
 }

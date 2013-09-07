@@ -12,14 +12,12 @@ Game::Game(int width, int height, int framerate)
 	,level(nullptr)
 {
 	window.setFramerateLimit(framerate);
-	TexManager::load();
 }
 
 Game::~Game()
 {
 	if (level)
 		delete level;
-	TexManager::unload();
 }
 
 int Game::execute()
@@ -36,13 +34,13 @@ int Game::execute()
         }
 
         window.clear();
-        
+
 		input.update();
 
 		if (level)
 		{
 			level->update();
-			
+
 			view.setCenter(level->getCameraPosition());
 
 			window.setView(view);
@@ -74,6 +72,11 @@ void Game::setTitle(const std::string& title)
 Input& Game::getInput()
 {
 	return input;
+}
+
+TexManager& Game::getTexManager()
+{
+	return texMan;
 }
 
 }

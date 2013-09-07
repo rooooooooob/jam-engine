@@ -11,22 +11,18 @@ namespace je
 class TexManager
 {
 public:
-	static void load();
-	static void unload();
-
-	static const sf::Texture& get(const std::string& id);
-
-	static void setPath(const std::string& pathname);
-
-private:
 	TexManager();
 	~TexManager();
 
+	const sf::Texture& get(const std::string& id);
+
+	void setPath(const std::string& pathname);
+
+private:
+
 	std::unordered_map<std::string, sf::Texture*> textures;
 
-	static TexManager *man;
-	static unsigned int references;
-	static std::string path;
+	std::string path;
 };
 
 }

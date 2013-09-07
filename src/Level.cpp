@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include "TexManager.hpp"
+#include "Game.hpp"
 
 namespace je
 {
@@ -92,16 +93,16 @@ int Level::getHeight() const
     return height;
 }
 
-Game * const Level::getGame() const
+Game& Level::getGame() const
 {
-	return game;
+	return *game;
 }
 
 const sf::Rect<int>& Level::getCameraBounds() const
 {
 	return cameraBounds;
 }
-	
+
 void Level::setCameraBounds(const sf::Rect<int>& newBounds)
 {
 	cameraBounds = newBounds;
@@ -160,7 +161,7 @@ void Level::loadEntities(const std::string& layerName, const std::vector<EntityP
 
 void Level::createTiles(const std::string& filename, int tileWidth, int tileHeight, int tilesAcross, int tilesHigh)
 {
-	const sf::Texture& texture = TexManager::get(filename);
+	const sf::Texture& texture = getGame().getTexManager().get(filename);
 	for (int x = 0; x < tilesAcross; ++x)
 	{
 		for (int y = 0; y < tilesHigh; ++y)
