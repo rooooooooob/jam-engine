@@ -1,6 +1,10 @@
 #include "Level.hpp"
 
 #include <cstdlib>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <cstring>
 #include "TexManager.hpp"
 #include "Game.hpp"
 
@@ -15,12 +19,214 @@ Level::Level(Game * const game, int width, int height)
 	tileSprites.push_back(sf::Sprite());	//	empty tile
 }
 
-Level::Level(Game * const game, const std::string& filename, int width, int height)
-	:width(width)
-	,height(height)
+Level::Level(Game * const game, const std::string& filename)
+	:width(0)
+	,height(0)
 	,game(game)
 {
 	tileSprites.push_back(sf::Sprite());	//	empty tile
+
+    using namespace rapidxml;
+    std::ifstream mapFile (filename);
+    std::string line;
+    std::stringstream ss;
+    std::cout << filename << "\n";
+
+    if (mapFile.is_open())
+    {
+        while (mapFile.good())
+        {
+            getline (mapFile, line);
+            ss << line << "\n";
+        }
+
+        std::string s = ss.str();
+        std::vector<char> text(s.begin(), s.end());
+        text.push_back('\0');
+        std::cout << s << "\n\n\n";
+
+       	xml_document<> doc;
+        doc.parse<0> (text.data());
+
+        xml_node<> *root = doc.first_node("map");
+        if (root)
+        {
+            xml_attribute<> *attr = root->first_attribute("version");
+            std::string version = attr->value();
+            std::cout << attr->value() << "\n";
+            attr = attr->next_attribute("orientation");
+            std::cout << attr->value() << "\n";
+            std::string orientation = attr->value();
+            attr = attr->next_attribute("width");
+            std::cout << attr->value() << "\n";
+            int width = atoi(attr->value());
+            attr = attr->next_attribute("height");
+            std::cout << attr->value() << "\n";
+            int height = atoi(attr->value());
+            attr = attr->next_attribute("tilewidth");
+            std::cout << attr->value() << "\n";
+            int tileWidth = atoi(attr->value());
+            attr = attr->next_attribute("tileheight");
+            std::cout << attr->value() << "\n";
+            int tileHeight = atoi(attr->value());
+
+            for (xml_node<> *tileset = root->first_node("tileset"); tileset; tileset = tileset->next_sibling("tileset"))
+            {
+                xml_attribute<> *attr = tileset->first_attribute("firstgid");
+                std::cout << attr->value() << "\n";
+                int firstgrid = atoi(attr->name());
+                attr = attr->next_attribute("name");
+                std::cout << attr->value() << "\n";
+                std::string tileSetName = attr->name();
+                attr = attr->next_attribute("tilewidth");
+                std::cout << attr->value() << "\n";
+                int tileSet_tileWidth = atoi(attr->name());
+                attr = attr->next_attribute("tileheight");
+                std::cout << attr->value() << "\n";
+                int tileSet_tileHeight = atoi(attr->name());
+
+                xml_node<> *img = tileset->first_node ("image");
+                attr = img->first_attribute ("source");
+                std::cout << attr->value() << "\n";
+                std::string source = attr->value();
+                attr = attr->next_attribute ("width");
+                std::cout << attr->value() << "\n";
+                int imgWidth = atoi(attr->value());
+                attr = attr->next_attribute ("height");
+                std::cout << attr->value() << "\n";
+                int imgHeight = atoi(attr->value());
+                createTiles(source, tileSet_tileHeight, tileSet_tileWidth, height, width);
+            }
+
+            for (xml_node<> *layer = root->first_node("layer"); layer; layer = layer->next_sibling("layer"))
+            {
+                xml_attribute<> *attr = layer->first_attribute();
+                std::cout << attr->value() << "\n";
+                std::string tileLayerName = attr->value();
+                attr = attr->next_attribute();
+                std::cout << attr->value() << "\n";
+                int layerWidth = atoi(attr->value());
+                attr = attr->next_attribute();
+                std::cout << attr->value() << "\n";
+                int layerHeight = atoi(attr->value());
+
+                xml_node<> *layerData = layer->first_node("data");
+                attr = layerData->first_attribute();
+                std::cout << attr->value() << "\n";
+                std::string encodeMode = attr->value();
+
+                std::string tileFieldText = layerData->value();
+                std::stringstream sstream (tileFieldText);
+                std::string fieldValue;
+
+                unsigned int **tileLayer = new unsigned int* [layerHeight];
+                for(int g = 0; g < layerHeight; ++g)
+                {
+                    tileLayer[g] = new unsigned int[layerWidth];
+                }
+                std::cout << "height: " << layerHeight << "   width: " << layerWidth << "\n";
+
+                int i = 0;
+                int j = 0;
+
+                while (std::getline(sstream, fieldValue, ','))
+                {
+                    //std::cout << "i: " << i << "  j: " << j << "\n";
+                    tileLayer[i][j] = atoi (fieldValue.c_str());
+                    ++j;
+                    if (j == layerWidth)
+                    {
+                        //std::cout << "\n";
+                        j = 0;
+                        ++i;
+                    }
+                }
+                //std::cout << "\n";
+
+                loadTiles(tileLayerName, layerHeight, layerWidth, height, width, tileLayer);
+                for (int a = 0; a < layerHeight; ++a)
+                {
+                    for (int b = 0; b < layerWidth; ++b)
+                    {
+                        //std::cout << tileLayer[a][b] << " ";
+                    }
+                    //std::cout << "\n";
+                }
+            }
+
+            std::cout << "test\n";
+            for (xml_node<> *objectgroup = root->first_node("objectgroup"); objectgroup; objectgroup = objectgroup->next_sibling("objectgroup"))
+            {
+                std::cout << "test2\n";
+                xml_attribute<> *attr = objectgroup->first_attribute ("name");
+                std::cout << attr->value() << "\n";
+                std::string objectLayer_name = attr->value();
+                attr = attr->next_attribute ("width");
+                std::cout << attr->value() << "\n";
+                int objectLayer_Width = atoi(attr->value());
+                attr = attr->next_attribute ("height");
+                std::cout << attr->value() << "\n";
+                int objectLayer_Height = atoi(attr->value());
+
+                for (xml_node<> *obj = objectgroup->first_node("object"); obj; obj = obj->next_sibling("object"))
+                {
+                    std::cout << obj->name();
+                    xml_attribute<> *attr = obj->first_attribute("gid");
+                    if (attr)
+                    {
+                        std::cout << attr->value() << "\n";
+                        int gid = atoi (attr->value());
+                    }
+                    else
+                        std::cout << "nigga u broke obj's gid attribute\n";
+
+                    attr = obj->first_attribute ("x");
+                    if (attr)
+                    {
+                        std::cout << attr->value() << "\n";
+                        int x = atoi (attr->value());
+                    }
+                    else
+                        std::cout << "nigga u broke obj's x attribute\n";
+
+                    attr = obj->first_attribute ("y");
+                    if (attr)
+                    {
+                        std::cout << attr->value() << "\n";
+                        int y = atoi (attr->value());
+                    }
+                    else
+                        std::cout << "nigga u broke obj's y attribute\n";
+
+                    attr = obj->first_attribute ("width");
+                    if (attr)
+                    {
+                        std::cout << attr->value() << "\n";
+                        int objWidth = atoi (attr->value());
+                    }
+                    else
+                        std::cout << "nigga u broke obj's width attribute\n";
+
+                    attr = obj->first_attribute ("height");
+                    if (attr)
+                    {
+                        std::cout << attr->value() << "\n";
+                        int objHeight = atoi (attr->value());
+                    }
+                    else
+                        std::cout << "nigga u broke obj's height attribute\n";
+                }
+            }
+        }
+        else
+            std::cout << "nigga u broke somthin' in da map\n";
+    }
+    else
+    {
+        std::cout << "couldn't open map\n";
+    }
+
+
 	//	TODO (max):
 	//	load the code here and then call loadEntities() and loadTiles()
 	//	based on the data loaded
@@ -35,6 +241,7 @@ Level::~Level()
 
 void Level::draw(sf::RenderTarget& target) const
 {
+
     for (auto it = entities.begin(); it != entities.end(); ++it)
         (*it)->draw(target);
 	onDraw(target);
@@ -147,6 +354,7 @@ void Level::loadTiles(const std::string& layerName, int tileWidth, int tileHeigh
 	{
 		for (int y = 0; y < tilesHigh; ++y)
 		{
+            //std::cout << "x: " << x << "  y: " << y << "\n";
 			if (tiles[x][y])
 				grid->setTexture(x, y, tileSprites[tiles[x][y]]);
 		}
@@ -166,10 +374,12 @@ void Level::createTiles(const std::string& filename, int tileWidth, int tileHeig
 	{
 		for (int y = 0; y < tilesHigh; ++y)
 		{
+		    //std::cout << "x:" << x << "  y: " << y << "\n";
 			tileSprites.push_back(sf::Sprite(texture));
 			tileSprites.back().setTextureRect(sf::IntRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight));
 		}
 	}
+    std::cout << "\n";
 }
 
 }

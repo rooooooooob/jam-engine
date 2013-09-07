@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include "rapidxml.hpp"
 #include "Entity.hpp"
 #include "TileGrid.hpp"
 
@@ -26,10 +27,8 @@ public:
 	 * Constructs a level with the given width and height using the passed in .tmx file
 	 * @param game The game the level belongs to
 	 * @param filename The .tmx file to load assets from
-	 * @param width The width of the level in pixels (if -1 the largest tile layer width in the .tmx file will be used)
-	 * @param height The height of the level in pixels (if -1 the largest tile layer height in the .tmx file will be used)
 	 */
-	Level(Game * const game, const std::string& filename, int width, int height);
+	Level(Game * const game, const std::string& filename);
 
 	virtual ~Level();
 
@@ -78,6 +77,8 @@ public:
 	void setCameraPosition(const sf::Vector2f& cameraPosition);
 
 	void moveCamera(const sf::Vector2f& cameraPosition);
+
+    void parse ();
 
 protected:
 	/**
