@@ -49,6 +49,8 @@ int Game::execute()
 			level->draw(window);
 
 			window.setView(window.getDefaultView());
+
+			level->drawGUI(window);
 		}
 
         window.display();

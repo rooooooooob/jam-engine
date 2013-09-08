@@ -61,6 +61,11 @@ void Animation::advanceFrame()
 	}
 }
 
+void Animation::reset()
+{
+	frame = 0;
+}
+
 void Animation::draw(sf::RenderTarget& target) const
 {
 	if (!frames.empty())//frame >= 0 && frame < frames.size())

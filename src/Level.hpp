@@ -34,6 +34,9 @@ public:
 
 	void draw(sf::RenderTarget& target) const;
 
+	virtual void drawGUI(sf::RenderTarget& target) const;
+
+
 	void update();
 
 	/**

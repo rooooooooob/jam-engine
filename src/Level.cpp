@@ -423,6 +423,11 @@ void Level::onDraw(sf::RenderTarget& target) const
 	//	purposefully empty - meant for subclass-specific behaviour
 }
 
+void Level::drawGUI(sf::RenderTarget& target) const
+{
+	//	purposefully empty - meant for subclass-specific behaviour
+}
+
 void Level::loadTiles(const std::string& layerName, int tileWidth, int tileHeight, int tilesAcross, int tilesHigh, unsigned int const * const * tiles)
 {
 	//	TODO: create tilemaps here

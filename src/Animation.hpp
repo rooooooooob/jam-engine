@@ -20,6 +20,11 @@ public:
 
 	void advanceFrame();
 
+	/**
+	 * If animation isn't repeating, then set it back to the start
+	 */
+	void reset();
+
 	void draw(sf::RenderTarget& target) const;
 
 	template <typename F>
