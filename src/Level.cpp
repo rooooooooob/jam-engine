@@ -167,7 +167,6 @@ void Level::loadMap(const std::string& filename)
         std::string s = ss.str();
         std::vector<char> text(s.begin(), s.end());
         text.push_back('\0');
-        std::cout << s << "\n\n\n";
 
        	xml_document<> doc;
         doc.parse<0> (text.data());
@@ -378,7 +377,6 @@ void Level::loadTiles(const std::string& layerName, int tileWidth, int tileHeigh
 			if (tiles[x][y])
 				grid->setTexture(x, y, tileSprites[tiles[x][y]]);
 		}
-		std::cout << "\n";
 	}
 	this->addEntity(grid);
 }
