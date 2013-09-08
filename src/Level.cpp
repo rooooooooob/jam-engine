@@ -189,7 +189,7 @@ sf::Vector2f Level::getCursorPos() const
 
 void Level::loadMap(const std::string& filename)
 {
-	    using namespace rapidxml;
+    using namespace rapidxml;
     std::ifstream mapFile (filename);
     std::string line;
     std::stringstream ss;
