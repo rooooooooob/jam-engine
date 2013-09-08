@@ -67,7 +67,10 @@ void Level::update()
 	onUpdate();
 	for (auto& grid : tileLayers)
 	{
-		grid.second->setVisibleArea(this->getCameraBounds());
+		sf::Rect<int> bounds(cameraBounds);
+		bounds.left -= cameraBounds.width / 2;
+		bounds.top -= cameraBounds.height / 2;
+		grid.second->setVisibleArea(bounds);
 	}
 }
 
