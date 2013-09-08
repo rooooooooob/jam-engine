@@ -29,8 +29,6 @@ public:
 	bool isButtonReleased(sf::Mouse::Button button) const;
 	bool isButtonHeld(sf::Mouse::Button button) const;
 
-	sf::Vector2f getMousePos() const;
-
 
 	/*			joystick		*/
 	bool isJoyButtonPressed(unsigned int joyID, unsigned int button) const;
@@ -40,10 +38,10 @@ public:
     float axis(int joyID, sf::Joystick::Axis axis) const ;
 
 private:
-	int keyUp[sf::Keyboard::KeyCount];
-	int keyDown[sf::Keyboard::KeyCount];
 	int buttonUp[sf::Mouse::ButtonCount];
 	int buttonDown[sf::Mouse::ButtonCount];
+	int keyUp[sf::Keyboard::KeyCount];
+	int keyDown[sf::Keyboard::KeyCount];
 	int joyUp[sf::Joystick::Count][sf::Joystick::ButtonCount];
 	int joyDown[sf::Joystick::Count][sf::Joystick::ButtonCount];
 	sf::RenderWindow& window;

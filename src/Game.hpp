@@ -27,6 +27,8 @@ public:
 
 	TexManager& getTexManager();
 
+	sf::RenderWindow& getWindow();
+
 private:
 	sf::RenderWindow window;
 	sf::View view;

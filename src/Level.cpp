@@ -135,6 +135,12 @@ void Level::moveCamera(const sf::Vector2f& cameraPosition)
 	cameraBounds.top += cameraPosition.y;
 }
 
+sf::Vector2f Level::getCursorPos() const
+{
+	sf::Vector2i posI = game->getWindow().mapCoordsToPixel(sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y)) - game->getWindow().getPosition();
+	return sf::Vector2f(posI.x + cameraBounds.left - cameraBounds.width / 2, posI.y + cameraBounds.top - cameraBounds.height / 2);
+}
+
 void Level::loadMap(const std::string& filename)
 {
 	    using namespace rapidxml;

@@ -118,9 +118,4 @@ float Controller::getAxis(sf::Joystick::Axis axis) const
 	return input.axis(joyID, axis);
 }
 
-sf::Vector2f Controller::getMousePos() const
-{
-	return input.getMousePos();
-}
-
 }

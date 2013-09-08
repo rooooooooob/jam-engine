@@ -80,4 +80,9 @@ TexManager& Game::getTexManager()
 	return texMan;
 }
 
+sf::RenderWindow& Game::getWindow()
+{
+	return window;
+}
+
 }

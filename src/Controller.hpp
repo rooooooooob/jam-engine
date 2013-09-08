@@ -46,7 +46,6 @@ public:
 	/*		joystick specific		*/
 	void setJoystickID(unsigned int id);
 	float getAxis(sf::Joystick::Axis axis) const;
-	sf::Vector2f getMousePos() const;
 
 private:
 	Input& input;

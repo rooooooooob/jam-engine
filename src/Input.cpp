@@ -51,15 +51,15 @@ void Input::update()
 	{
 		if (sf::Mouse::isButtonPressed((sf::Mouse::Button) button))
 		{
-			keyDown[button] = 2;
-			if (keyUp[button] > 0)
-				--keyUp[button];
+			buttonDown[button] = 2;
+			if (buttonUp[button] > 0)
+				--buttonUp[button];
 		}
 		else
 		{
-			keyUp[button] = 2;
-			if (keyDown[button] > 0)
-				--keyDown[button];
+			buttonUp[button] = 2;
+			if (buttonDown[button] > 0)
+				--buttonDown[button];
 		}
 	}
 	for (int joystick = 0; joystick < sf::Joystick::Count; ++joystick)
@@ -111,12 +111,6 @@ bool Input::isButtonReleased(sf::Mouse::Button button) const
 bool Input::isButtonHeld(sf::Mouse::Button button) const
 {
     return buttonDown[button] == 2;
-}
-
-sf::Vector2f Input::getMousePos() const
-{
-	sf::Vector2i posI = window.mapCoordsToPixel(sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y));
-	return sf::Vector2f(posI.x, posI.y);
 }
 
 /*			joystick			*/

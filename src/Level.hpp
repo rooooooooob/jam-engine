@@ -78,6 +78,8 @@ public:
 
 	void moveCamera(const sf::Vector2f& cameraPosition);
 
+	sf::Vector2f getCursorPos() const;
+
     void loadMap(const std::string& filename);
 
 protected:
