@@ -32,6 +32,11 @@ Animation::Animation(const sf::Texture& texture, int width, int height, std::ini
 	}
 }
 
+bool Animation::isFinished() const
+{
+	return !repeating && frame == frames.size() - 1;
+}
+
 void Animation::advanceFrame()
 {
 	if (++frameProgress > lengths[frame])

@@ -35,8 +35,8 @@ Level::~Level()
 void Level::draw(sf::RenderTarget& target) const
 {
 
-    for (auto it = entities.begin(); it != entities.end(); ++it)
-        (*it)->draw(target);
+    for (int i = 0; i < entities.size(); ++i)
+		entities[i]->draw(target);
 	onDraw(target);
 	/*std::cout << "tileSprites.size() = " << tileSprites.size() << "\n";
 	for (int i = 0; i < tileSprites.size(); ++i)
@@ -50,17 +50,17 @@ void Level::draw(sf::RenderTarget& target) const
 
 void Level::update()
 {
-    for (auto it = entities.begin(); it != entities.end();)
+    for (int i = 0; i < entities.size(); )
     {
-        (*it)->update();
-        if ((*it)->isDead())
+        entities[i]->update();
+        if (entities[i]->isDead())
         {
-            delete *it;
-            *it = entities.back();
+            delete entities[i];
+            entities[i] = entities.back();
             entities.pop_back();
         }
         else
-            ++it;
+            ++i;
     }
 	onUpdate();
 	for (auto& grid : tileLayers)

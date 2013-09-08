@@ -15,6 +15,9 @@ public:
 	Animation(const sf::Texture& texture, int width, int height, int time, bool repeat = true);
 	Animation(const sf::Texture& texture, int width, int height, std::initializer_list<unsigned int> times, bool repeat = true);
 
+
+	bool isFinished() const;
+
 	void advanceFrame();
 
 	void draw(sf::RenderTarget& target) const;
