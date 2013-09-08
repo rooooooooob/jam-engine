@@ -1,5 +1,5 @@
 #include "Controller.hpp"
-
+#include <iostream>
 namespace je
 {
 /*			bind			*/
@@ -7,18 +7,21 @@ Controller::Bind::Bind(sf::Keyboard::Key key)
 	:key(key)
 	,device(Device::Keyboard)
 {
+	std::cout << "Bind(Keyboard)\n";
 }
 
 Controller::Bind::Bind(sf::Mouse::Button button)
 	:key(button)
 	,device(Device::Mouse)
 {
+	std::cout << "Bind(Mouse)\n";
 }
 
 Controller::Bind::Bind(unsigned int joystickButton)
 	:key(joystickButton)
 	,device(Device::Joystick)
 {
+	std::cout << "Bind(Joystick)\n";
 }
 
 
@@ -81,7 +84,7 @@ bool Controller::isActionHeld(const std::string& action) const
 
 
 
-void Controller::addKeybinds(const std::string& action, Bind bind)
+void Controller::addKeybind(const std::string& action, Bind bind)
 {
 	binds[action].push_back(bind);
 }
@@ -113,6 +116,11 @@ void Controller::setJoystickID(unsigned int id)
 float Controller::getAxis(sf::Joystick::Axis axis) const
 {
 	return input.axis(joyID, axis);
+}
+
+sf::Vector2f Controller::getMousePos() const
+{
+	return input.getMousePos();
 }
 
 }

@@ -10,6 +10,7 @@ Game::Game(int width, int height, int framerate)
 	:window(sf::VideoMode(width, height), "")
 	,view(sf::Vector2f(width / 2, height / 2), sf::Vector2f(width, height))
 	,level(nullptr)
+	,input(window)
 {
 	window.setFramerateLimit(framerate);
 }

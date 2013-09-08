@@ -5,13 +5,17 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 
+namespace sf
+{
+class RenderWindow;
+}
 namespace je
 {
 
 class Input
 {
-public:        
-	Input();
+public:
+	Input(sf::RenderWindow& window);
 
     void update();
 
@@ -24,6 +28,9 @@ public:
 	bool isButtonPressed(sf::Mouse::Button button) const;
 	bool isButtonReleased(sf::Mouse::Button button) const;
 	bool isButtonHeld(sf::Mouse::Button button) const;
+
+	sf::Vector2f getMousePos() const;
+
 
 	/*			joystick		*/
 	bool isJoyButtonPressed(unsigned int joyID, unsigned int button) const;
@@ -39,7 +46,7 @@ private:
 	int buttonDown[sf::Mouse::ButtonCount];
 	int joyUp[sf::Joystick::Count][sf::Joystick::ButtonCount];
 	int joyDown[sf::Joystick::Count][sf::Joystick::ButtonCount];
-
+	sf::RenderWindow& window;
 };
 
 }

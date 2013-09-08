@@ -38,7 +38,7 @@ public:
 	bool isActionReleased(const std::string& action) const;
 	bool isActionHeld(const std::string& action) const;
 
-	void addKeybinds(const std::string& action, Bind bind);
+	void addKeybind(const std::string& action, Bind bind);
 	void setKeybinds(const std::string& action, std::initializer_list<Bind> binds);
 	void removeKeybinds(const std::string& action);
 	void removeKeybinds();
@@ -46,6 +46,7 @@ public:
 	/*		joystick specific		*/
 	void setJoystickID(unsigned int id);
 	float getAxis(sf::Joystick::Axis axis) const;
+	sf::Vector2f getMousePos() const;
 
 private:
 	Input& input;

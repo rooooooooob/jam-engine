@@ -1,10 +1,10 @@
-#ifndef RANDOM_HPP
-#define RANDOM_HPP
+#ifndef JE_RANDOM_HPP
+#define JE_RANDOM_HPP
 
 #include <initializer_list>
 #include <cstdlib>
 
-namespace ggj
+namespace je
 {
 
 template <typename T>
@@ -15,6 +15,8 @@ T choose(const std::initializer_list<T>& il)
 }
 
 float randomf(float n);
+
+int random(int n);
 
 }
 

@@ -78,7 +78,7 @@ public:
 
 	void moveCamera(const sf::Vector2f& cameraPosition);
 
-    void parse ();
+    void loadMap(const std::string& filename);
 
 protected:
 	/**
