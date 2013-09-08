@@ -62,6 +62,16 @@ public:
 	 */
 	void addEntity(Entity *instance);
 
+	/**
+	 * Destroys everything in the level
+	 */
+	void clear();
+
+	/**
+	 * Destroys the non-tile layer Entities in the level
+	 */
+	void clearEntities();
+
 	int getWidth() const;
 
 	int getHeight() const;
@@ -132,11 +142,14 @@ protected:
 
 	virtual void transformTiles(const std::string& layerName, int tilesAcross, int tilesHigh, unsigned  **tiles);
 
-private:
+
 
 	std::vector<Entity*> entities;
 	std::map<std::string, TileGrid*> tileLayers;
-	mutable std::vector<sf::Sprite> tileSprites;
+
+private:
+
+	std::vector<sf::Sprite> tileSprites;
 	sf::Rect<int> cameraBounds;
 	int width;
 	int height;

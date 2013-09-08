@@ -31,6 +31,10 @@ float pointDistance(float x1, float y1, float x2, float y2)
     return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
+float pointDirection(const sf::Vector2f& vec)
+{
+	return pointDirection(0, 0, vec.x, vec.y);
+}
 
 float pointDirection(const sf::Vector2f& a, const sf::Vector2f& b)
 {

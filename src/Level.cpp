@@ -29,9 +29,7 @@ Level::Level(Game * const game, const std::string& filename)
 
 Level::~Level()
 {
-	for (auto it = entities.begin(); it != entities.end(); ++it)
-        delete *it;
-    entities.clear();
+	this->clear();
 }
 
 void Level::draw(sf::RenderTarget& target) const
@@ -98,6 +96,39 @@ void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, 
 void Level::addEntity(Entity *instance)
 {
     entities.push_back(instance);
+}
+
+void Level::clear()
+{
+	for (Entity *entity : entities)
+		delete entity;
+	entities.clear();
+	tileLayers.clear();
+    tileSprites.clear();
+}
+
+void Level::clearEntities()
+{
+	bool isTile = false;
+	for (int i = 0; i < entities.size(); ++i)
+	{
+		isTile = false;
+		for (auto& it : tileLayers)
+		{
+			if (entities[i] == it.second)
+			{
+				isTile = true;
+				break;
+			}
+		}
+		if (!isTile)
+		{
+			delete entities[i];
+			entities[i] = entities.back();
+			entities.pop_back();
+			--i;
+		}
+	}
 }
 
 int Level::getWidth() const
@@ -182,16 +213,19 @@ void Level::loadMap(const std::string& filename)
             std::string orientation = attr->value();
             attr = attr->next_attribute("width");
             std::cout << attr->value() << "\n";
-            int width = atoi(attr->value());
+            int mapWidth = atoi(attr->value());
             attr = attr->next_attribute("height");
             std::cout << attr->value() << "\n";
-            int height = atoi(attr->value());
+            int mapHeight = atoi(attr->value());
             attr = attr->next_attribute("tilewidth");
             std::cout << attr->value() << "\n";
             int tileWidth = atoi(attr->value());
             attr = attr->next_attribute("tileheight");
             std::cout << attr->value() << "\n";
             int tileHeight = atoi(attr->value());
+
+			width = mapWidth * tileWidth;
+			height = mapHeight * tileHeight;
 
             for (xml_node<> *tileset = root->first_node("tileset"); tileset; tileset = tileset->next_sibling("tileset"))
             {
