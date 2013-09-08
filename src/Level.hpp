@@ -90,6 +90,15 @@ protected:
 	 */
 	struct EntityPrototype
 	{
+		EntityPrototype()
+			:id(-1)
+			,x(-1)
+			,y(-1)
+			,name("")
+			,type("")
+		{
+		}
+
 		unsigned int id;	//	Tiled object gid
 		int x, y;			//	position
 		std::string name;	//	tiled name field

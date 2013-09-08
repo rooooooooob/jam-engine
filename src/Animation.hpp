@@ -19,6 +19,9 @@ public:
 
 	void draw(sf::RenderTarget& target) const;
 
+	template <typename F>
+	void apply(F function);
+
 private:
 	std::vector<sf::Sprite> frames;
 	std::vector<unsigned int> lengths;
@@ -26,6 +29,13 @@ private:
 	unsigned int frame;
 	bool repeating;
 };
+
+template <typename F>
+void Animation::apply(F function)
+{
+	for (sf::Sprite& sprite : frames)
+		function(sprite);
+}
 
 }
 

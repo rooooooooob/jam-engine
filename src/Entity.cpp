@@ -12,7 +12,17 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
     ,dim(dim)
     ,offset(offset)
     ,dead(false)
+//#ifdef JE_DEBUG
+//	,debugBounds()
+//#endif // JE_DEBUG
 {
+/*#ifdef JE_DEBUG
+	debugBounds.setFillColor(sf::Color::Transparent);
+	debugBounds.setOutlineColor(sf::Color::Red);
+	debugBounds.setOutlineThickness(1);
+	debugBounds.setSize(sf::Vector2f(dim.x, dim.y));
+	debugBounds.setPosition(sf::Vector2f(pos.x - offset.x, pos.y - offset.y));
+#endif // JE_DEBUG*/
 }
 
 Entity::~Entity()
@@ -41,6 +51,24 @@ bool Entity::intersects(const Entity& other, float xoffset, float yoffset) const
     const int top       = pos.y + offset.y + yoffset,     otop    = other.pos.y + other.offset.y;
     const int bottom    = top + dim.y + yoffset,          obottom = otop + other.dim.y;
     return (left <= oright && right > oleft && top <= obottom && bottom > otop);
+}
+
+void Entity::setOffset(int x, int y)
+{
+	offset.x = x;
+	offset.y = y;
+/*#ifdef JE_DEBUG
+	debugBounds.setPosition(pos.x - offset.x, pos.y - offset.y);
+#endif // JE_DEBUG*/
+}
+
+void Entity::setDimensions(int width, int height)
+{
+	dim.x = width;
+	dim.y = height;
+/*#ifdef JE_DEBUG
+	debugBounds.setSize(sf::Vector2f(dim.x, dim.y));
+#endif // JE_DEBUG*/
 }
 
 }

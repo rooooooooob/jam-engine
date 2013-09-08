@@ -292,54 +292,75 @@ void Level::loadMap(const std::string& filename)
                 std::cout << attr->value() << "\n";
                 int objectLayer_Height = atoi(attr->value());
 
+                std::vector<EntityPrototype> prototypes;
+
                 for (xml_node<> *obj = objectgroup->first_node("object"); obj; obj = obj->next_sibling("object"))
                 {
-                    std::cout << obj->name();
+					prototypes.push_back(EntityPrototype());
+                    EntityPrototype& prototype = prototypes.back();
+
+                    //std::cout << obj->name();
                     xml_attribute<> *attr = obj->first_attribute("gid");
                     if (attr)
                     {
-                        std::cout << attr->value() << "\n";
+                        //std::cout << attr->value() << "\n";
                         int gid = atoi (attr->value());
+                        prototype.id = gid;
                     }
-                    else
-                        std::cout << "nigga u broke obj's gid attribute\n";
+                    //else
+                        //std::cout << "nigga u broke obj's gid attribute\n";
 
                     attr = obj->first_attribute ("x");
                     if (attr)
                     {
-                        std::cout << attr->value() << "\n";
+                        //std::cout << attr->value() << "\n";
                         int x = atoi (attr->value());
+                        prototype.x = x;
                     }
-                    else
-                        std::cout << "nigga u broke obj's x attribute\n";
+                    //else
+                        //std::cout << "nigga u broke obj's x attribute\n";
 
                     attr = obj->first_attribute ("y");
                     if (attr)
                     {
-                        std::cout << attr->value() << "\n";
+                        //std::cout << attr->value() << "\n";
                         int y = atoi (attr->value());
+                        prototype.y = y;
                     }
-                    else
-                        std::cout << "nigga u broke obj's y attribute\n";
+                    //else
+                        //std::cout << "nigga u broke obj's y attribute\n";
 
                     attr = obj->first_attribute ("width");
                     if (attr)
                     {
-                        std::cout << attr->value() << "\n";
+                        //std::cout << attr->value() << "\n";
                         int objWidth = atoi (attr->value());
                     }
-                    else
-                        std::cout << "nigga u broke obj's width attribute\n";
+                    //else
+                        //std::cout << "nigga u broke obj's width attribute\n";
 
                     attr = obj->first_attribute ("height");
                     if (attr)
                     {
-                        std::cout << attr->value() << "\n";
+                        //std::cout << attr->value() << "\n";
                         int objHeight = atoi (attr->value());
                     }
-                    else
-                        std::cout << "nigga u broke obj's height attribute\n";
+                    //else
+                        //std::cout << "nigga u broke obj's height attribute\n";
+
+					attr = obj->first_attribute("name");
+					if (attr)
+					{
+						prototype.name = attr->value();
+					}
+					attr = obj->first_attribute("type");
+					if (attr)
+					{
+						prototype.type = attr->value();
+					}
                 }
+                if (!prototypes.empty())
+					this->loadEntities(objectLayer_name, prototypes);
             }
         }
         else

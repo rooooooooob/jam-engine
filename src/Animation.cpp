@@ -10,6 +10,12 @@ Animation::Animation(const sf::Texture& texture, int width, int height, int time
 	,frame(0)
 	,repeating(repeat)
 {
+	int length = texture.getSize().x / width;
+	for (int i = 0, x = 0; i < length; ++i, x += width)
+	{
+		lengths.push_back(time);
+		frames.push_back(sf::Sprite(texture, sf::IntRect(x, 0, width, height)));
+	}
 }
 
 Animation::Animation(const sf::Texture& texture, int width, int height, std::initializer_list<unsigned int> times, bool repeat)
@@ -48,6 +54,12 @@ void Animation::advanceFrame()
 			}
 		}
 	}
+}
+
+void Animation::draw(sf::RenderTarget& target) const
+{
+	if (!frames.empty())//frame >= 0 && frame < frames.size())
+		target.draw(frames[frame]);
 }
 
 }
