@@ -25,6 +25,10 @@ public:
 
 	bool isDead() const;
 
+	int getDepth() const;
+
+	void setDepth(int depth);
+
 	const sf::Vector2f& getPos() const;
 	/*
 	 * Marks the Entity to be destroyed at the end of the current update

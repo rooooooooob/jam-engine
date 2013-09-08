@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <cstring>
+#include <algorithm>
 #include "TexManager.hpp"
 #include "Game.hpp"
 
@@ -34,7 +35,6 @@ Level::~Level()
 
 void Level::draw(sf::RenderTarget& target) const
 {
-
     for (int i = 0; i < entities.size(); ++i)
 	{
 		entities[i]->draw(target);
@@ -75,6 +75,9 @@ void Level::update()
 		bounds.top -= cameraBounds.height / 2;
 		grid.second->setVisibleArea(bounds);
 	}
+	std::sort(entities.begin(), entities.end(), [] (const Entity *a, const Entity *b) -> bool {
+		return a->getDepth() > b->getDepth();
+	});
 }
 
 Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoffset, float yoffset) const

@@ -47,6 +47,16 @@ bool Entity::isDead() const
     return dead;
 }
 
+int Entity::getDepth() const
+{
+	return depth;
+}
+
+void Entity::setDepth(int depth)
+{
+	this->depth = depth;
+}
+
 const sf::Vector2f& Entity::getPos() const
 {
 	return pos;
