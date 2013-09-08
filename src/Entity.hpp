@@ -15,12 +15,17 @@ public:
 	typedef std::string Type;
 	virtual ~Entity();
 
+#ifdef JE_DEBUG
+	void debugDraw(sf::RenderTarget& target);
+#endif
 	virtual void draw(sf::RenderTarget& target) const = 0;
 	virtual void update() = 0;
 
 	const Type& getType() const;
 
 	bool isDead() const;
+
+	const sf::Vector2f& getPos() const;
 	/*
 	 * Marks the Entity to be destroyed at the end of the current update
 	 */
@@ -42,6 +47,7 @@ protected:
 	sf::Vector2f pos;
 	//!The drawing depth for the Entity. Larger depths are drawn first, so lower ones appear on top of higher ones
 	int depth;
+
 private:
 	bool dead;
 	const Type type;
@@ -49,9 +55,9 @@ private:
 	sf::Vector2i dim;
 	//!This is the offset from pos that the Entity's physical bounds is offset by for collisions
 	sf::Vector2i offset;
-/*#ifdef JE_DEBUG
+#ifdef JE_DEBUG
 	sf::RectangleShape debugBounds;
-#endif*/
+#endif
 };
 
 }

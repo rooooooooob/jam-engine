@@ -12,22 +12,30 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
     ,dim(dim)
     ,offset(offset)
     ,dead(false)
-//#ifdef JE_DEBUG
-//	,debugBounds()
-//#endif // JE_DEBUG
+#ifdef JE_DEBUG
+	,debugBounds()
+#endif // JE_DEBUG
 {
-/*#ifdef JE_DEBUG
+#ifdef JE_DEBUG
 	debugBounds.setFillColor(sf::Color::Transparent);
 	debugBounds.setOutlineColor(sf::Color::Red);
 	debugBounds.setOutlineThickness(1);
 	debugBounds.setSize(sf::Vector2f(dim.x, dim.y));
 	debugBounds.setPosition(sf::Vector2f(pos.x - offset.x, pos.y - offset.y));
-#endif // JE_DEBUG*/
+#endif // JE_DEBUG
 }
 
 Entity::~Entity()
 {
 }
+
+#ifdef JE_DEBUG
+void Entity::debugDraw(sf::RenderTarget& target)
+{
+	debugBounds.setPosition(pos.x + offset.x, pos.y + offset.y);
+	target.draw(debugBounds);
+}
+#endif
 
 const std::string& Entity::getType() const
 {
@@ -37,6 +45,11 @@ const std::string& Entity::getType() const
 bool Entity::isDead() const
 {
     return dead;
+}
+
+const sf::Vector2f& Entity::getPos() const
+{
+	return pos;
 }
 
 void Entity::destroy()
@@ -57,18 +70,18 @@ void Entity::setOffset(int x, int y)
 {
 	offset.x = x;
 	offset.y = y;
-/*#ifdef JE_DEBUG
+#ifdef JE_DEBUG
 	debugBounds.setPosition(pos.x - offset.x, pos.y - offset.y);
-#endif // JE_DEBUG*/
+#endif // JE_DEBUG
 }
 
 void Entity::setDimensions(int width, int height)
 {
 	dim.x = width;
 	dim.y = height;
-/*#ifdef JE_DEBUG
+#ifdef JE_DEBUG
 	debugBounds.setSize(sf::Vector2f(dim.x, dim.y));
-#endif // JE_DEBUG*/
+#endif // JE_DEBUG
 }
 
 }

@@ -36,7 +36,12 @@ void Level::draw(sf::RenderTarget& target) const
 {
 
     for (int i = 0; i < entities.size(); ++i)
+	{
 		entities[i]->draw(target);
+#ifdef JE_DEBUG
+		entities[i]->debugDraw(target);
+#endif // JE_DEBUG
+	}
 	onDraw(target);
 	/*std::cout << "tileSprites.size() = " << tileSprites.size() << "\n";
 	for (int i = 0; i < tileSprites.size(); ++i)
