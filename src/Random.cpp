@@ -1,6 +1,6 @@
 #include "Random.hpp"
 
-namespace
+namespace je
 {
 // TODO: make these use <random> and be less crap
 float randomf(float n)
@@ -8,7 +8,7 @@ float randomf(float n)
     return ((rand() % 0xFFFF) / (float) 0xFFFF) * n;
 }
 
-float random(int n)
+int random(int n)
 {
 	return rand() % n;
 }

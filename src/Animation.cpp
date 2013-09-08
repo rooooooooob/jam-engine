@@ -5,6 +5,13 @@
 namespace je
 {
 
+Animation::Animation(const sf::Texture& texture, int width, int height, int time, bool repeat)
+	:frameProgress(0)
+	,frame(0)
+	,repeating(repeat)
+{
+}
+
 Animation::Animation(const sf::Texture& texture, int width, int height, std::initializer_list<unsigned int> times, bool repeat)
 	:frameProgress(0)
 	,frame(0)

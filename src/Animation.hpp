@@ -12,6 +12,7 @@ namespace je
 class Animation
 {
 public:
+	Animation(const sf::Texture& texture, int width, int height, int time, bool repeat = true);
 	Animation(const sf::Texture& texture, int width, int height, std::initializer_list<unsigned int> times, bool repeat = true);
 
 	void advanceFrame();

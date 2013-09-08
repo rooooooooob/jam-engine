@@ -65,6 +65,10 @@ void Level::update()
             ++it;
     }
 	onUpdate();
+	for (auto& grid : tileLayers)
+	{
+		grid.second->setVisibleArea(this->getCameraBounds());
+	}
 }
 
 Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoffset, float yoffset) const
