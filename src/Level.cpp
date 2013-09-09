@@ -39,7 +39,8 @@ void Level::draw(sf::RenderTarget& target) const
 	{
 		entities[i]->draw(target);
 #ifdef JE_DEBUG
-		entities[i]->debugDraw(target);
+		if (cameraBounds.contains(entities[i]->getPos().x + cameraBounds.width / 2, entities[i]->getPos().y + cameraBounds.height / 2))
+			entities[i]->debugDraw(target);
 #endif // JE_DEBUG
 	}
 	onDraw(target);
