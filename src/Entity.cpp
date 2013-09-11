@@ -93,5 +93,9 @@ void Entity::setDimensions(int width, int height)
 	debugBounds.setSize(sf::Vector2f(dim.x, dim.y));
 #endif // JE_DEBUG
 }
+sf::Rect<int> Entity::getBounds() const
+{
+	return sf::Rect<int>(pos.x + offset.x, pos.y + offset.y, dim.x, dim.y);
+}
 
 }

@@ -32,9 +32,10 @@ TileGrid::~TileGrid()
 {
 	for (int i = 0; i < width; ++i)
 	{
-		for (int j = 0; j < height; ++j)
+		//	no need, TileGrid doesn't own these
+		/*for (int j = 0; j < height; ++j)
 			if (tiles[i][j])
-				delete tiles[i][j];
+				delete tiles[i][j];*/
 		delete[] tiles[i];
 	}
 	delete[] tiles;

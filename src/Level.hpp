@@ -47,7 +47,7 @@ public:
 	 * @Param yoffset The vertical offset away from caller to query at
 	 * @return The first Entity found that collides, or nullptr if none were found
 	 */
-	Entity* testCollision(const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0) const;
+	Entity* testCollision(const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
 
 	/**
 	 * Queries the level for collisions
@@ -57,7 +57,7 @@ public:
 	 * @param xoffset The horizontal offset away from caller to query at
 	 * @Param yoffset The vertical offset away from caller to query at
 	 */
-	void findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0) const;
+	void findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
 
 	/**
 	 * Adds an Entity into the Level. The Level now assumes ownership of the Entity
@@ -94,6 +94,8 @@ public:
 	sf::Vector2f getCursorPos() const;
 
     void loadMap(const std::string& filename);
+
+	void debugDrawRect(sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor = sf::Color::Transparent, int outlineThickness = 1);
 
 protected:
 	/**
@@ -157,6 +159,9 @@ private:
 	int width;
 	int height;
 	Game * const game;
+#ifdef JE_DEBUG
+	std::vector<sf::RectangleShape> debugDrawRects;
+#endif
 };
 
 }

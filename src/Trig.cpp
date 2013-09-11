@@ -20,6 +20,10 @@ sf::Vector2f lengthdir(float length, float dir)
     return sf::Vector2f(lengthdirX(length, dir), lengthdirY(length, dir));
 }
 
+float length(const sf::Vector2f& vec)
+{
+	return sqrt(vec.x * vec.x + vec.y * vec.y);
+}
 
 float pointDistance(const sf::Vector2f& a, const sf::Vector2f& b)
 {

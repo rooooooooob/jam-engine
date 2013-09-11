@@ -8,23 +8,25 @@ namespace je
 
 const float pi = 3.14159265;
 
-float lengthdirX(float length, float dir);
+extern float lengthdirX(float length, float dir);
 
-float lengthdirY(float length, float dir);
+extern float lengthdirY(float length, float dir);
 
-sf::Vector2f lengthdir(float length, float dir);
+extern sf::Vector2f lengthdir(float length, float dir);
 
-
-float pointDistance(const sf::Vector2f& a, const sf::Vector2f& b);
-
-float pointDistance(float x1, float y1, float x2, float y2);
+extern float length(const sf::Vector2f& vec);
 
 
-float pointDirection(const sf::Vector2f& a, const sf::Vector2f& b);
+extern float pointDistance(const sf::Vector2f& a, const sf::Vector2f& b);
 
-float pointDirection(const sf::Vector2f& vec);
+extern float pointDistance(float x1, float y1, float x2, float y2);
 
-float pointDirection(float x1, float y1, float x2, float y2);
+
+extern float pointDirection(const sf::Vector2f& a, const sf::Vector2f& b);
+
+extern float pointDirection(const sf::Vector2f& vec);
+
+extern float pointDirection(float x1, float y1, float x2, float y2);
 
 }
 

@@ -41,6 +41,8 @@ public:
 
 	void setDimensions(int width, int height);
 
+	sf::Rect<int> getBounds() const;
+
 protected:
 	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset = sf::Vector2i(0, 0));
 

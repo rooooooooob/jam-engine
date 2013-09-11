@@ -35,15 +35,19 @@ Level::~Level()
 
 void Level::draw(sf::RenderTarget& target) const
 {
-    for (int i = 0; i < entities.size(); ++i)
+    for (unsigned int i = 0; i < entities.size(); ++i)
 	{
 		entities[i]->draw(target);
-#ifdef JE_DEBUG
-		if (cameraBounds.contains(entities[i]->getPos().x + cameraBounds.width / 2, entities[i]->getPos().y + cameraBounds.height / 2))
-			entities[i]->debugDraw(target);
-#endif // JE_DEBUG
 	}
 	onDraw(target);
+
+#ifdef JE_DEBUG
+	for (Entity * entity : entities)
+		if (cameraBounds.contains(entity->getPos().x + cameraBounds.width / 2, entity->getPos().y + cameraBounds.height / 2))
+			entity->debugDraw(target);
+	for (const sf::RectangleShape& rect : debugDrawRects)
+		target.draw(rect);
+#endif
 	/*std::cout << "tileSprites.size() = " << tileSprites.size() << "\n";
 	for (int i = 0; i < tileSprites.size(); ++i)
 	{
@@ -56,7 +60,10 @@ void Level::draw(sf::RenderTarget& target) const
 
 void Level::update()
 {
-    for (int i = 0; i < entities.size(); )
+#ifdef JE_DEBUG
+	debugDrawRects.clear();
+#endif
+    for (unsigned int i = 0; i < entities.size(); )
     {
         entities[i]->update();
         if (entities[i]->isDead())
@@ -81,17 +88,25 @@ void Level::update()
 	});
 }
 
-Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoffset, float yoffset) const
+Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoffset, float yoffset)
 {
+	Entity *retVal = nullptr;
     for (auto it = entities.begin(); it != entities.end(); ++it)
     {
         if (*it != caller && (*it)->getType() == type && caller->intersects(**it, xoffset, yoffset))
-            return *it;
+		{
+			retVal = *it;
+			break;
+		}
     }
-    return nullptr;
+	sf::Rect<int> rect = caller->getBounds();
+	rect.left += xoffset;
+	rect.top += yoffset;
+	this->debugDrawRect(rect, !retVal ? sf::Color::Yellow : sf::Color::Green);
+    return retVal;
 }
 
-void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset, float yoffset) const
+void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset, float yoffset)
 {
 	//	TODO: ADD CULLING
     results.clear();
@@ -100,6 +115,10 @@ void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, 
         if (*it != caller && (*it)->getType() == type && caller->intersects(**it, xoffset, yoffset))
             results.push_back(*it);
     }
+	sf::Rect<int> rect = caller->getBounds();
+	rect.left += xoffset;
+	rect.top += yoffset;
+	this->debugDrawRect(rect, results.empty() ? sf::Color::Yellow : sf::Color::Green);
 }
 
 void Level::addEntity(Entity *instance)
@@ -119,7 +138,7 @@ void Level::clear()
 void Level::clearEntities()
 {
 	bool isTile = false;
-	for (int i = 0; i < entities.size(); ++i)
+	for (unsigned int i = 0; i < entities.size(); ++i)
 	{
 		isTile = false;
 		for (auto& it : tileLayers)
@@ -184,7 +203,11 @@ void Level::moveCamera(const sf::Vector2f& cameraPosition)
 
 sf::Vector2f Level::getCursorPos() const
 {
+//#ifdef STOP_CHANGING_NAMES_LAURENT
+//	sf::Vector2f posI = game->getWindow().convertCoords(sf::Vector2i(sf::Mouse::getPosition().x - game->getWindow().getPosition().x, sf::Mouse::getPosition().y - game->getWindow().getPosition().y));
+//#else
 	sf::Vector2i posI = game->getWindow().mapCoordsToPixel(sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y)) - game->getWindow().getPosition();
+//#endif
 	return sf::Vector2f(posI.x + cameraBounds.left - cameraBounds.width / 2, posI.y + cameraBounds.top - cameraBounds.height / 2);
 }
 
@@ -413,6 +436,18 @@ void Level::loadMap(const std::string& filename)
     {
         std::cout << "couldn't open map\n";
     }
+}
+
+void Level::debugDrawRect(sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor, int outlineThickness)
+{
+#ifdef JE_DEBUG
+	debugDrawRects.push_back(sf::RectangleShape(sf::Vector2f(rect.width, rect.height)));
+	sf::RectangleShape& r = debugDrawRects.back();
+	r.setPosition(rect.left, rect.top);
+	r.setOutlineColor(outlineColor);
+	r.setOutlineThickness(outlineThickness);
+	r.setFillColor(fillColor);
+#endif
 }
 
 /*		protected			*/
