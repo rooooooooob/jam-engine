@@ -15,6 +15,7 @@ TileGrid::TileGrid(Level * const level, int xOffset, int yOffset, int width, int
 	,cellSizeY(cellSizeY)
 	,bBox(xOffset, yOffset, width * cellSizeX, height * cellSizeY)
 {
+	depth = 1;	//	just so that if the user doesn't specify, at least Entities will go above it by default
 	tiles = new sf::Sprite**[width];
 	for (int i = 0; i < width; ++i)
 	{

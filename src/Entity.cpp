@@ -10,6 +10,7 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
 	,type(type)
     ,pos(startPos)
     ,dim(dim)
+	,depth(0)
     ,offset(offset)
     ,dead(false)
 #ifdef JE_DEBUG
