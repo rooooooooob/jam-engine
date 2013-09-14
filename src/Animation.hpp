@@ -18,7 +18,7 @@ public:
 
 	bool isFinished() const;
 
-	void advanceFrame();
+	bool advanceFrame();
 
 	/**
 	 * If animation isn't repeating, then set it back to the start

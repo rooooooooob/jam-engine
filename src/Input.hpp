@@ -18,6 +18,7 @@ public:
 	Input(sf::RenderWindow& window);
 
     void update();
+	void setFocus(bool focus);
 
 	/*			keyboard		*/
     bool isKeyPressed(sf::Keyboard::Key key) const;
@@ -45,6 +46,7 @@ private:
 	int joyUp[sf::Joystick::Count][sf::Joystick::ButtonCount];
 	int joyDown[sf::Joystick::Count][sf::Joystick::ButtonCount];
 	sf::RenderWindow& window;
+	bool focused;
 };
 
 }

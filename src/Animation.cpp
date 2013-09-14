@@ -37,14 +37,15 @@ bool Animation::isFinished() const
 	return !repeating && frame == frames.size() - 1;
 }
 
-void Animation::advanceFrame()
+bool Animation::advanceFrame()
 {
-	if (++frameProgress > lengths[frame])
+	if (++frameProgress >= lengths[frame])
 	{
 		if (frame < lengths.size() - 1)
 		{
 			frameProgress -= lengths[frame];
 			++frame;
+			return true;
 		}
 		else
 		{
@@ -59,6 +60,7 @@ void Animation::advanceFrame()
 			}
 		}
 	}
+	return false;
 }
 
 void Animation::reset()

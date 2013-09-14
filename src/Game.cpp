@@ -32,6 +32,10 @@ int Game::execute()
                 window.close();
 			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				window.close();
+			else if (event.type == sf::Event::GainedFocus)
+				input.setFocus(true);
+			else if (event.type == sf::Event::LostFocus)
+				input.setFocus(false);
         }
 
         window.clear();
