@@ -81,7 +81,7 @@ void TileGrid::draw(sf::RenderTarget& target) const
 	}
 }
 
-void TileGrid::update()
+void TileGrid::onUpdate()
 {
 }
 

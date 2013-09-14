@@ -18,7 +18,7 @@ public:
 
 	void setPos(int x, int y);
 
-	void update() override;
+	void onUpdate() override;
 
 	void draw(sf::RenderTarget& target) const override;
 

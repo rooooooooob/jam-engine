@@ -19,7 +19,7 @@ public:
 	void debugDraw(sf::RenderTarget& target);
 #endif
 	virtual void draw(sf::RenderTarget& target) const = 0;
-	virtual void update() = 0;
+	void update();
 
 	const Type& getType() const;
 
@@ -45,14 +45,17 @@ public:
 
 protected:
 	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset = sf::Vector2i(0, 0));
-
+	virtual void onUpdate() = 0;
 
 	//!The level the Entity is currently in
 	Level * const level;
 	//!The Entity's current position in the current Level
 	sf::Vector2f pos;
+	sf::Vector2f prevPos;
 	//!The drawing depth for the Entity. Larger depths are drawn first, so lower ones appear on top of higher ones
 	int depth;
+
+	void addAutoCollisionCheck(const std::string& type);
 
 private:
 	bool dead;
@@ -64,6 +67,7 @@ private:
 #ifdef JE_DEBUG
 	sf::RectangleShape debugBounds;
 #endif
+	std::vector<std::string> autoCollisionChecks;
 };
 
 }

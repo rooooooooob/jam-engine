@@ -9,6 +9,7 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
     :level(level)
 	,type(type)
     ,pos(startPos)
+	,prevPos(startPos)
     ,dim(dim)
 	,depth(0)
     ,offset(offset)
@@ -37,6 +38,21 @@ void Entity::debugDraw(sf::RenderTarget& target)
 	target.draw(debugBounds);
 }
 #endif
+
+void Entity::update()
+{
+	this->onUpdate();
+
+	for (const std::string typeName : autoCollisionChecks)
+	{
+		if (level->testCollision(this, typeName, 0, 0))
+		{
+			pos = prevPos;
+			break;
+		}
+	}
+	prevPos = pos;
+}
 
 const std::string& Entity::getType() const
 {
@@ -97,6 +113,15 @@ void Entity::setDimensions(int width, int height)
 sf::Rect<int> Entity::getBounds() const
 {
 	return sf::Rect<int>(pos.x + offset.x, pos.y + offset.y, dim.x, dim.y);
+}
+
+/*		protected		*/
+void Entity::addAutoCollisionCheck(const std::string& type)
+{
+	for (const std::string& str : autoCollisionChecks)
+		if (str == type)
+			return;
+	autoCollisionChecks.push_back(type);
 }
 
 }
