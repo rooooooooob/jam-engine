@@ -342,6 +342,12 @@ void Level::loadMap(const std::string& filename)
                     }
                     std::cout << "\n";
                 }*/
+
+                for (int i = 0; i < layerWidth; ++i)
+                {
+                    delete [] tileLayer[i];
+                }
+                delete [] tileLayer;
             }
 
             std::cout << "test\n";
