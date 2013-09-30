@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <SFML/Graphics/RenderStates.hpp>
 #include "rapidxml.hpp"
 #include "Entity.hpp"
 #include "TileGrid.hpp"
@@ -151,6 +152,7 @@ protected:
 
 	std::vector<Entity*> entities;
 	std::map<std::string, TileGrid*> tileLayers;
+	sf::RenderStates states;
 
 private:
 

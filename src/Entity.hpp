@@ -3,6 +3,7 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 
 namespace je
 {
@@ -18,7 +19,7 @@ public:
 #ifdef JE_DEBUG
 	void debugDraw(sf::RenderTarget& target);
 #endif
-	virtual void draw(sf::RenderTarget& target) const = 0;
+	virtual void draw(sf::RenderTarget& target, const sf::RenderStates &states = sf::RenderStates::Default) const = 0;
 	void update();
 
 	const Type& getType() const;

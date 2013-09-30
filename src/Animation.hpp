@@ -25,7 +25,7 @@ public:
 	 */
 	void reset();
 
-	void draw(sf::RenderTarget& target) const;
+	void draw(sf::RenderTarget& target, const sf::RenderStates &states = sf::RenderStates::Default) const;
 
 	template <typename F>
 	void apply(F function);

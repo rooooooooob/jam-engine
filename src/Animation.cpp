@@ -68,10 +68,10 @@ void Animation::reset()
 	frame = 0;
 }
 
-void Animation::draw(sf::RenderTarget& target) const
+void Animation::draw(sf::RenderTarget& target, const sf::RenderStates &states /*= sf::RenderStates::Default*/) const
 {
 	if (!frames.empty())//frame >= 0 && frame < frames.size())
-		target.draw(frames[frame]);
+		target.draw(frames[frame], states);
 }
 
 }

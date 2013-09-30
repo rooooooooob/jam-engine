@@ -16,6 +16,7 @@ Level::Level(Game * const game, int width, int height)
 	:width(width)
 	,height(height)
 	,game(game)
+	,states (sf::RenderStates::Default)
 {
 	tileSprites.push_back(sf::Sprite());	//	empty tile
 }
@@ -24,6 +25,7 @@ Level::Level(Game * const game, const std::string& filename)
 	:width(0)
 	,height(0)
 	,game(game)
+	,states (sf::RenderStates::Default)
 {
 	tileSprites.push_back(sf::Sprite());	//	empty tile (0)
 }
@@ -37,7 +39,7 @@ void Level::draw(sf::RenderTarget& target) const
 {
     for (unsigned int i = 0; i < entities.size(); ++i)
 	{
-		entities[i]->draw(target);
+		entities[i]->draw(target, states);
 	}
 	onDraw(target);
 

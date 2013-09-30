@@ -66,7 +66,7 @@ void TileGrid::setPos(int x, int y)
 	}
 }
 
-void TileGrid::draw(sf::RenderTarget& target) const
+void TileGrid::draw(sf::RenderTarget& target, const sf::RenderStates &states /*= sf::RenderStates::Default*/) const
 {
 	for (int i = visibleTilesByIndices.left; i < visibleTilesByIndices.width; ++i)
 	{
@@ -75,7 +75,7 @@ void TileGrid::draw(sf::RenderTarget& target) const
 			if (tiles[i][j])
 			{
 				tiles[i][j]->setPosition(left + i * cellSizeX, top + j * cellSizeY);
-				target.draw(*tiles[i][j]);
+				target.draw(*tiles[i][j], states);
 			}
 		}
 	}
