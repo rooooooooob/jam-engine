@@ -176,9 +176,9 @@ Game& Level::getGame() const
 	return *game;
 }
 
-const sf::Rect<int>& Level::getCameraBounds() const
+sf::Rect<int> Level::getCameraBounds() const
 {
-	return cameraBounds;
+	return sf::Rect<int>(cameraBounds.left - cameraBounds.width / 2, cameraBounds.top - cameraBounds.height / 2, cameraBounds.width, cameraBounds.height);
 }
 
 void Level::setCameraBounds(const sf::Rect<int>& newBounds)
@@ -205,11 +205,7 @@ void Level::moveCamera(const sf::Vector2f& cameraPosition)
 
 sf::Vector2f Level::getCursorPos() const
 {
-//#ifdef STOP_CHANGING_NAMES_LAURENT
-//	sf::Vector2f posI = game->getWindow().convertCoords(sf::Vector2i(sf::Mouse::getPosition().x - game->getWindow().getPosition().x, sf::Mouse::getPosition().y - game->getWindow().getPosition().y));
-//#else
 	sf::Vector2i posI = game->getWindow().mapCoordsToPixel(sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y)) - game->getWindow().getPosition();
-//#endif
 	return sf::Vector2f(posI.x + cameraBounds.left - cameraBounds.width / 2, posI.y + cameraBounds.top - cameraBounds.height / 2);
 }
 
@@ -294,7 +290,6 @@ void Level::loadMap(const std::string& filename)
             for (xml_node<> *layer = root->first_node("layer"); layer; layer = layer->next_sibling("layer"))
             {
                 xml_attribute<> *attr = layer->first_attribute();
-                std::cout << "fgdsg" << attr->value() << "\n";
                 std::string tileLayerName = attr->value();
                 attr = attr->next_attribute();
                 std::cout << attr->value() << "\n";
@@ -373,54 +368,39 @@ void Level::loadMap(const std::string& filename)
 					prototypes.push_back(EntityPrototype());
                     EntityPrototype& prototype = prototypes.back();
 
-                    //std::cout << obj->name();
                     xml_attribute<> *attr = obj->first_attribute("gid");
                     if (attr)
                     {
-                        //std::cout << attr->value() << "\n";
                         int gid = atoi (attr->value());
                         prototype.id = gid;
                     }
-                    //else
-                        //std::cout << "nigga u broke obj's gid attribute\n";
 
                     attr = obj->first_attribute ("x");
                     if (attr)
                     {
-                        //std::cout << attr->value() << "\n";
                         int x = atoi (attr->value());
                         prototype.x = x;
                     }
-                    //else
-                        //std::cout << "nigga u broke obj's x attribute\n";
 
                     attr = obj->first_attribute ("y");
                     if (attr)
                     {
-                        //std::cout << attr->value() << "\n";
                         int y = atoi (attr->value());
                         prototype.y = y;
                     }
-                    //else
-                        //std::cout << "nigga u broke obj's y attribute\n";
 
                     attr = obj->first_attribute ("width");
                     if (attr)
                     {
-                        //std::cout << attr->value() << "\n";
                         int objWidth = atoi (attr->value());
                     }
-                    //else
-                        //std::cout << "nigga u broke obj's width attribute\n";
+
 
                     attr = obj->first_attribute ("height");
                     if (attr)
                     {
-                        //std::cout << attr->value() << "\n";
                         int objHeight = atoi (attr->value());
                     }
-                    //else
-                        //std::cout << "nigga u broke obj's height attribute\n";
 
 					attr = obj->first_attribute("name");
 					if (attr)
@@ -432,18 +412,18 @@ void Level::loadMap(const std::string& filename)
 					{
 						prototype.type = attr->value();
 					}
-                }
-                if (!prototypes.empty())
+				}
+				if (!prototypes.empty())
 					this->loadEntities(objectLayer_name, prototypes);
-            }
-        }
-        else
-            std::cout << "nigga u broke somthin' in da map\n";
-    }
-    else
-    {
-        std::cout << "couldn't open map\n";
-    }
+				}
+			}
+			else
+				std::cerr << "error: Max sucks at writing error messages.\n";
+		}
+		else
+		{
+			std::cerr << "couldn't open map\n";
+		}
 }
 
 void Level::debugDrawRect(sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor, int outlineThickness)
