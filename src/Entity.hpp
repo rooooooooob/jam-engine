@@ -40,7 +40,11 @@ public:
 
 	void setOffset(int x, int y);
 
+	sf::Vector2i getOffset () const;
+
 	void setDimensions(int width, int height);
+
+	sf::Vector2i getDimensions () const;
 
 	sf::Rect<int> getBounds() const;
 
