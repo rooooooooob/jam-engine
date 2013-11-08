@@ -14,7 +14,7 @@ Input::Input(sf::RenderWindow& window)
 	:window(window)
 	,focused(true)
 {
-    for (int& i : keyUp)
+	for (int& i : keyUp)
 		i = 0;
 	for (int& i : keyDown)
 		i = 0;
@@ -91,49 +91,49 @@ void Input::setFocus(bool focus)
 /*			keyboard			*/
 bool Input::isKeyPressed(sf::Keyboard::Key key) const
 {
-    return focused && keyUp[key] == 1;
+	return focused && keyUp[key] == 1;
 }
 
 bool Input::isKeyReleased(sf::Keyboard::Key key) const
 {
-    return focused && keyDown[key] == 1;
+	return focused && keyDown[key] == 1;
 }
 
 bool Input::isKeyHeld(sf::Keyboard::Key key) const
 {
-    return focused && keyDown[key] == 2;
+	return focused && keyDown[key] == 2;
 }
 
 /*			mouse				*/
 bool Input::isButtonPressed(sf::Mouse::Button button) const
 {
-    return focused && buttonUp[button] == 1;
+	return focused && buttonUp[button] == 1;
 }
 
 bool Input::isButtonReleased(sf::Mouse::Button button) const
 {
-    return focused && buttonDown[button] == 1;
+	return focused && buttonDown[button] == 1;
 }
 
 bool Input::isButtonHeld(sf::Mouse::Button button) const
 {
-    return focused && buttonDown[button] == 2;
+	return focused && buttonDown[button] == 2;
 }
 
 /*			joystick			*/
 bool Input::isJoyButtonPressed(unsigned int joyID, unsigned int button) const
 {
-    return focused && joyUp[joyID][button] == 1;
+	return focused && joyUp[joyID][button] == 1;
 }
 
 bool Input::isJoyButtonReleased(unsigned int joyID, unsigned int button) const
 {
-    return focused && joyDown[joyID][button] == 1;
+	return focused && joyDown[joyID][button] == 1;
 }
 
 bool Input::isJoyButtonHeld(unsigned int joyID, unsigned int button) const
 {
-    return focused && joyDown[joyID][button] == 2;
+	return focused && joyDown[joyID][button] == 2;
 }
 float Input::axis(int joyID, sf::Joystick::Axis axis) const
 {

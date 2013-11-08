@@ -17,13 +17,13 @@ class Input
 public:
 	Input(sf::RenderWindow& window);
 
-    void update();
+	void update();
 	void setFocus(bool focus);
 
 	/*			keyboard		*/
-    bool isKeyPressed(sf::Keyboard::Key key) const;
-    bool isKeyReleased(sf::Keyboard::Key key) const;
-    bool isKeyHeld(sf::Keyboard::Key key) const;
+	bool isKeyPressed(sf::Keyboard::Key key) const;
+	bool isKeyReleased(sf::Keyboard::Key key) const;
+	bool isKeyHeld(sf::Keyboard::Key key) const;
 
 	/*			mouse			*/
 	bool isButtonPressed(sf::Mouse::Button button) const;
@@ -36,7 +36,7 @@ public:
 	bool isJoyButtonReleased(unsigned int joyID, unsigned int button) const;
 	bool isJoyButtonHeld(unsigned int JoyID, unsigned int button) const;
 
-    float axis(int joyID, sf::Joystick::Axis axis) const ;
+	float axis(int joyID, sf::Joystick::Axis axis) const ;
 
 private:
 	int buttonUp[sf::Mouse::ButtonCount];

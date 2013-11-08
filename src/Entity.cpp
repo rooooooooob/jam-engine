@@ -6,14 +6,14 @@ namespace je
 {
 
 Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset)
-    :level(level)
+	:level(level)
 	,type(type)
-    ,pos(startPos)
+	,pos(startPos)
 	,prevPos(startPos)
-    ,dim(dim)
+	,dim(dim)
 	,depth(0)
-    ,offset(offset)
-    ,dead(false)
+	,offset(offset)
+	,dead(false)
 #ifdef JE_DEBUG
 	,debugBounds()
 #endif // JE_DEBUG
@@ -61,7 +61,7 @@ const std::string& Entity::getType() const
 
 bool Entity::isDead() const
 {
-    return dead;
+	return dead;
 }
 
 int Entity::getDepth() const
@@ -81,16 +81,16 @@ const sf::Vector2f& Entity::getPos() const
 
 void Entity::destroy()
 {
-    dead = true;
+	dead = true;
 }
 
 bool Entity::intersects(const Entity& other, float xoffset, float yoffset) const
 {
-    const int left      = pos.x + offset.x + xoffset,     oleft   = other.pos.x + other.offset.x;
-    const int right     = left + dim.x,                   oright  = oleft + other.dim.x;
-    const int top       = pos.y + offset.y + yoffset,     otop    = other.pos.y + other.offset.y;
-    const int bottom    = top + dim.y,                    obottom = otop + other.dim.y;
-    return (left <= oright && right > oleft && top <= obottom && bottom > otop);
+	const int left	  = pos.x + offset.x + xoffset,	 oleft   = other.pos.x + other.offset.x;
+	const int right	 = left + dim.x,				   oright  = oleft + other.dim.x;
+	const int top	   = pos.y + offset.y + yoffset,	 otop	= other.pos.y + other.offset.y;
+	const int bottom	= top + dim.y,					obottom = otop + other.dim.y;
+	return (left <= oright && right > oleft && top <= obottom && bottom > otop);
 }
 
 void Entity::setOffset(int x, int y)
@@ -113,12 +113,12 @@ void Entity::setDimensions(int width, int height)
 
 sf::Vector2i Entity::getOffset() const
 {
-    return offset;
+	return offset;
 }
 
 sf::Vector2i Entity::getDimensions() const
 {
-    return dim;
+	return dim;
 }
 
 sf::Rect<int> Entity::getBounds() const

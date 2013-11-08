@@ -23,6 +23,8 @@ public:
 
 	void setTitle(const std::string& title);
 
+	bool isFocused() const;
+
 	Input& getInput();
 
 	TexManager& getTexManager();
@@ -36,6 +38,7 @@ private:
 	std::string title;
 	Input input;
 	TexManager texMan;
+	bool focused;
 };
 
 }

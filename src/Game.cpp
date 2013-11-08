@@ -11,6 +11,7 @@ Game::Game(int width, int height, int framerate)
 	,view(sf::Vector2f(width / 2, height / 2), sf::Vector2f(width, height))
 	,level(nullptr)
 	,input(window)
+	,focused(true)
 {
 	window.setFramerateLimit(framerate);
 }
@@ -24,21 +25,21 @@ Game::~Game()
 int Game::execute()
 {
 	while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
 			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				window.close();
 			else if (event.type == sf::Event::GainedFocus)
-				input.setFocus(true);
+				focused = true;
 			else if (event.type == sf::Event::LostFocus)
-				input.setFocus(false);
-        }
+				focused = false;
+		}
 
-        window.clear();
+		window.clear();
 
 		input.update();
 
@@ -57,10 +58,10 @@ int Game::execute()
 			level->drawGUI(window);
 		}
 
-        window.display();
-    }
+		window.display();
+	}
 
-    return 0;
+	return 0;
 }
 
 void Game::setLevel(Level *level)

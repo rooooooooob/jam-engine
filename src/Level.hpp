@@ -82,7 +82,7 @@ public:
 
 	Game& getGame() const;
 
-	const sf::Rect<int>& getCameraBounds() const;
+	sf::Rect<int> getCameraBounds() const;
 
 	void setCameraBounds(const sf::Rect<int>& newBounds);
 
@@ -94,7 +94,7 @@ public:
 
 	sf::Vector2f getCursorPos() const;
 
-    void loadMap(const std::string& filename);
+	void loadMap(const std::string& filename);
 
 	void debugDrawRect(sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor = sf::Color::Transparent, int outlineThickness = 1);
 

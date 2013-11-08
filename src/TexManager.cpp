@@ -1,7 +1,7 @@
 #include "TexManager.hpp"
 
 #ifdef JE_DEBUG
-    #include <iostream>
+	#include <iostream>
 #endif
 
 namespace je
@@ -14,21 +14,21 @@ TexManager::TexManager()
 
 TexManager::~TexManager()
 {
-    for (auto it = textures.begin(); it != textures.end(); ++it)
-        delete it->second;
+	for (auto it = textures.begin(); it != textures.end(); ++it)
+		delete it->second;
 }
 
 const sf::Texture& TexManager::get(const std::string& id)
 {
-    if (!textures[id])
-    {
-        textures[id] = new sf::Texture();
-        textures[id]->loadFromFile(path + id);
+	if (!textures[id])
+	{
+		textures[id] = new sf::Texture();
+		textures[id]->loadFromFile(path + id);
 #ifdef JE_DEBUG
-        std::cout << "Loaded " << id << std::endl;
+		std::cout << "Loaded " << id << std::endl;
 #endif
-    }
-    return *textures[id];
+	}
+	return *textures[id];
 }
 
 void TexManager::setPath(const std::string& pathname)

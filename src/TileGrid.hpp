@@ -30,10 +30,10 @@ private:
 	void recalculateVisibleTiles();
 
 	sf::Sprite ***tiles;
-	int left;       //  in pixels
-	int top;        //  in pixels
-	int width;      //  in tiles
-	int height;     //  in tiles
+	int left;	   //  in pixels
+	int top;		//  in pixels
+	int width;	  //  in tiles
+	int height;	 //  in tiles
 	int cellSizeX;  //  in pixels
 	int cellSizeY;  //  in pixels
 	sf::Rect<int> bBox;

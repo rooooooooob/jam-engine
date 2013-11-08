@@ -100,7 +100,7 @@ void TileGrid::setVisibleArea(const sf::Rect<int>& bBox)
 	}
 }
 
-/*      TileGrid private methods        */
+/*	  TileGrid private methods		*/
 void TileGrid::recalculateVisibleTiles()
 {
 	visibleTilesByIndices.left = 0;
