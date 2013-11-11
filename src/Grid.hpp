@@ -140,32 +140,32 @@ Grid<T>& Grid<T>::operator=Grid(const Grid<T>& rhs)
 
 typename Grid<T>::Iterator Grid<T>::begin()
 {
-	return Iterator(*this, 0, 0);
+	return Iterator(data);
 }
 
 typename Grid<T>::Iterator Grid<T>::end()
 {
-	return Iterator(*this, 0, height);
+	return Iterator(data + width * height);
 }
 
 typename Grid<T>::ConstIterator Grid<T>::begin() const
 {
-	return ConstIterator(*this, 0, 0);
+	return ConstIterator(data);
 }
 
 typename Grid<T>::ConstIterator Grid<T>::end() const
 {
-	return ConstIterator(*this, 0, height);
+	return ConstIterator(data + width * height);
 }
 
 typename Grid<T>::ConstIterator Grid<T>::cbegin() const
 {
-	return ConstIterator(*this, 0, 0);
+	return ConstIterator(data);
 }
 
 typename Grid<T>::ConstIterator Grid<T>::cend() const
 {
-	return ConstIterator(*this, 0, height);
+	return ConstIterator(data + width * height);
 }
 
 template <typename T>
@@ -212,166 +212,114 @@ const T& Grid<T>::get(int x, int y) const
 	--------------------------------
 */
 template <typename T>
-Grid<T>::Iterator::Iterator(Grid<T>& owner, int x = 0, int y = 0)
-	:owner(owner)
-	,x(x)
-	,y(y)
+Grid<T>::Iterator::Iterator(T *data)
+	:data(data)
 {
 }
 
 template <typename T>	
 bool Grid<T>::Iterator::operator==(const Iterator& rhs) const
 {
-	return x == rhs.x && y == rhs.y && &owner == &(rhs.owner);
+	return data == rhs.data;
 }
 
 template <typename T>
 bool Grid<T>::Iterator::operator!=(const Iterator& rhs) const
 {
-	return x != rhs.x || y != rhs.y || &owner != &(rhs.owner);
+	return data != rhs.data;
 }
 
 template <typename T>
 T& Grid<T>::Iterator::operator*() const
 {
-	return owner.get(x, y);
+	return *data;
 }
 
 template <typename T>
 T* Grid<T>::Iterator::operator->() const
 {
-	return &owner.get(x, y);
+	return data;
 }
 
 template <typename T>
 typename Grid<T>::Iterator& Grid<T>::Iterator::operator++()
 {
-	++x;
-	while (x >= owner.width)
-	{
-		x -= owner.width;
-		++y;
-	}
+	++data;
 	return *this;
 }
 
 template <typename T>
 typename Grid<T>::Iterator Grid<T>::Iterator::operator++(int)
 {
-	Iterator ret(*this);
-	++x;
-	while (x >= owner.width)
-	{
-		x -= owner.width;
-		++y;
-	}
-	return ret;
+	return Iterator(data++);
 }
 
 template <typename T>
 typename Grid<T>::Iterator& Grid<T>::Iterator::operator--()
 {
-	--x;
-	while (x < 0)
-	{
-		x += owner.width;
-		--y;
-	}
+	--data;
 	return *this;
 }
 
 template <typename T>
 typename Grid<T>::Iterator Grid<T>::Iterator::operator--(int)
 {
-	Iterator ret(*this);
-	--x;
-	while (x < 0)
-	{
-		x += owner.width;
-		--y;
-	}
-	return ret;
+	return Iterator(data--);
 }
 /*				const iterator					*/
 template <typename T>
-Grid<T>::ConstIterator::ConstIterator(Grid<T>& owner, int x = 0, int y = 0)
-	:owner(owner)
-	,x(x)
-	,y(y)
+Grid<T>::ConstIterator::ConstIterator(const T *data)
+	:data(data)
 {
 }
 
 template <typename T>	
 bool Grid<T>::ConstIterator::operator==(const ConstIterator& rhs) const
 {
-	return x == rhs.x && y == rhs.y && &owner == &(rhs.owner);
+	return data == rhs.data;
 }
 
 template <typename T>
 bool Grid<T>::ConstIterator::operator!=(const ConstIterator& rhs) const
 {
-	return x != rhs.x || y != rhs.y || &owner != &(rhs.owner);
+	return data != rhs.data
 }
 
 template <typename T>
 T& Grid<T>::ConstIterator::operator*() const
 {
-	return owner.get(x, y);
+	return *data;
 }
 
 template <typename T>
 T* Grid<T>::ConstIterator::operator->() const
 {
-	return &owner.get(x, y);
+	return data;
 }
 
 template <typename T>
 typename Grid<T>::ConstIterator& Grid<T>::ConstIterator::operator++()
 {
-	++x;
-	while (x >= owner.width)
-	{
-		x -= owner.width;
-		++y;
-	}
+	++data;
 	return *this;
 }
 
 template <typename T>
 typename Grid<T>::ConstIterator Grid<T>::ConstIterator::operator++(int)
 {
-	ConstIterator ret(*this);
-	++x;
-	while (x >= owner.width)
-	{
-		x -= owner.width;
-		++y;
-	}
-	return ret;
+	return ConstIterator(data++);
 }
 
 template <typename T>
 typename Grid<T>::ConstIterator& Grid<T>::ConstIterator::operator--()
 {
-	--x;
-	while (x < 0)
-	{
-		x += owner.width;
-		--y;
-	}
+	--data;
 	return *this;
 }
 
 template <typename T>
 typename Grid<T>::ConstIterator Grid<T>::ConstIterator::operator--(int)
 {
-	ConstIterator ret(*this);
-	--x;
-	while (x < 0)
-	{
-		x += owner.width;
-		--y;
-	}
-	return ret;
+	return ConstIterator(data--);
 }
 #endif
