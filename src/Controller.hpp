@@ -47,7 +47,7 @@ public:
 
 	/*		joystick specific		*/
 	void setJoystickID(unsigned int id);
-	float axisValue(sf::Joystick::Axis axis) const;
+	float axisPos(sf::Joystick::Axis axis) const;
 
 	Bind getLastInputAsBind() const;
 

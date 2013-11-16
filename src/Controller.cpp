@@ -118,9 +118,9 @@ void Controller::setJoystickID(unsigned int id)
 	joyID = id;
 }
 
-float Controller::axisValue(sf::Joystick::Axis axis) const
+float Controller::axisPos(sf::Joystick::Axis axis) const
 {
-	return input.axisValue(joyID, axis);
+	return input.axisPos(joyID, axis);
 }
 
 Controller::Bind Controller::getLastInputAsBind() const

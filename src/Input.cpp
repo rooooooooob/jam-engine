@@ -12,7 +12,7 @@
 namespace je
 {
 
-const float Input::JoyAxisThreshhold = 0.3;
+const float Input::JoyAxisThreshhold = 0.2;
 
 Input::Input(sf::RenderWindow& window)
 	:window(window)
@@ -172,7 +172,7 @@ bool Input::isJoyButtonHeld(unsigned int joyID, unsigned int button) const
 	return focused && joyDown[joyID][button] == 2;
 }
 
-bool Input::testJoyButton(int joyID, unsigned int& button) const
+bool Input::testJoyButton(unsigned int joyID, unsigned int& button) const
 {
 	if (focused)
 	{
@@ -188,18 +188,40 @@ bool Input::testJoyButton(int joyID, unsigned int& button) const
 	return false;
 }
 
-float Input::axisValue(int joyID, sf::Joystick::Axis axis) const
+float Input::axisPos(unsigned int joyID, sf::Joystick::Axis axis) const
 {
-	return sf::Joystick::getAxisPosition(joyID, axis) / 100.f;
+	if (!sf::Joystick::hasAxis(joyID, axis))
+		return 0;
+	int val = sf::Joystick::getAxisPosition(joyID, axis);
+	if (axis > 101 || axis < -101) // between -100 and 100 my ass, SFML!
+		return 0;
+	return val / 100.f;
 }
 
 bool Input::findController(unsigned int& joyID) const
 {
-
-	return false;
+	sf::Joystick::Axis axis;//just here so we can call testAxis()
+	int foundCount = 0;
+	for (unsigned int i = 0; i < sf::Joystick::Count; ++i)
+	{
+		unsigned int foo;//just here so we can call testJoyButton()
+		if (testJoyButton(i, foo))
+		{
+			joyID = i;
+			++foundCount;
+		}
+		else if (testAxis(i, axis))
+		{
+			joyID = i;
+			++foundCount;
+		}
+	}
+	//if multiple ones are pressing shit then mark the input as invalid
+	//and obviously if none were pressed then nothing was found
+	return foundCount == 1;
 }
 
-bool Input::testAxis(int joyID, sf::Joystick::Axis& output) const
+bool Input::testAxis(unsigned int joyID, sf::Joystick::Axis& output) const
 {
 	std::initializer_list<sf::Joystick::Axis> axes = {
 		sf::Joystick::Axis::X,
@@ -213,7 +235,7 @@ bool Input::testAxis(int joyID, sf::Joystick::Axis& output) const
 	};
 	for (sf::Joystick::Axis axis : axes)
 	{
-		if (abs(this->axisValue(joyID, axis)) > JoyAxisThreshhold)
+		if (abs(this->axisPos(joyID, axis)) > JoyAxisThreshhold)
 		{
 			output = axis;
 			return true;

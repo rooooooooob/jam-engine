@@ -46,10 +46,10 @@ public:
 	 # @param button Which button was pressed (OUTPUT - invalid if returns false)
 	 * @return whether or not any joystick was pressing any button
 	 */
-	bool testJoyButton(int joyID, unsigned int& button) const;
+	bool testJoyButton(unsigned int joyID, unsigned int& button) const;
 
 
-	float axisValue(int joyID, sf::Joystick::Axis axis) const ;
+	float axisPos(unsigned int joyID, sf::Joystick::Axis axis) const ;
 
 	/**
 	 * Checks which joystick is currently pressing buttons
@@ -64,7 +64,7 @@ public:
 	 * @param output Which axis was pressed (OUTPUT - invalid if returns false)
 	 * @return whether or not any joystick was pressing any axis
 	 */
-	bool testAxis(int joyID, sf::Joystick::Axis& output) const;
+	bool testAxis(unsigned int joyID, sf::Joystick::Axis& output) const;
 
 private:
 	int buttonUp[sf::Mouse::ButtonCount];
