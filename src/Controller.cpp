@@ -3,6 +3,11 @@
 namespace je
 {
 /*			bind			*/
+Controller::Bind::Bind()
+	:key(0)
+	,device(Device::Invalid)
+{
+}
 Controller::Bind::Bind(sf::Keyboard::Key key)
 	:key(key)
 	,device(Device::Keyboard)
@@ -116,6 +121,11 @@ void Controller::setJoystickID(unsigned int id)
 float Controller::getAxis(sf::Joystick::Axis axis) const
 {
 	return input.axis(joyID, axis);
+}
+
+Controller::Bind Controller::getLastInputAsBind() const
+{
+	return Bind();
 }
 
 }

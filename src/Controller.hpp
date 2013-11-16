@@ -22,8 +22,10 @@ public:
 		{
 			Keyboard,
 			Mouse,
-			Joystick
+			Joystick,
+			Invalid
 		};
+		Bind();
 		explicit Bind(sf::Keyboard::Key key);
 		explicit Bind(sf::Mouse::Button button);
 		explicit Bind(unsigned int joystickButton);
@@ -46,6 +48,8 @@ public:
 	/*		joystick specific		*/
 	void setJoystickID(unsigned int id);
 	float getAxis(sf::Joystick::Axis axis) const;
+
+	Bind getLastInputAsBind() const;
 
 private:
 	Input& input;

@@ -104,6 +104,11 @@ bool Input::isKeyHeld(sf::Keyboard::Key key) const
 	return focused && keyDown[key] == 2;
 }
 
+bool Input::testKey(sf::Keyboard::Key& output)
+{
+	return false;
+}
+
 /*			mouse				*/
 bool Input::isButtonPressed(sf::Mouse::Button button) const
 {
@@ -118,6 +123,11 @@ bool Input::isButtonReleased(sf::Mouse::Button button) const
 bool Input::isButtonHeld(sf::Mouse::Button button) const
 {
 	return focused && buttonDown[button] == 2;
+}
+
+bool Input::testButton(sf::Mouse::Button& output)
+{
+	return false;
 }
 
 /*			joystick			*/
@@ -135,9 +145,25 @@ bool Input::isJoyButtonHeld(unsigned int joyID, unsigned int button) const
 {
 	return focused && joyDown[joyID][button] == 2;
 }
+
+bool Input::testJoyButton(int joyID, unsigned int& button) const
+{
+	return false;
+}
+
 float Input::axis(int joyID, sf::Joystick::Axis axis) const
 {
 	return sf::Joystick::getAxisPosition(joyID, axis) / 100.f;
+}
+
+bool Input::findController(unsigned int& joyID) const
+{
+	return false;
+}
+
+bool Input::testAxis(int joyID, sf::Joystick::Axis& axis) const
+{
+	return false;
 }
 
 }

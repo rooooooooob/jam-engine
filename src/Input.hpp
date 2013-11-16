@@ -32,7 +32,7 @@ public:
 	bool isButtonReleased(sf::Mouse::Button button) const;
 	bool isButtonHeld(sf::Mouse::Button button) const;
 	
-	bool testButton(sf::Mouse::button& output);
+	bool testButton(sf::Mouse::Button& output);
 
 	/*			joystick		*/
 	bool isJoyButtonPressed(unsigned int joyID, unsigned int button) const;
