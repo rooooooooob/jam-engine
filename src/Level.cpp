@@ -37,6 +37,7 @@ Level::~Level()
 
 void Level::draw(sf::RenderTarget& target) const
 {
+	beforeDraw(target);
 	for (unsigned int i = 0; i < entities.size(); ++i)
 	{
 		entities[i]->draw(target, states);
@@ -446,6 +447,11 @@ void Level::onUpdate()
 }
 
 void Level::onDraw(sf::RenderTarget& target) const
+{
+	//	purposefully empty - meant for subclass-specific behaviour
+}
+
+void Level::beforeDraw(sf::RenderTarget& target) const
 {
 	//	purposefully empty - meant for subclass-specific behaviour
 }

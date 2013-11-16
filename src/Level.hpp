@@ -125,6 +125,8 @@ protected:
 
 	virtual void onDraw(sf::RenderTarget& target) const;
 
+	virtual void beforeDraw(sf::RenderTarget& target) const;
+
 	/**
 	 * Defines how to handle the tile layers when maps are loaded. If this isn't overridden
 	 * then TileMaps will be created and added to the level using layerName as the texture filename.
