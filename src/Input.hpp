@@ -5,6 +5,8 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 
+#define AXES 8
+
 namespace sf
 {
 class RenderWindow;
@@ -15,7 +17,8 @@ namespace je
 class Input
 {
 public:
-	static const float JoyAxisThreshhold;
+	static const float joyAxisThreshhold;
+
 	Input(sf::RenderWindow& window);
 
 	void update();
@@ -48,8 +51,11 @@ public:
 	 */
 	bool testJoyButton(unsigned int joyID, unsigned int& button) const;
 
+	bool isJoyAxisPressed(unsigned int joyID, sf::Joystick::Axis axis, bool negative = false) const;
+	bool isJoyAxisReleased(unsigned int joyID, sf::Joystick::Axis axis, bool negative = false) const;
+	bool isJoyAxisHeld(unsigned int joyID, sf::Joystick::Axis axis, bool negative = false) const;
 
-	float axisPos(unsigned int joyID, sf::Joystick::Axis axis) const ;
+	float axisPos(unsigned int joyID, sf::Joystick::Axis axis) const;
 
 	/**
 	 * Checks which joystick is currently pressing buttons
@@ -73,6 +79,10 @@ private:
 	int keyDown[sf::Keyboard::KeyCount];
 	int joyUp[sf::Joystick::Count][sf::Joystick::ButtonCount];
 	int joyDown[sf::Joystick::Count][sf::Joystick::ButtonCount];
+	int posAxisUp[sf::Joystick::Count][AXES];
+	int posAxisDown[sf::Joystick::Count][AXES];
+	int negAxisUp[sf::Joystick::Count][AXES];
+	int negAxisDown[sf::Joystick::Count][AXES];
 	sf::RenderWindow& window;
 	bool focused;
 };

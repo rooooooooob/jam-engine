@@ -12,7 +12,7 @@
 namespace je
 {
 
-const float Input::JoyAxisThreshhold = 0.2;
+const float Input::joyAxisThreshhold = 0.2;
 
 Input::Input(sf::RenderWindow& window)
 	:window(window)
@@ -31,6 +31,14 @@ Input::Input(sf::RenderWindow& window)
 		for (int& i : joyUp[joystick])
 			i = 0;
 		for (int& i : joyDown[joystick])
+			i = 0;
+		for (int& i : posAxisUp[joystick])
+			i = 0;
+		for (int& i : posAxisDown[joystick])
+			i = 0;
+		for (int& i : negAxisUp[joystick])
+			i = 0;
+		for (int& i : negAxisDown[joystick])
 			i = 0;
 	}
 }
@@ -82,6 +90,33 @@ void Input::update()
 				joyUp[joystick][button] = 2;
 				if (joyDown[joystick][button] > 0)
 					--joyDown[joystick][button];
+			}
+		}
+		for (int axis = 0; axis < AXES; ++axis)
+		{
+			if (axisPos(joystick, (sf::Joystick::Axis) axis) > joyAxisThreshhold)
+			{
+				posAxisDown[joystick][axis] = 2;
+				if (posAxisUp[joystick][axis] > 0)
+					--posAxisUp[joystick][axis];
+			}
+			else
+			{
+				posAxisUp[joystick][axis] = 2;
+				if (posAxisDown[joystick][axis] > 0)
+					--posAxisDown[joystick][axis];
+			}
+			if (axisPos(joystick, (sf::Joystick::Axis) axis) < -joyAxisThreshhold)
+			{
+				negAxisDown[joystick][axis] = 2;
+				if (negAxisUp[joystick][axis] > 0)
+					--negAxisUp[joystick][axis];
+			}
+			else
+			{
+				negAxisUp[joystick][axis] = 2;
+				if (negAxisDown[joystick][axis] > 0)
+					--negAxisDown[joystick][axis];
 			}
 		}
 	}
@@ -188,6 +223,21 @@ bool Input::testJoyButton(unsigned int joyID, unsigned int& button) const
 	return false;
 }
 
+bool Input::isJoyAxisPressed(unsigned int joyID, sf::Joystick::Axis axis, bool negative) const
+{
+	return focused && (negative ? negAxisUp : posAxisUp)[joyID][axis] == 1;
+}
+
+bool Input::isJoyAxisReleased(unsigned int joyID, sf::Joystick::Axis axis, bool negative) const
+{
+	return focused && (negative ? negAxisDown : posAxisDown)[joyID][axis] == 1;
+}
+
+bool Input::isJoyAxisHeld(unsigned int joyID, sf::Joystick::Axis axis, bool negative) const
+{
+	return focused && (negative ? negAxisDown : posAxisDown)[joyID][axis] == 2;
+}
+
 float Input::axisPos(unsigned int joyID, sf::Joystick::Axis axis) const
 {
 	if (!sf::Joystick::hasAxis(joyID, axis))
@@ -235,7 +285,7 @@ bool Input::testAxis(unsigned int joyID, sf::Joystick::Axis& output) const
 	};
 	for (sf::Joystick::Axis axis : axes)
 	{
-		if (abs(this->axisPos(joyID, axis)) > JoyAxisThreshhold)
+		if (abs(this->axisPos(joyID, axis)) > joyAxisThreshhold)
 		{
 			output = axis;
 			return true;

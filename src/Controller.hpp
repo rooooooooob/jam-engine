@@ -23,15 +23,18 @@ public:
 			Keyboard,
 			Mouse,
 			Joystick,
+			JoyAxis,
 			Invalid
 		};
 		Bind();
 		explicit Bind(sf::Keyboard::Key key);
 		explicit Bind(sf::Mouse::Button button);
 		explicit Bind(unsigned int joystickButton);
+		explicit Bind(sf::Joystick::Axis axis, bool reversed = false);
 
 		const unsigned int key;
 		const Device device;
+		const bool reversed;
 	};
 
 	Controller(Input& input, unsigned int joyID = 0);
@@ -47,7 +50,7 @@ public:
 
 	/*		joystick specific		*/
 	void setJoystickID(unsigned int id);
-	float axisPos(sf::Joystick::Axis axis) const;
+	float axisPos(const std::string& axis) const;
 
 	Bind getLastInputAsBind() const;
 
@@ -55,6 +58,7 @@ private:
 	Input& input;
 	unsigned int joyID;
 	std::map<std::string, std::vector<Bind> > binds;
+	std::map<std::string, sf::Joystick::Axis> boundAxes;
 };
 
 }
