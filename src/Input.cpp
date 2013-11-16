@@ -5,10 +5,14 @@
 #include <cstdlib>
 #include <string>
 #include <sstream>
+#include <cmath>
+#include <initializer_list>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 namespace je
 {
+
+const float Input::JoyAxisThreshhold = 0.3;
 
 Input::Input(sf::RenderWindow& window)
 	:window(window)
@@ -106,6 +110,17 @@ bool Input::isKeyHeld(sf::Keyboard::Key key) const
 
 bool Input::testKey(sf::Keyboard::Key& output)
 {
+	if (focused)
+	{
+		for (int i = 0; i < sf::Keyboard::KeyCount; ++i)
+		{
+			if (keyDown[i] == 2)
+			{
+				output = (sf::Keyboard::Key) i;
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
@@ -127,6 +142,17 @@ bool Input::isButtonHeld(sf::Mouse::Button button) const
 
 bool Input::testButton(sf::Mouse::Button& output)
 {
+	if (focused)
+	{
+		for (int i = 0; i < sf::Mouse::ButtonCount; ++i)
+		{
+			if (buttonDown[i] == 2)
+			{
+				output = (sf::Mouse::Button) i;
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
@@ -148,21 +174,51 @@ bool Input::isJoyButtonHeld(unsigned int joyID, unsigned int button) const
 
 bool Input::testJoyButton(int joyID, unsigned int& button) const
 {
+	if (focused)
+	{
+		for (int i = 0; i < sf::Joystick::ButtonCount; ++i)
+		{
+			if (joyDown[joyID][i] == 2)
+			{
+				button = i;
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
-float Input::axis(int joyID, sf::Joystick::Axis axis) const
+float Input::axisValue(int joyID, sf::Joystick::Axis axis) const
 {
 	return sf::Joystick::getAxisPosition(joyID, axis) / 100.f;
 }
 
 bool Input::findController(unsigned int& joyID) const
 {
+
 	return false;
 }
 
-bool Input::testAxis(int joyID, sf::Joystick::Axis& axis) const
+bool Input::testAxis(int joyID, sf::Joystick::Axis& output) const
 {
+	std::initializer_list<sf::Joystick::Axis> axes = {
+		sf::Joystick::Axis::X,
+		sf::Joystick::Axis::Y,
+		sf::Joystick::Axis::Z,
+		sf::Joystick::Axis::R,
+		sf::Joystick::Axis::U,
+		sf::Joystick::Axis::V,
+		sf::Joystick::Axis::PovX,
+		sf::Joystick::Axis::PovY
+	};
+	for (sf::Joystick::Axis axis : axes)
+	{
+		if (abs(this->axisValue(joyID, axis)) > JoyAxisThreshhold)
+		{
+			output = axis;
+			return true;
+		}
+	}
 	return false;
 }
 

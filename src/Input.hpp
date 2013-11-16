@@ -15,6 +15,7 @@ namespace je
 class Input
 {
 public:
+	static const float JoyAxisThreshhold;
 	Input(sf::RenderWindow& window);
 
 	void update();
@@ -24,14 +25,14 @@ public:
 	bool isKeyPressed(sf::Keyboard::Key key) const;
 	bool isKeyReleased(sf::Keyboard::Key key) const;
 	bool isKeyHeld(sf::Keyboard::Key key) const;
-	
+
 	bool testKey(sf::Keyboard::Key& output);
 
 	/*			mouse			*/
 	bool isButtonPressed(sf::Mouse::Button button) const;
 	bool isButtonReleased(sf::Mouse::Button button) const;
 	bool isButtonHeld(sf::Mouse::Button button) const;
-	
+
 	bool testButton(sf::Mouse::Button& output);
 
 	/*			joystick		*/
@@ -46,25 +47,25 @@ public:
 	 * @return whether or not any joystick was pressing any button
 	 */
 	bool testJoyButton(int joyID, unsigned int& button) const;
-	
-	
-	float axis(int joyID, sf::Joystick::Axis axis) const ;
-	
+
+
+	float axisValue(int joyID, sf::Joystick::Axis axis) const ;
+
 	/**
 	 * Checks which joystick is currently pressing buttons
 	 * @param joyID Which joysticks ID is in use (OUTPUT - invalid if returns false)
 	 * @return Whether or not a controller was found
 	 */
 	bool findController(unsigned int& joyID) const;
-	
+
 	/**
 	 * Checks for which button is pressed on which joystick
 	 * @param joyID Which joystick to poll
-	 # @param axis Which axis was pressed (OUTPUT - invalid if returns false)
+	 * @param output Which axis was pressed (OUTPUT - invalid if returns false)
 	 * @return whether or not any joystick was pressing any axis
 	 */
-	bool testAxis(int joyID, sf::Joystick::Axis& axis) const;
-	
+	bool testAxis(int joyID, sf::Joystick::Axis& output) const;
+
 private:
 	int buttonUp[sf::Mouse::ButtonCount];
 	int buttonDown[sf::Mouse::ButtonCount];

@@ -118,13 +118,25 @@ void Controller::setJoystickID(unsigned int id)
 	joyID = id;
 }
 
-float Controller::getAxis(sf::Joystick::Axis axis) const
+float Controller::axisValue(sf::Joystick::Axis axis) const
 {
-	return input.axis(joyID, axis);
+	return input.axisValue(joyID, axis);
 }
 
 Controller::Bind Controller::getLastInputAsBind() const
 {
+	sf::Keyboard::Key key;
+	if (input.testKey(key))
+		return Bind(key);
+
+	sf::Mouse::Button button;
+	if (input.testButton(button))
+		return Bind(button);
+
+	unsigned int joyButton;
+	if (input.testJoyButton(joyID, joyButton))
+		return Bind(joyButton);
+
 	return Bind();
 }
 
