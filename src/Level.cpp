@@ -87,7 +87,7 @@ void Level::update()
 		grid.second->setVisibleArea(bounds);
 	}
 	std::sort(entities.begin(), entities.end(), [] (const Entity *a, const Entity *b) -> bool {
-		return a->getDepth() > b->getDepth();
+		return a->getDepth() == b->getDepth() ? (int) a > (int) b : a->getDepth() > b->getDepth();
 	});
 }
 
