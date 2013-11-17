@@ -179,6 +179,18 @@ void Controller::setAxis(const std::string& name, const AxisBind& bind)
 
 float Controller::axisPos(const std::string& axis, je::Level *level) const
 {
+	float origin = 0;
+	auto it = boundAxes.find(axis);
+	if (it != boundAxes.end())
+	{
+		assert(it->second.pos != nullptr);
+		origin = *(it->second.pos);
+	}
+	return axisPos(axis, origin, level);
+}
+
+float Controller::axisPos(const std::string& axis, float origin, je::Level *level) const
+{
 	auto it = boundAxes.find(axis);
 	if (it == boundAxes.end())
 		return 0;
@@ -193,10 +205,10 @@ float Controller::axisPos(const std::string& axis, je::Level *level) const
 				switch (bind.mAxis)
 				{
 					case AxisBind::MouseAxis::X:
-						ret = level->getCursorPos().x - *bind.pos;
+						ret = level->getCursorPos().x - origin;
 						break;
 					case AxisBind::MouseAxis::Y:
-						ret = level->getCursorPos().y - *bind.pos;
+						ret = level->getCursorPos().y - origin;
 						break;
 					default:
 						ret = (bind.interval.max - bind.interval.min) / 2;

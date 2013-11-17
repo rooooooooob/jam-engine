@@ -98,6 +98,7 @@ public:
 	void setJoystickID(unsigned int id);
 	void setAxis(const std::string& name, const AxisBind& bind);
 	float axisPos(const std::string& axis, je::Level *level = nullptr) const;
+	float axisPos(const std::string& axis, float origin, je::Level *level = nullptr) const;
 
 	Bind getLastInputAsBind() const;
 
