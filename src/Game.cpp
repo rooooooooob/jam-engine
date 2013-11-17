@@ -22,6 +22,7 @@ Game::~Game()
 {
     for (Level* l : oldlevels)
         delete l;
+	oldlevels.clear();
 	if (level)
 		delete level;
 }
@@ -68,8 +69,8 @@ int Game::execute()
         {
             std::cout << "deleting old levels";
             delete l;
-            oldlevels.pop_back();
         }
+		oldlevels.clear();
 	}
 
 	return 0;
