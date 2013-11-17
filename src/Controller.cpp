@@ -64,6 +64,18 @@ Controller::AxisBind::AxisBind(sf::Joystick::Axis axis, bool rev, Interval)
 {
 }
 
+Controller::AxisBind::Interval::Interval()
+	:min(-1)
+	,max(1)
+{
+}
+
+Controller::AxisBind::Interval::Interval(float min, float max)
+	:min(min)
+	,max(max)
+{
+}
+
 
 /*			controller			*/
 Controller::Controller(Input& input, unsigned int joyID)
@@ -155,6 +167,16 @@ void Controller::setJoystickID(unsigned int id)
 	joyID = id;
 }
 
+void Controller::setAxis(const std::string& name, const AxisBind& bind)
+{
+	auto it = boundAxes.find(name);
+	if (it != boundAxes.end())
+	{
+		boundAxes.erase(it);
+	}
+	boundAxes.insert(std::make_pair(name, bind));
+}
+
 float Controller::axisPos(const std::string& axis, je::Level *level) const
 {
 	auto it = boundAxes.find(axis);
@@ -162,7 +184,7 @@ float Controller::axisPos(const std::string& axis, je::Level *level) const
 		return 0;
 	else
 	{
-		float ret;
+		float ret = 0;
 		AxisBind bind = it->second;
 		switch (bind.device)
 		{
@@ -198,7 +220,7 @@ float Controller::axisPos(const std::string& axis, je::Level *level) const
 		const float intervalDif = (bind.interval.max - bind.interval.min);
 		ret = (ret - bind.interval.min) / (intervalDif);
 		//	now adjust that to [-1, 1]
-		ret = 2.f * ret - intervalDif / 2.f;
+		ret = 2.f * ret - 1.f;
 
 		return bind.reversed ? -ret : ret;
 	}

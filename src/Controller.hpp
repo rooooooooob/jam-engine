@@ -70,7 +70,7 @@ public:
 		 * @param rev Whether the X axis should be reversed
 		 * @param interval The interval to operate on (default [-1, 1])
 		 */
-		AxisBind(sf::Joystick::Axis axis, bool rev, Interval = Interval());
+		AxisBind(sf::Joystick::Axis axis, bool rev = false, Interval = Interval());
 
 		const Device device;
 		const union
