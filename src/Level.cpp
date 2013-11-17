@@ -79,7 +79,6 @@ void Level::update()
 			++i;
 	}
 	onUpdate();
-	std::cout << "test";
 	for (auto& grid : tileLayers)
 	{
 		sf::Rect<int> bounds(cameraBounds);
@@ -90,7 +89,6 @@ void Level::update()
 	std::sort(entities.begin(), entities.end(), [] (const Entity *a, const Entity *b) -> bool {
 		return a->getDepth() > b->getDepth();
 	});
-	std::cout << "\ndone test";
 }
 
 Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoffset, float yoffset)
