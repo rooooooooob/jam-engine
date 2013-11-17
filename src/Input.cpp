@@ -149,7 +149,7 @@ bool Input::testKey(sf::Keyboard::Key& output)
 	{
 		for (int i = 0; i < sf::Keyboard::KeyCount; ++i)
 		{
-			if (keyDown[i] == 2)
+			if (keyUp[i] == 1)
 			{
 				output = (sf::Keyboard::Key) i;
 				return true;
@@ -181,7 +181,7 @@ bool Input::testButton(sf::Mouse::Button& output)
 	{
 		for (int i = 0; i < sf::Mouse::ButtonCount; ++i)
 		{
-			if (buttonDown[i] == 2)
+			if (buttonUp[i] == 1)
 			{
 				output = (sf::Mouse::Button) i;
 				return true;
@@ -213,7 +213,7 @@ bool Input::testJoyButton(unsigned int joyID, unsigned int& button) const
 	{
 		for (int i = 0; i < sf::Joystick::ButtonCount; ++i)
 		{
-			if (joyDown[joyID][i] == 2)
+			if (joyUp[joyID][i] == 1)
 			{
 				button = i;
 				return true;
@@ -286,11 +286,16 @@ bool Input::testAxis(unsigned int joyID, sf::Joystick::Axis& output, bool& negat
 	};
 	for (sf::Joystick::Axis axis : axes)
 	{
-		float pos = this->axisPos(joyID, axis);
-		if (abs(pos) > joyAxisThreshhold)
+		if (isJoyAxisPressed(joyID, axis, false))
 		{
 			output = axis;
-			negative = pos < 0.f;
+			negative = false;
+			return true;
+		}
+		else if (isJoyAxisPressed(joyID, axis, true))
+		{
+			output = axis;
+			negative = true;
 			return true;
 		}
 	}

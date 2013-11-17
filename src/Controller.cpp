@@ -1,6 +1,5 @@
 #include "Controller.hpp"
 
-#include <iostream>
 #include <cassert>
 #include "Level.hpp"
 
@@ -18,7 +17,6 @@ Controller::Bind::Bind(sf::Keyboard::Key key)
 	,device(Device::Keyboard)
 	,reversed(false)
 {
-	std::cout << "Bind(Keyboard)\n";
 }
 
 Controller::Bind::Bind(sf::Mouse::Button button)
@@ -26,7 +24,6 @@ Controller::Bind::Bind(sf::Mouse::Button button)
 	,device(Device::Mouse)
 	,reversed(false)
 {
-	std::cout << "Bind(Mouse)\n";
 }
 
 Controller::Bind::Bind(unsigned int joystickButton)
@@ -34,7 +31,6 @@ Controller::Bind::Bind(unsigned int joystickButton)
 	,device(Device::Joystick)
 	,reversed(false)
 {
-	std::cout << "Bind(Joystick)\n";
 }
 
 Controller::Bind::Bind(sf::Joystick::Axis axis, bool reversed)
@@ -42,7 +38,6 @@ Controller::Bind::Bind(sf::Joystick::Axis axis, bool reversed)
 	,device(Device::JoyAxis)
 	,reversed(reversed)
 {
-	std::cout << "Bind(JoyAxis)\n";
 }
 
 /*			axis bind			*/
