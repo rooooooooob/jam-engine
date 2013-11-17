@@ -43,7 +43,8 @@ public:
 		enum class Device
 		{
 			Mouse,
-			JoyAxis
+			JoyAxis,
+			Invalid
 		};
 		enum class MouseAxis
 		{
@@ -56,6 +57,10 @@ public:
 			Interval(float min, float max);	//	custom
 			const float min, max;
 		};
+		/**
+		 * Invalid bind. Used when nothing is bound
+		 */
+		AxisBind();
 		/**
 		 * Binds mice axes
 		 * @param axis Which mouse axis to use for axis
@@ -101,6 +106,8 @@ public:
 	float axisPos(const std::string& axis, float origin, je::Level *level = nullptr) const;
 
 	Bind getLastInputAsBind() const;
+
+	AxisBind getLastAxisMovementAsBind() const;
 
 private:
 	Input& input;

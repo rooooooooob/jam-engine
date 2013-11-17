@@ -46,6 +46,14 @@ Controller::Bind::Bind(sf::Joystick::Axis axis, bool reversed)
 }
 
 /*			axis bind			*/
+Controller::AxisBind::AxisBind()
+	:device(Device::Invalid)
+	,reversed(false)
+	,interval(0.f, 0.f)
+	,pos(nullptr)
+{
+}
+
 Controller::AxisBind::AxisBind(MouseAxis axis, bool rev, Interval interval, const float *pos)
 	:device(Device::Mouse)
 	,mAxis(axis)
@@ -259,6 +267,16 @@ Controller::Bind Controller::getLastInputAsBind() const
 		return Bind(axis, reversed);
 	//	nothing was pressed, return empty bind (invalid)
 	return Bind();
+}
+
+Controller::AxisBind Controller::getLastAxisMovementAsBind() const
+{
+	sf::Joystick::Axis axis;
+	bool reversed;
+	if (input.testAxis(joyID, axis, reversed))
+		return AxisBind(axis, reversed);
+	//	nothing was pressed, return empty bind (invalid)
+	return AxisBind();
 }
 
 }
