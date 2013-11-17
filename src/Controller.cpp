@@ -55,7 +55,7 @@ Controller::AxisBind::AxisBind(MouseAxis axis, bool rev, Interval interval, cons
 {
 }
 
-Controller::AxisBind::AxisBind(sf::Joystick::Axis axis, bool rev, Interval)
+Controller::AxisBind::AxisBind(sf::Joystick::Axis axis, bool rev, Interval interval)
 	:device(Device::JoyAxis)
 	,jAxis(axis)
 	,reversed(rev)
@@ -65,8 +65,8 @@ Controller::AxisBind::AxisBind(sf::Joystick::Axis axis, bool rev, Interval)
 }
 
 Controller::AxisBind::Interval::Interval()
-	:min(-1)
-	,max(1)
+	:min(-1.f)
+	,max(1.f)
 {
 }
 

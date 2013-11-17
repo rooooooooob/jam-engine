@@ -66,10 +66,10 @@ int Game::execute()
 		window.display();
 
 		for (Level* l : oldlevels)
-        {
-            std::cout << "deleting old levels";
-            delete l;
-        }
+		{
+			std::cout << "deleting old levels";
+			delete l;
+		}
 		oldlevels.clear();
 	}
 
