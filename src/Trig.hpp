@@ -19,12 +19,14 @@ extern float length(const sf::Vector2f& vec);
 
 extern float pointDistance(const sf::Vector2f& a, const sf::Vector2f& b);
 
+extern float distance(const sf::Vector2f& vec);
+
 extern float pointDistance(float x1, float y1, float x2, float y2);
 
 
 extern float pointDirection(const sf::Vector2f& a, const sf::Vector2f& b);
 
-extern float pointDirection(const sf::Vector2f& vec);
+extern float direction(const sf::Vector2f& vec);
 
 extern float pointDirection(float x1, float y1, float x2, float y2);
 
