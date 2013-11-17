@@ -68,9 +68,10 @@ public:
 	 * Checks for which button is pressed on which joystick
 	 * @param joyID Which joystick to poll
 	 * @param output Which axis was pressed (OUTPUT - invalid if returns false)
+	 * @param negative Whether the axis was detected in the positive or negative region
 	 * @return whether or not any joystick was pressing any axis
 	 */
-	bool testAxis(unsigned int joyID, sf::Joystick::Axis& output) const;
+	bool testAxis(unsigned int joyID, sf::Joystick::Axis& output, bool& negative) const;
 
 private:
 	int buttonUp[sf::Mouse::ButtonCount];

@@ -144,18 +144,24 @@ float Controller::axisPos(const std::string& axis) const
 
 Controller::Bind Controller::getLastInputAsBind() const
 {
+	//	check keys
 	sf::Keyboard::Key key;
 	if (input.testKey(key))
 		return Bind(key);
-
+	//	check mouse buttons
 	sf::Mouse::Button button;
 	if (input.testButton(button))
 		return Bind(button);
-
+	//	check joypad buttons
 	unsigned int joyButton;
 	if (input.testJoyButton(joyID, joyButton))
 		return Bind(joyButton);
-
+	//	check joypad axes
+	sf::Joystick::Axis axis;
+	bool reversed;
+	if (input.testAxis(joyID, axis, reversed))
+		return Bind(axis, reversed);
+	//	nothing was pressed, return empty bind (invalid)
 	return Bind();
 }
 

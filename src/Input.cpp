@@ -254,13 +254,14 @@ bool Input::findController(unsigned int& joyID) const
 	int foundCount = 0;
 	for (unsigned int i = 0; i < sf::Joystick::Count; ++i)
 	{
-		unsigned int foo;//just here so we can call testJoyButton()
-		if (testJoyButton(i, foo))
+		unsigned int button;//just here so we can call testJoyButton()
+		bool neg;//just here so we can call testAxis()
+		if (testJoyButton(i, button))
 		{
 			joyID = i;
 			++foundCount;
 		}
-		else if (testAxis(i, axis))
+		else if (testAxis(i, axis, neg))
 		{
 			joyID = i;
 			++foundCount;
@@ -271,7 +272,7 @@ bool Input::findController(unsigned int& joyID) const
 	return foundCount == 1;
 }
 
-bool Input::testAxis(unsigned int joyID, sf::Joystick::Axis& output) const
+bool Input::testAxis(unsigned int joyID, sf::Joystick::Axis& output, bool& negative) const
 {
 	std::initializer_list<sf::Joystick::Axis> axes = {
 		sf::Joystick::Axis::X,
@@ -285,9 +286,11 @@ bool Input::testAxis(unsigned int joyID, sf::Joystick::Axis& output) const
 	};
 	for (sf::Joystick::Axis axis : axes)
 	{
-		if (abs(this->axisPos(joyID, axis)) > joyAxisThreshhold)
+		float pos = this->axisPos(joyID, axis);
+		if (abs(pos) > joyAxisThreshhold)
 		{
 			output = axis;
+			negative = pos < 0.f;
 			return true;
 		}
 	}
