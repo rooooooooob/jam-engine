@@ -1,5 +1,9 @@
 #include "Controller.hpp"
+
 #include <iostream>
+#include <cassert>
+#include "Level.hpp"
+
 namespace je
 {
 /*			bind			*/
@@ -41,6 +45,24 @@ Controller::Bind::Bind(sf::Joystick::Axis axis, bool reversed)
 	std::cout << "Bind(JoyAxis)\n";
 }
 
+/*			axis bind			*/
+Controller::AxisBind::AxisBind(MouseAxis axis, bool rev, Interval interval, const float *pos)
+	:device(Device::Mouse)
+	,mAxis(axis)
+	,reversed(rev)
+	,interval(interval)
+	,pos(pos)
+{
+}
+
+Controller::AxisBind::AxisBind(sf::Joystick::Axis axis, bool rev, Interval)
+	:device(Device::JoyAxis)
+	,jAxis(axis)
+	,reversed(rev)
+	,interval(interval)
+	,pos(nullptr)
+{
+}
 
 
 /*			controller			*/
@@ -133,13 +155,53 @@ void Controller::setJoystickID(unsigned int id)
 	joyID = id;
 }
 
-float Controller::axisPos(const std::string& axis) const
+float Controller::axisPos(const std::string& axis, je::Level *level) const
 {
 	auto it = boundAxes.find(axis);
 	if (it == boundAxes.end())
 		return 0;
 	else
-		return input.axisPos(joyID, it->second);
+	{
+		float ret;
+		AxisBind bind = it->second;
+		switch (bind.device)
+		{
+			case AxisBind::Device::Mouse:
+				assert(level != nullptr);
+				switch (bind.mAxis)
+				{
+					case AxisBind::MouseAxis::X:
+						ret = level->getCursorPos().x - *bind.pos;
+						break;
+					case AxisBind::MouseAxis::Y:
+						ret = level->getCursorPos().y - *bind.pos;
+						break;
+					default:
+						ret = (bind.interval.max - bind.interval.min) / 2;
+						break;
+				}
+				break;
+			case AxisBind::Device::JoyAxis:
+				ret = input.axisPos(joyID, bind.jAxis);
+				break;
+			default:
+				ret = 0;
+				break;
+		}
+		//	cap the value to the interval
+		if (ret > bind.interval.max)
+			ret = bind.interval.max;
+		if (ret < bind.interval.min)
+			ret = bind.interval.min;
+		//	adjust the value to the interval by finding how far along the interval is
+		//	then dividing that by the interval absolute difference to give us a number in [0, 1]
+		const float intervalDif = (bind.interval.max - bind.interval.min);
+		ret = (ret - bind.interval.min) / (intervalDif);
+		//	now adjust that to [-1, 1]
+		ret = 2.f * ret - intervalDif / 2.f;
+
+		return bind.reversed ? -ret : ret;
+	}
 }
 
 Controller::Bind Controller::getLastInputAsBind() const
