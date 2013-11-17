@@ -157,6 +157,8 @@ protected:
 	sf::RenderStates states;
 
 private:
+	void init();
+
 
 	std::vector<sf::Sprite> tileSprites;
 	sf::Rect<int> cameraBounds;

@@ -18,7 +18,7 @@ Level::Level(Game * const game, int width, int height)
 	,game(game)
 	,states (sf::RenderStates::Default)
 {
-	tileSprites.push_back(sf::Sprite());	//	empty tile
+	this->init();
 }
 
 Level::Level(Game * const game, const std::string& filename)
@@ -27,7 +27,7 @@ Level::Level(Game * const game, const std::string& filename)
 	,game(game)
 	,states (sf::RenderStates::Default)
 {
-	tileSprites.push_back(sf::Sprite());	//	empty tile (0)
+	this->init();
 }
 
 Level::~Level()
@@ -507,6 +507,14 @@ void Level::transformTiles(const std::string& layerName, int tilesAcross, int ti
 {
 	std::cout << "Level::transformTiles()\n";
 	//	no transform is done here
+}
+
+/*		private		*/
+void Level::init()
+{
+	tileSprites.push_back(sf::Sprite());	//	empty tile (0)
+	this->setCameraBounds(sf::Rect<int>(0, 0, getWidth(), getHeight()));
+	this->setCameraPosition(sf::Vector2f(getWidth() / 2, getHeight() / 2));
 }
 
 }
