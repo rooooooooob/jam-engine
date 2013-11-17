@@ -3,6 +3,8 @@
 #include "Level.hpp"
 #include "TexManager.hpp"
 
+#include <iostream>
+
 namespace je
 {
 
@@ -18,6 +20,8 @@ Game::Game(int width, int height, int framerate)
 
 Game::~Game()
 {
+    for (Level* l : oldlevels)
+        delete l;
 	if (level)
 		delete level;
 }
@@ -59,6 +63,13 @@ int Game::execute()
 		}
 
 		window.display();
+
+		for (Level* l : oldlevels)
+        {
+            std::cout << "deleting old levels";
+            delete l;
+            oldlevels.pop_back();
+        }
 	}
 
 	return 0;
@@ -67,7 +78,7 @@ int Game::execute()
 void Game::setLevel(Level *level)
 {
 	if (this->level)
-		delete this->level;
+		oldlevels.push_back (this->level);
 	this->level = level;
 }
 

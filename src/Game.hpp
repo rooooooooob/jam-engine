@@ -2,6 +2,7 @@
 #define JE_GAME_HPP
 
 #include <string>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "Input.hpp"
 #include "TexManager.hpp"
@@ -39,6 +40,7 @@ private:
 	Input input;
 	TexManager texMan;
 	bool focused;
+	std::vector <Level*> oldlevels;
 };
 
 }
