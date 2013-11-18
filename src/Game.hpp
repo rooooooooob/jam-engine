@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "Input.hpp"
 #include "TexManager.hpp"
@@ -24,7 +25,17 @@ public:
 
 	void setTitle(const std::string& title);
 
+	const std::string& getTitle() const;
+
 	bool isFocused() const;
+
+	void setFPSCap(int cap);
+
+	int getFPSCap() const;
+
+	int getFPS() const;
+
+	double getExactFPS() const;
 
 	Input& getInput();
 
@@ -35,12 +46,15 @@ public:
 private:
 	sf::RenderWindow window;
 	sf::View view;
-	Level *level;
+	std::unique_ptr<Level> level;
 	std::string title;
+	int currentFPS;
+	double exactFPS;
+	int FPSCap;
 	Input input;
 	TexManager texMan;
 	bool focused;
-	std::vector <Level*> oldlevels;
+	std::vector<std::unique_ptr<Level> > oldlevels;
 };
 
 }
