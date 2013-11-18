@@ -152,7 +152,7 @@ protected:
 
 
 
-	std::vector<Entity*> entities;
+	std::map<std::string, std::vector<Entity*> > entities;
 	std::map<std::string, TileGrid*> tileLayers;
 	sf::RenderStates states;
 

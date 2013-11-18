@@ -38,18 +38,24 @@ Level::~Level()
 void Level::draw(sf::RenderTarget& target) const
 {
 	beforeDraw(target);
-	for (unsigned int i = 0; i < entities.size(); ++i)
+	for (auto& p : entities)
 	{
-		entities[i]->draw(target, states);
+		for (unsigned int i = 0; i < p.second.size(); ++i)
+		{
+			p.second[i]->draw(target, states);
+		}
 	}
 	onDraw(target);
 
 #ifdef JE_DEBUG
-	for (Entity * entity : entities)
-		if (cameraBounds.contains(entity->getPos().x + cameraBounds.width / 2, entity->getPos().y + cameraBounds.height / 2))
-			entity->debugDraw(target);
-	for (const sf::RectangleShape& rect : debugDrawRects)
-		target.draw(rect);
+	for (auto& p : entities)
+	{
+		for (Entity * entity : p.second)
+			if (cameraBounds.contains(entity->getPos().x + cameraBounds.width / 2, entity->getPos().y + cameraBounds.height / 2))
+				entity->debugDraw(target);
+		for (const sf::RectangleShape& rect : debugDrawRects)
+			target.draw(rect);
+	}
 #endif
 	/*std::cout << "tileSprites.size() = " << tileSprites.size() << "\n";
 	for (int i = 0; i < tileSprites.size(); ++i)
@@ -66,17 +72,20 @@ void Level::update()
 #ifdef JE_DEBUG
 	debugDrawRects.clear();
 #endif
-	for (unsigned int i = 0; i < entities.size(); )
+	for (auto& p : entities)
 	{
-		entities[i]->update();
-		if (entities[i]->isDead())
+		for (unsigned int i = 0; i < p.second.size(); )
 		{
-			delete entities[i];
-			entities[i] = entities.back();
-			entities.pop_back();
+			p.second[i]->update();
+			if (p.second[i]->isDead())
+			{
+				delete p.second[i];
+				p.second[i] = p.second.back();
+				p.second.pop_back();
+			}
+			else
+				++i;
 		}
-		else
-			++i;
 	}
 	onUpdate();
 	for (auto& grid : tileLayers)
@@ -86,20 +95,28 @@ void Level::update()
 		bounds.top -= cameraBounds.height / 2;
 		grid.second->setVisibleArea(bounds);
 	}
-	std::sort(entities.begin(), entities.end(), [] (const Entity *a, const Entity *b) -> bool {
-		return a->getDepth() == b->getDepth() ? (int) a > (int) b : a->getDepth() > b->getDepth();
-	});
+	//	depth sort
+	for (auto& p : entities)
+	{
+		std::sort(p.second.begin(), p.second.end(), [](const Entity *a, const Entity *b) -> bool {
+			return a->getDepth() == b->getDepth() ? (int) a > (int) b : a->getDepth() > b->getDepth();
+		});
+	}
 }
 
 Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoffset, float yoffset)
 {
 	Entity *retVal = nullptr;
-	for (auto it = entities.begin(); it != entities.end(); ++it)
+	auto mit = entities.find(type);
+	if (mit != entities.end())
 	{
-		if (*it != caller && (*it)->getType() == type && caller->intersects(**it, xoffset, yoffset))
+		for (Entity *entity : mit->second)
 		{
-			retVal = *it;
-			break;
+			if (entity != caller && entity->getType() == type && caller->intersects(*entity, xoffset, yoffset))
+			{
+				retVal = entity;
+				break;
+			}
 		}
 	}
 	sf::Rect<int> rect = caller->getBounds();
@@ -113,10 +130,14 @@ void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, 
 {
 	//	TODO: ADD CULLING
 	results.clear();
-	for (auto it = entities.begin(); it != entities.end(); ++it)
+	auto mit = entities.find(type);
+	if (mit != entities.end())
 	{
-		if (*it != caller && (*it)->getType() == type && caller->intersects(**it, xoffset, yoffset))
-			results.push_back(*it);
+		for (Entity *entity : mit->second)
+		{
+			if (entity != caller && entity->getType() == type && caller->intersects(*entity, xoffset, yoffset))
+				results.push_back(entity);
+		}
 	}
 	sf::Rect<int> rect = caller->getBounds();
 	rect.left += xoffset;
@@ -126,38 +147,53 @@ void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, 
 
 void Level::addEntity(Entity *instance)
 {
-	entities.push_back(instance);
+	entities[instance->getType()].push_back(instance);
 }
 
 void Level::clear()
 {
-	for (Entity *entity : entities)
-		delete entity;
-	entities.clear();
+	for (auto& p : entities)
+	{
+		for (Entity *entity : p.second)
+			delete entity;
+		p.second.clear();
+	}
 	tileLayers.clear();
 	tileSprites.clear();
 }
 
 void Level::clearEntities()
 {
-	bool isTile = false;
-	for (unsigned int i = 0; i < entities.size(); ++i)
+	for (auto& p : entities)
 	{
-		isTile = false;
-		for (auto& it : tileLayers)
+		if (p.first == "TileGrid")
 		{
-			if (entities[i] == it.second)
+			bool isTile = false;
+			for (unsigned int i = 0; i < p.second.size(); ++i)
 			{
-				isTile = true;
-				break;
+				isTile = false;
+				for (auto& it : tileLayers)
+				{
+					if (p.second[i] == it.second)
+					{
+						isTile = true;
+						break;
+					}
+				}
+				if (!isTile)
+				{
+					delete p.second[i];
+					p.second[i] = p.second.back();
+					p.second.pop_back();
+					--i;
+				}
 			}
 		}
-		if (!isTile)
+		else
 		{
-			delete entities[i];
-			entities[i] = entities.back();
-			entities.pop_back();
-			--i;
+			for (Entity *entity : p.second)
+				delete entity;
+			p.second.clear();
 		}
 	}
 }
