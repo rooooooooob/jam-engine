@@ -165,6 +165,7 @@ private:
 	int width;
 	int height;
 	Game * const game;
+	std::vector<Entity*> depthBuffer;
 #ifdef JE_DEBUG
 	std::vector<sf::RectangleShape> debugDrawRects;
 #endif

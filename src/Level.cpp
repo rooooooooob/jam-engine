@@ -38,11 +38,10 @@ Level::~Level()
 void Level::draw(sf::RenderTarget& target) const
 {
 	beforeDraw(target);
-	for (auto& p : entities)
+	for (Entity *entity : depthBuffer)
 	{
-		for (unsigned int i = 0; i < p.second.size(); ++i)
 		{
-			p.second[i]->draw(target, states);
+			entity->draw(target, states);
 		}
 	}
 	onDraw(target);
@@ -96,12 +95,13 @@ void Level::update()
 		grid.second->setVisibleArea(bounds);
 	}
 	//	depth sort
+	depthBuffer.clear();
 	for (auto& p : entities)
-	{
-		std::sort(p.second.begin(), p.second.end(), [](const Entity *a, const Entity *b) -> bool {
-			return a->getDepth() == b->getDepth() ? (int) a > (int) b : a->getDepth() > b->getDepth();
-		});
-	}
+		for (Entity *entity : p.second)
+			depthBuffer.push_back(entity);
+	std::sort(depthBuffer.begin(), depthBuffer.end(), [](const Entity *a, const Entity *b) -> bool {
+		return a->getDepth() == b->getDepth() ? (int) a > (int) b : a->getDepth() > b->getDepth();
+	});
 }
 
 Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoffset, float yoffset)
