@@ -71,8 +71,27 @@ void Level::update()
 #ifdef JE_DEBUG
 	debugDrawRects.clear();
 #endif
+	for (const std::string& type : specificOrderEntitiesPre)
+	{
+		auto& entityList = entities[type];
+		for (unsigned int i = 0; i < entityList.size(); )
+		{
+			entityList[i]->update();
+			if (entityList[i]->isDead())
+			{
+				delete entityList[i];
+				entityList[i] = entityList.back();
+				entityList.pop_back();
+			}
+			else
+				++i;
+		}
+	}
 	for (auto& p : entities)
 	{
+		auto it = hasSpecificUpdateOrder.find(p.first);
+		if (it != hasSpecificUpdateOrder.end() && it->second == true)
+			continue;
 		for (unsigned int i = 0; i < p.second.size(); )
 		{
 			p.second[i]->update();
@@ -81,6 +100,22 @@ void Level::update()
 				delete p.second[i];
 				p.second[i] = p.second.back();
 				p.second.pop_back();
+			}
+			else
+				++i;
+		}
+	}
+	for (const std::string& type : specificOrderEntitiesPost)
+	{
+		auto& entityList = entities[type];
+		for (unsigned int i = 0; i < entityList.size(); )
+		{
+			entityList[i]->update();
+			if (entityList[i]->isDead())
+			{
+				delete entityList[i];
+				entityList[i] = entityList.back();
+				entityList.pop_back();
 			}
 			else
 				++i;
@@ -475,6 +510,22 @@ void Level::debugDrawRect(sf::Rect<int>& rect, sf::Color outlineColor, sf::Color
 #endif
 }
 
+void Level::setSpecificOrderEntitiesPre(std::initializer_list<std::string> order)
+{
+	specificOrderEntitiesPre.clear();
+	for (const std::string& type : order)
+		specificOrderEntitiesPre.push_back(type);
+	this->fixUpdateOrder();
+}
+
+void Level::setSpecificOrderEntitiesPost(std::initializer_list<std::string> order)
+{
+	specificOrderEntitiesPost.clear();
+	for (const std::string& type : order)
+		specificOrderEntitiesPost.push_back(type);
+	this->fixUpdateOrder();
+}
+
 /*		protected			*/
 
 void Level::onUpdate()
@@ -551,6 +602,20 @@ void Level::init()
 	tileSprites.push_back(sf::Sprite());	//	empty tile (0)
 	this->setCameraBounds(sf::Rect<int>(0, 0, getWidth(), getHeight()));
 	this->setCameraPosition(sf::Vector2f(getWidth() / 2, getHeight() / 2));
+}
+
+void Level::fixUpdateOrder()
+{
+	hasSpecificUpdateOrder.clear();
+
+	for (const std::string& type : specificOrderEntitiesPre)
+	{
+		hasSpecificUpdateOrder[type] = true;
+	}
+	for (const std::string& type : specificOrderEntitiesPost)
+	{
+		hasSpecificUpdateOrder[type] = true;
+	}
 }
 
 }

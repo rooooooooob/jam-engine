@@ -79,6 +79,12 @@ const sf::Vector2f& Entity::getPos() const
 	return pos;
 }
 
+void Entity::setPos(const sf::Vector2f& pos)
+{
+	this->pos = pos;
+	//	do I need to update anything else here..?
+}
+
 void Entity::destroy()
 {
 	dead = true;

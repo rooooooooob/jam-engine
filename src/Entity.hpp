@@ -31,6 +31,8 @@ public:
 	void setDepth(int depth);
 
 	const sf::Vector2f& getPos() const;
+
+	void setPos(const sf::Vector2f& pos);
 	/*
 	 * Marks the Entity to be destroyed at the end of the current update
 	 */

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <initializer_list>
 #include <SFML/Graphics/RenderStates.hpp>
 #include "rapidxml.hpp"
 #include "Entity.hpp"
@@ -98,6 +99,22 @@ public:
 
 	void debugDrawRect(sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor = sf::Color::Transparent, int outlineThickness = 1);
 
+	/**
+	 * Sets the order of any Entities which are to be updated before all others
+	 * All Entities in this category will be updated in the order they are set in this
+	 * initializer list. The order of things outside of here is lexicographical.
+	 * @param order The order for entities in this category
+	 */
+	void setSpecificOrderEntitiesPre(std::initializer_list<std::string> order);
+
+	/**
+	 * Sets the order of any Entities which are to be updated after all others
+	 * All Entities in this category will be updated in the order they are set in this
+	 * initializer list. The order of things outside of here is lexicographical.
+	 * @param order The order for entities in this category
+	 */
+	void setSpecificOrderEntitiesPost(std::initializer_list<std::string> order);
+
 protected:
 	/**
 	 * Represents the data loaded from a Tiled map file. loadEntities should
@@ -158,6 +175,7 @@ protected:
 
 private:
 	void init();
+	void fixUpdateOrder();
 
 
 	std::vector<sf::Sprite> tileSprites;
@@ -166,6 +184,9 @@ private:
 	int height;
 	Game * const game;
 	std::vector<Entity*> depthBuffer;
+	std::vector<std::string> specificOrderEntitiesPre;
+	std::vector<std::string> specificOrderEntitiesPost;
+	std::map<std::string, bool> hasSpecificUpdateOrder;
 #ifdef JE_DEBUG
 	std::vector<sf::RectangleShape> debugDrawRects;
 #endif
