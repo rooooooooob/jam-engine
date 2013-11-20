@@ -70,16 +70,16 @@ int Game::execute()
 
 		window.display();
 
-		//std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
-		//std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTimeExact);
-		//exactFPS = frameTime.count() ? 1.0 / frameTime.count() : 123456789;
-		//lastTimeExact = currentTime;
-		//if (++counter % 10 == 0)
-		//{
-		//	frameTime = std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTime);
-		//	currentFPS = frameTime.count() ? JE_FPS_APPROX_RATE / frameTime.count() : 123456789;
-		//	lastTime = currentTime;
-		//}
+		std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTimeExact);
+		exactFPS = frameTime.count() ? 1.0 / frameTime.count() : 123456789;
+		lastTimeExact = currentTime;
+		if (++counter % 10 == 0)
+		{
+			frameTime = std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTime);
+			currentFPS = frameTime.count() ? JE_FPS_APPROX_RATE / frameTime.count() : 123456789;
+			lastTime = currentTime;
+		}
 	}
 
 	return 0;
