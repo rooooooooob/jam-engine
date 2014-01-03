@@ -3,14 +3,14 @@
 namespace je
 {
 
-const PathGrid::CellType canGoLeft  = 1;
-const PathGrid::CellType canGoRight = 2;
-const PathGrid::CellType canGoUp    = 4;
-const PathGrid::CellType canGoDown  = 8;
-const PathGrid::CellType canGoNW    = 16;
-const PathGrid::CellType canGoNS    = 32;
-const PathGrid::CellType canGoSW    = 64;
-const PathGrid::CellType canGoSE    = 128;
+const PathGrid::CellType PathGrid::canGoLeft  = 1;
+const PathGrid::CellType PathGrid::canGoRight = 2;
+const PathGrid::CellType PathGrid::canGoUp    = 4;
+const PathGrid::CellType PathGrid::canGoDown  = 8;
+const PathGrid::CellType PathGrid::canGoNW    = 16;
+const PathGrid::CellType PathGrid::canGoNE    = 32;
+const PathGrid::CellType PathGrid::canGoSW    = 64;
+const PathGrid::CellType PathGrid::canGoSE    = 128;
 
 /*			PathGrid::Node			*/
 PathGrid::Node::Node(const PathGrid& owner, int x, int y)
@@ -20,7 +20,7 @@ PathGrid::Node::Node(const PathGrid& owner, int x, int y)
 {
 }
 
-int PathGrid:Node::getID() const
+int PathGrid::Node::getID() const
 {
 	return (x << 16) + y;
 }
@@ -34,6 +34,7 @@ PathGrid::PathGrid(int cellWidth, int cellHeight, int width, int height, bool al
 	,height(height)
 	,grid(width, height)
 	,weights(width, height)
+	,walkable(width, height)
 	,allowDiag(allowDiag)
 	,diagRatio(diagRatio)
 {
@@ -41,6 +42,8 @@ PathGrid::PathGrid(int cellWidth, int cellHeight, int width, int height, bool al
 		type = 0xFF;	//	allow all paths
 	for (float& weight : weights)
 		weight = 1.f;
+	for (bool& b : walkable)
+		b = true;
 }
 
 void PathGrid::addPath(int x, int y, CellType type)
@@ -65,47 +68,48 @@ void PathGrid::removeAllPaths()
 		type = 0;		//	disallow all paths
 }
 
-void PathGrid::openCell(int x int y)
+void PathGrid::openCell(int x, int y)
 {
-	Grid& g = grid.get(x, y);
-	if (x > 0)
+	walkable.get(x, y) = true;
+	auto& g = grid.get(x, y);
+	if (x > 0 && walkable.get(x -1 , y))
 	{
 		grid.get(x - 1, y) |= canGoRight;
 		g |= canGoLeft;
 	}
-	if (x < width - 1)
+	if (x < width - 1 && walkable.get(x + 1, y))
 	{
 		grid.get(x + 1, y) |= canGoLeft;
 		g |= canGoRight;
 	}
-	if (y > 0)
+	if (y > 0 && walkable.get(x, y - 1))
 	{
 		grid.get(x, y - 1) |= canGoDown;
 		g |= canGoUp;
 	}
-	if (y < height - 1)
+	if (y < height - 1 && walkable.get(x, y + 1))
 	{
 		grid.get(x, y + 1) |= canGoUp;
 		g |= canGoDown;
 	}
 	if (allowDiag)
 	{
-		if (x > 0 && y > 0)
+		if (x > 0 && y > 0 && walkable.get(x - 1, y - 1))
 		{
 			grid.get(x - 1, y - 1) |= canGoSE;
 			g |= canGoNW;
 		}
-		if (x < width - 1 && y > 0)
+		if (x < width - 1 && y > 0 && walkable.get(x + 1, y - 1))
 		{
 			grid.get(x + 1, y - 1) |= canGoSW;
 			g |= canGoNE;
 		}
-		if (x > 0 && y < height - 1)
+		if (x > 0 && y < height - 1 && walkable.get(x - 1, y + 1))
 		{
 			grid.get(x - 1, y + 1) |= canGoNE;
 			g |= canGoSW;
 		}
-		if (x < width - 1 && y < height - 1)
+		if (x < width - 1 && y < height - 1 && walkable.get(x + 1, y + 1))
 		{
 			grid.get(x + 1, y + 1) |= canGoNW;
 			g |= canGoSE;
@@ -115,6 +119,7 @@ void PathGrid::openCell(int x int y)
 
 void PathGrid::closeCell(int x, int y)
 {
+	walkable.get(x, y) = false;
 	grid.get(x, y) = 0;
 	if (x > 0)
 	{
@@ -153,7 +158,12 @@ void PathGrid::closeCell(int x, int y)
 	}
 }
 
-void setWeight(int x, int y, float weight)
+void PathGrid::setWalkable(int x, int y, bool val)
+{
+	walkable.get(x, y) = val;
+}
+
+void PathGrid::setWeight(int x, int y, float weight)
 {
 	weights.get(x, y) = weight;
 }
@@ -161,6 +171,11 @@ void setWeight(int x, int y, float weight)
 PathGrid::CellType PathGrid::getCell(int x, int y) const
 {
 	return grid.get(x, y);
+}
+
+bool PathGrid::getWalkable(int x, int y) const
+{
+	return walkable.get(x, y);
 }
 
 }
