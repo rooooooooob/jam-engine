@@ -7,6 +7,10 @@ const PathGrid::CellType canGoLeft  = 1;
 const PathGrid::CellType canGoRight = 2;
 const PathGrid::CellType canGoUp    = 4;
 const PathGrid::CellType canGoDown  = 8;
+const PathGrid::CellType canGoNW    = 16;
+const PathGrid::CellType canGoNS    = 32;
+const PathGrid::CellType canGoSW    = 64;
+const PathGrid::CellType canGoSE    = 128;
 
 /*			PathGrid::Node			*/
 PathGrid::Node::Node(const PathGrid& owner, int x, int y)
@@ -84,6 +88,29 @@ void PathGrid::openCell(int x int y)
 		grid.get(x, y + 1) |= canGoUp;
 		g |= canGoDown;
 	}
+	if (allowDiag)
+	{
+		if (x > 0 && y > 0)
+		{
+			grid.get(x - 1, y - 1) |= canGoSE;
+			g |= canGoNW;
+		}
+		if (x < width - 1 && y > 0)
+		{
+			grid.get(x + 1, y - 1) |= canGoSW;
+			g |= canGoNE;
+		}
+		if (x > 0 && y < height - 1)
+		{
+			grid.get(x - 1, y + 1) |= canGoNE;
+			g |= canGoSW;
+		}
+		if (x < width - 1 && y < height - 1)
+		{
+			grid.get(x + 1, y + 1) |= canGoNW;
+			g |= canGoSE;
+		}
+	}
 }
 
 void PathGrid::closeCell(int x, int y)
@@ -104,6 +131,25 @@ void PathGrid::closeCell(int x, int y)
 	if (y < height - 1)
 	{
 		grid.get(x, y + 1) &= ~canGoUp;
+	}
+	if (allowDiag)
+	{
+		if (x > 0 && y > 0)
+		{
+			grid.get(x - 1, y - 1) &= ~canGoSE;
+		}
+		if (x < width - 1 && y > 0)
+		{
+			grid.get(x + 1, y - 1) &= ~canGoSW;
+		}
+		if (x > 0 && y < height - 1)
+		{
+			grid.get(x - 1, y + 1) &= ~canGoNE;
+		}
+		if (x < width - 1 && y < height - 1)
+		{
+			grid.get(x + 1, y + 1) &= ~canGoNW;
+		}
 	}
 }
 

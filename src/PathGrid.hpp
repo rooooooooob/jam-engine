@@ -16,6 +16,10 @@ public:
 	static const CellType canGoRight;
 	static const CellType canGoUp;
 	static const CellType canGoDown;
+	static const CellType canGoNW;
+	static const CellType canGoNE;
+	static const CellType canGoSW;
+	static const CellType canGoSE;
 	
 	class Node
 	{
@@ -88,6 +92,33 @@ void PathGrid::Node::getNeighbors(T& container, F pushFunc, V visitedFunc)
 		Node(owner, x, y + 1) downNode;
 		if (!visitedFunc(downNode.getID()))
 			F(container, downNode);
+	}
+	if (allowDiag)
+	{
+		if (x > 0 && y > 0 && (owner.grid.get(x, y) & canGoNW))
+		{
+			Node(owner, x - 1, y - 1) NWNode;
+			if (!visitedFunc(NWNode.getID()))
+				pushFunc(container, NWNode);
+		}
+		if (x < owner.width - 1 && y > 0 && (owner.grid.get(x, y) & canGoNE))
+		{
+			Node(owner, x + 1, y - 1) NENode;
+			if (!visitedFunc(NENode.getID()))
+				pushFunc(container, NENode);
+		}
+		if (x > 0 && y < height - 1 && (owner.grid.get(x, y) & canGoSW))
+		{
+			Node(owner, x - 1, y + 1) SWNode;
+			if (!visitedFunc(SWNode.getID()))
+				pushFunc(container, SWNode);
+		}
+		if (x < owner.width - 1 && y < owner.height - 1 && (owner.grid.get(x, y) & canGoSE))
+		{
+			Node(owner, x + 1, y + 1) SENode;
+			if (!visitedFunc(SENode.getID()))
+				F(container, SENode);
+		}
 	}
 }
 
