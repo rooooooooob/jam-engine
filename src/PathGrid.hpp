@@ -34,11 +34,23 @@ public:
 	
 	friend class PathGrid::Node;
 	
-	PathGrid(int cellWidth, int cellHeight, int width, int height);
+	PathGrid(int cellWidth, int cellHeight, int width, int height, bool allowDiag = true, float diagRatio = 1.4142135);
 	
 	void addPath(int x, int y, CellType type);
 	
 	void removePath(int x, int y, CellType type);
+	
+	void addAllPaths();
+	
+	void removeAllPaths();
+	
+	void openCell(int x, int y);
+	
+	void closeCell(int x, int y);
+	
+	void setWeight(int x, int y, float weight);
+	
+	CellType getCell(int x, int y) const;
 	
 	
 private:
@@ -46,6 +58,9 @@ private:
 	int cellWidth, cellHeight;
 	int width, height;
 	Grid<CellType> grid;
+	Grid<float> weights;
+	bool allowDiag;
+	float diagRatio;
 };
 
 template <typename T, typename F, typename V>
