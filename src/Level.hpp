@@ -41,6 +41,8 @@ public:
 
 	void update();
 
+	Entity* testCollision(const sf::Rect<int>& bBox, Entity::Type type);
+
 	/**
 	 * Queries the level for collisions and stops after the first one
 	 * @param caller The Entity to use a reference to query from

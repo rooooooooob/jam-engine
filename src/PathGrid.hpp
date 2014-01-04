@@ -7,6 +7,8 @@
 namespace je
 {
 
+void update();
+
 class PathGrid
 {
 public:

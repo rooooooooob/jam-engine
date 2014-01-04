@@ -139,6 +139,25 @@ void Level::update()
 	});
 }
 
+Entity* testCollision(const sf::Rect<int>& bBox, Entity::Type type)
+{
+	Entity *retVal = nullptr;
+	auto mit = entities.find(type);
+	if (mit != entities.end())
+	{
+		for (Entity *entity : mit->second)
+		{
+			if (entity->getType() == type && caller->intersects(bBox, xoffset, yoffset))
+			{
+				retVal = entity;
+				break;
+			}
+		}
+	}
+	this->debugDrawRect(bBox, !retVal ? sf::Color::Yellow : sf::Color::Green);
+	return retVal;
+}
+
 Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoffset, float yoffset)
 {
 	Entity *retVal = nullptr;

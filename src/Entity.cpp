@@ -90,6 +90,12 @@ void Entity::destroy()
 	dead = true;
 }
 
+bool Entity::intersects(const sf::Rect<int>& bBox) const
+{
+	//	maybe optimize this later
+	return sf::Rect<int>(pos.x + offset.x, pos.y + offset.y, dim.x, dim.y).intersects(bBox);
+}
+
 bool Entity::intersects(const Entity& other, float xoffset, float yoffset) const
 {
 	const int left	  = pos.x + offset.x + xoffset,	 oleft   = other.pos.x + other.offset.x;

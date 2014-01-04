@@ -38,6 +38,8 @@ public:
 	 */
 	void destroy();
 
+	bool intersects(const sf::Rect<int>& bBox) const;
+
 	bool intersects(const Entity& other, float xoffset = 0, float yoffset = 0) const;
 
 	void setOffset(int x, int y);
