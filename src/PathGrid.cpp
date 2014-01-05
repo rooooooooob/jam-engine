@@ -20,9 +20,28 @@ PathGrid::Node::Node(const PathGrid& owner, int x, int y)
 {
 }
 
-int PathGrid::Node::getID() const
+PathGrid::ID PathGrid::Node::getID() const
 {
 	return (x << 16) + y;
+}
+
+sf::Vector2f PathGrid::Node::getPos() const
+{
+	return sf::Vector2f((x + 0.5f) * owner.cellWidth, (y + 0.5f) * owner.cellHeight);
+}
+
+bool PathGrid::Node::operator==(const Node& rhs) const
+{
+	return x == rhs.x && y == rhs.y && &owner == &rhs.owner;
+}
+
+bool PathGrid::Node::operator<(const Node& rhs) const
+{
+	if (x < rhs.x)
+		return true;
+	if (x > rhs.x)
+		return false;
+	return y < rhs.y;
 }
 
 
@@ -176,6 +195,21 @@ PathGrid::CellType PathGrid::getCell(int x, int y) const
 bool PathGrid::getWalkable(int x, int y) const
 {
 	return walkable.get(x, y);
+}
+
+PathGrid::Node PathGrid::getNodeFromPos(const sf::Vector2f& pos) const
+{
+	int x = pos.x / cellWidth;
+	if (x < 0)
+		x = 0;
+	if (x >= width)
+		x = width - 1;
+	int y = pos.y / cellHeight;
+	if (y < 0)
+		y = 0;
+	if (y >= height)
+		y = height - 1;
+	return Node(*this, x, y);
 }
 
 }

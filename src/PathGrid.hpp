@@ -2,6 +2,7 @@
 #define JE_PATHGRID_HPP
 
 #include <cstdint>
+#include <SFML/System/Vector2.hpp>
 #include "Grid.hpp"
 
 namespace je
@@ -13,6 +14,7 @@ class PathGrid
 {
 public:
 	typedef uint8_t CellType;
+	typedef int ID;
 
 	static const CellType canGoLeft;
 	static const CellType canGoRight;
@@ -32,7 +34,7 @@ public:
 		 * Pushes all unvisited neighbors of Node into the given container using the provided functions
 		 * @param container The queue to push into
 		 * @param pushFunc The function to push the Node into the container. Type: (decltype(container)&, Node)->void
-		 * @param visitedFunc A function that marks a Node as visited and returns true if it wasn't before. Type: (int)->void
+		 * @param visitedFunc A function that marks a Node as visited and returns true if it wasn't before. Type: (PathGrid::ID)->bool
 		 */
 		template <typename T, typename F, typename V>
 		void getNeighbors(T& container, F pushFunc, V visitedFunc);
@@ -41,7 +43,13 @@ public:
 		 * Creates a UNIQUE id for each Node (It is only unique vs othe Nodes in this Grid)
 		 * @return the ID
 		 */
-		int getID() const;
+		ID getID() const;
+
+		sf::Vector2f getPos() const;
+
+		bool operator==(const Node& rhs) const;
+
+		bool operator<(const Node& rhs) const;
 
 	private:
 		const PathGrid& owner;
@@ -86,6 +94,8 @@ public:
 	CellType getCell(int x, int y) const;
 
 	bool getWalkable(int x, int y) const;
+
+	Node getNodeFromPos(const sf::Vector2f& pos) const;
 
 private:
 
