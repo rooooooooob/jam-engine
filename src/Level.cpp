@@ -139,7 +139,7 @@ void Level::update()
 	});
 }
 
-Entity* testCollision(const sf::Rect<int>& bBox, Entity::Type type)
+Entity* Level::testCollision(const sf::Rect<int>& bBox, Entity::Type type)
 {
 	Entity *retVal = nullptr;
 	auto mit = entities.find(type);
@@ -147,7 +147,7 @@ Entity* testCollision(const sf::Rect<int>& bBox, Entity::Type type)
 	{
 		for (Entity *entity : mit->second)
 		{
-			if (entity->getType() == type && caller->intersects(bBox, xoffset, yoffset))
+			if (entity->getType() == type && entity->intersects(bBox))
 			{
 				retVal = entity;
 				break;
@@ -517,7 +517,7 @@ void Level::loadMap(const std::string& filename)
 		}
 }
 
-void Level::debugDrawRect(sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor, int outlineThickness)
+void Level::debugDrawRect(const sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor, int outlineThickness)
 {
 #ifdef JE_DEBUG
 	debugDrawRects.push_back(sf::RectangleShape(sf::Vector2f(rect.width, rect.height)));

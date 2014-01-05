@@ -99,7 +99,7 @@ public:
 
 	void loadMap(const std::string& filename);
 
-	void debugDrawRect(sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor = sf::Color::Transparent, int outlineThickness = 1);
+	void debugDrawRect(const sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor = sf::Color::Transparent, int outlineThickness = 1);
 
 	/**
 	 * Sets the order of any Entities which are to be updated before all others
