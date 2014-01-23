@@ -37,7 +37,7 @@ public:
 	class ConstIterator
 	{
 	public:
-		ConstIterator(Grid<T>& owner, int x = 0, int y = 0);
+		ConstIterator(const Grid<T>& owner, int x = 0, int y = 0);
 
 		bool operator==(const ConstIterator& rhs) const;
 
@@ -316,7 +316,7 @@ typename Grid<T>::Iterator Grid<T>::Iterator::operator--(int)
 }
 /*				const iterator					*/
 template <typename T>
-Grid<T>::ConstIterator::ConstIterator(Grid<T>& owner, int x, int y)
+Grid<T>::ConstIterator::ConstIterator(const Grid<T>& owner, int x, int y)
 	:owner(owner)
 	,x(x)
 	,y(y)
