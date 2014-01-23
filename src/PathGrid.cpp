@@ -35,6 +35,11 @@ bool PathGrid::Node::operator==(const Node& rhs) const
 	return x == rhs.x && y == rhs.y && &owner == &rhs.owner;
 }
 
+bool PathGrid::Node::operator!=(const Node& rhs) const
+{
+	return x != rhs.x || y != rhs.y || &owner != &rhs.owner;
+}
+
 bool PathGrid::Node::operator<(const Node& rhs) const
 {
 	if (x < rhs.x)
@@ -42,6 +47,14 @@ bool PathGrid::Node::operator<(const Node& rhs) const
 	if (x > rhs.x)
 		return false;
 	return y < rhs.y;
+}
+
+PathGrid::Node& PathGrid::Node::operator=(const Node& rhs)
+{
+	assert(&owner == &rhs.owner);
+	x = rhs.x;
+	y = rhs.y;
+	return *this;
 }
 
 

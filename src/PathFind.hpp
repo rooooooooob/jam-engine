@@ -30,7 +30,9 @@ void reconstructPathPushBack(R& results, N node, const N& start, const P& prev)
 	do
 	{
 		path.push_front(node.getPos());
-		node = prev[node];
+		auto it = prev.find(node);
+		assert(it != prev.end());
+		node = it->second;
 	}
 	while (node != start);
 	for (const sf::Vector2f& pos : path)
@@ -53,7 +55,7 @@ template <typename R, typename G, typename D>
 void findSinglePathUnweighted(R& results, G& graph, const sf::Vector2f& source, const D& destinations)
 {
 	std::map<typename G::ID, bool> visited;
-	std::map<typename G::Node, typename G::ID> prev;
+	std::map<typename G::Node, typename G::Node> prev;
 	std::queue<typename G::Node> visitQueue;
 
 	std::set<typename G::ID> destIDs;
@@ -70,9 +72,10 @@ void findSinglePathUnweighted(R& results, G& graph, const sf::Vector2f& source, 
 	{
 		v = visitQueue.front();
 
-		if (destIDs.count(v))
+		if (destIDs.count(v.getID()))
 		{
-			reconstructPath(results, v, start, prev);
+			if (!prev.empty())
+				reconstructPath(results, v, start, prev);
 			break;
 		}
 
@@ -82,7 +85,11 @@ void findSinglePathUnweighted(R& results, G& graph, const sf::Vector2f& source, 
 			[&prev,&v](decltype(visitQueue)& q, typename G::Node n)
 			{
 				q.push(n);
-				prev[n] = v;
+				auto it = prev.find(n);
+				if (it == prev.end())
+					prev.insert(std::make_pair(n, v));
+				else
+					it->second = v;
 			},
 			[&visited](typename G::ID id) -> bool
 			{

@@ -49,7 +49,11 @@ public:
 
 		bool operator==(const Node& rhs) const;
 
+		bool operator!=(const Node& rhs) const;
+
 		bool operator<(const Node& rhs) const;
+
+		Node& operator=(const Node& rhs);
 
 	private:
 		const PathGrid& owner;
@@ -111,51 +115,51 @@ private:
 template <typename T, typename F, typename V>
 void PathGrid::Node::getNeighbors(T& container, F pushFunc, V visitedFunc)
 {
-	if (x > 0 && walkable.get(x - 1, y) && (owner.grid.get(x, y) & canGoLeft))
+	if (x > 0 && owner.walkable.get(x - 1, y) && (owner.grid.get(x, y) & canGoLeft))
 	{
 		Node leftNode(owner, x - 1, y);
 		if (!visitedFunc(leftNode.getID()))
 			pushFunc(container, leftNode);
 	}
-	if (x < owner.width - 1 && walkable.get(x + 1, y) && (owner.grid.get(x, y) & canGoRight))
+	if (x < owner.width - 1 && owner.walkable.get(x + 1, y) && (owner.grid.get(x, y) & canGoRight))
 	{
 		Node rightNode(owner, x + 1, y);
 		if (!visitedFunc(rightNode.getID()))
 			pushFunc(container, rightNode);
 	}
-	if (y > 0 && walkable.get(x, y - 1) && (owner.grid.get(x, y) & canGoUp))
+	if (y > 0 && owner.walkable.get(x, y - 1) && (owner.grid.get(x, y) & canGoUp))
 	{
 		Node upNode(owner, x, y - 1);
 		if (!visitedFunc(upNode.getID()))
 			pushFunc(container, upNode);
 	}
-	if (y < owner.height - 1 && walkable.get(x, y + 1) && (owner.grid.get(x, y) & canGoDown))
+	if (y < owner.height - 1 && owner.walkable.get(x, y + 1) && (owner.grid.get(x, y) & canGoDown))
 	{
 		Node downNode(owner, x, y + 1);
 		if (!visitedFunc(downNode.getID()))
 			pushFunc(container, downNode);
 	}
-	if (allowDiag)
+	if (owner.allowDiag)
 	{
-		if (x > 0 && y > 0 && walkable.get(x - 1, y - 1) && (owner.grid.get(x, y) & canGoNW))
+		if (x > 0 && y > 0 && owner.walkable.get(x - 1, y - 1) && (owner.grid.get(x, y) & canGoNW))
 		{
 			Node NWNode(owner, x - 1, y - 1);
 			if (!visitedFunc(NWNode.getID()))
 				pushFunc(container, NWNode);
 		}
-		if (x < owner.width - 1 && walkable.get(x + 1, y - 1) && y > 0 && (owner.grid.get(x, y) & canGoNE))
+		if (x < owner.width - 1 && y > 0 && owner.walkable.get(x + 1, y - 1) && (owner.grid.get(x, y) & canGoNE))
 		{
 			Node NENode(owner, x + 1, y - 1);
 			if (!visitedFunc(NENode.getID()))
 				pushFunc(container, NENode);
 		}
-		if (x > 0 && y < height - 1 && walkable.get(x - 1, y + 1) && (owner.grid.get(x, y) & canGoSW))
+		if (x > 0 && y < owner.height - 1 && owner.walkable.get(x - 1, y + 1) && (owner.grid.get(x, y) & canGoSW))
 		{
 			Node SWNode(owner, x - 1, y + 1);
 			if (!visitedFunc(SWNode.getID()))
 				pushFunc(container, SWNode);
 		}
-		if (x < owner.width - 1 && y < owner.height - 1 && walkable.get(x + 1, y + 1) && (owner.grid.get(x, y) & canGoSE))
+		if (x < owner.width - 1 && y < owner.height - 1 && owner.walkable.get(x + 1, y + 1) && (owner.grid.get(x, y) & canGoSE))
 		{
 			Node SENode(owner, x + 1, y + 1);
 			if (!visitedFunc(SENode.getID()))
