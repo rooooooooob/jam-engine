@@ -1,4 +1,4 @@
-#include "TexManager.hpp"
+#include "Graphics/TexManager.hpp"
 
 #ifdef JE_DEBUG
 	#include <iostream>

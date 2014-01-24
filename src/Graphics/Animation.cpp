@@ -1,6 +1,6 @@
-#include "Animation.hpp"
+#include "Graphics/Animation.hpp"
 
-#include "TexManager.hpp"
+#include "Graphics/TexManager.hpp"
 
 namespace je
 {

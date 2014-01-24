@@ -5,8 +5,8 @@
 #include <vector>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "Input.hpp"
-#include "TexManager.hpp"
+#include "Core/Input.hpp"
+#include "Graphics/TexManager.hpp"
 
 namespace je
 {

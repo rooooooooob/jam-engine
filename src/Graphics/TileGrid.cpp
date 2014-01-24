@@ -1,4 +1,4 @@
-#include "TileGrid.hpp"
+#include "Graphics/TileGrid.hpp"
 
 #include <cassert>
 #include <iostream>

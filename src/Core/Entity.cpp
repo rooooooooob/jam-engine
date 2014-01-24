@@ -1,6 +1,6 @@
-#include "Entity.hpp"
+#include "Core/Entity.hpp"
 
-#include "Level.hpp"
+#include "Core/Level.hpp"
 
 namespace je
 {

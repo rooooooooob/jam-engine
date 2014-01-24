@@ -1,4 +1,4 @@
-#include "Input.hpp"
+#include "Core/Input.hpp"
 
 #include <cstddef>
 #include <cstdio>

@@ -1,4 +1,4 @@
-#include "Level.hpp"
+#include "Core/Level.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -6,8 +6,8 @@
 #include <fstream>
 #include <cstring>
 #include <algorithm>
-#include "TexManager.hpp"
-#include "Game.hpp"
+#include "Graphics/TexManager.hpp"
+#include "Core/Game.hpp"
 
 namespace je
 {

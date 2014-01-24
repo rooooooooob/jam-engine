@@ -1,7 +1,7 @@
-#include "Controller.hpp"
+#include "Core/Controller.hpp"
 
 #include <cassert>
-#include "Level.hpp"
+#include "Core/Level.hpp"
 
 namespace je
 {

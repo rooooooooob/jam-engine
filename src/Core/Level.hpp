@@ -7,8 +7,8 @@
 #include <initializer_list>
 #include <SFML/Graphics/RenderStates.hpp>
 #include "rapidxml.hpp"
-#include "Entity.hpp"
-#include "TileGrid.hpp"
+#include "Core/Entity.hpp"
+#include "Graphics/TileGrid.hpp"
 
 namespace je
 {

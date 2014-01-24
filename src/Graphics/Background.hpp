@@ -2,7 +2,7 @@
 #define JE_BACKGROUND_HPP
 
 #include <SFML/Graphics.hpp>
-#include "Entity.hpp"
+#include "Core/Entity.hpp"
 
 namespace je
 {

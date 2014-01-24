@@ -1,4 +1,4 @@
-#include "Trig.hpp"
+#include "Utility/Trig.hpp"
 
 #include <cmath>
 

@@ -1,7 +1,7 @@
-#include "Game.hpp"
+#include "Core/Game.hpp"
 
-#include "Level.hpp"
-#include "TexManager.hpp"
+#include "Core/Level.hpp"
+#include "Graphics/TexManager.hpp"
 
 #include <iostream>
 #include <chrono>

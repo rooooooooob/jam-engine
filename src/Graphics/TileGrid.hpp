@@ -5,7 +5,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include "Entity.hpp"
+#include "Core/Entity.hpp"
 
 namespace je
 {
