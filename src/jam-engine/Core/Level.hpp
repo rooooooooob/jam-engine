@@ -178,6 +178,7 @@ protected:
 private:
 	void init();
 	void fixUpdateOrder();
+	void limitCamera();
 
 
 	std::vector<sf::Sprite> tileSprites;

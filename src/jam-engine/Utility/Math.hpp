@@ -22,15 +22,15 @@ inline T abs(T n)
 	return n > 0 ? n : -n;
 }
 
-template <typename T>
-void limit(T& n, const T& upper)
+template <typename T, typename L>
+void limit(T& n, const L& upper)
 {
 	if (n > upper)
 		n = upper;
 }
 
-template <typename T>
-void limit(T& n, const T& lower, const T& upper)
+template <typename T, typename L>
+void limit(T& n, const L& lower, const L& upper)
 {
 	if (n > upper)
 		n = upper;

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include "jam-engine/Core/Game.hpp"
 #include "jam-engine/Graphics/TexManager.hpp"
+#include "jam-engine/Utility/Math.hpp"
 
 namespace je
 {
@@ -286,12 +287,14 @@ void Level::setCameraPosition(const sf::Vector2f& cameraPosition)
 {
 	cameraBounds.left = cameraPosition.x;
 	cameraBounds.top = cameraPosition.y;
+	this->limitCamera();
 }
 
 void Level::moveCamera(const sf::Vector2f& cameraPosition)
 {
 	cameraBounds.left += cameraPosition.x;
 	cameraBounds.top += cameraPosition.y;
+	this->limitCamera();
 }
 
 sf::Vector2f Level::getCursorPos() const
@@ -635,6 +638,12 @@ void Level::fixUpdateOrder()
 	{
 		hasSpecificUpdateOrder[type] = true;
 	}
+}
+
+void Level::limitCamera()
+{
+	je::limit(cameraBounds.left, cameraBounds.width / 2, width - cameraBounds.width / 2);
+	je::limit(cameraBounds.top, cameraBounds.height / 2, height - cameraBounds.height / 2);
 }
 
 }
