@@ -8,8 +8,8 @@
 
 namespace je
 {
-
-class Animation
+//	TODO: make not shit
+class Animation : public sf::Drawable
 {
 public:
 	Animation(const sf::Texture& texture, int width, int height, int time, bool repeat = true);
@@ -25,10 +25,24 @@ public:
 	 */
 	void reset();
 
+	//	deprecated
 	void draw(sf::RenderTarget& target, const sf::RenderStates &states = sf::RenderStates::Default) const;
 
+	void setAngle(float angle);
+
+	void setScale(float xscale, float yscale);
+
+	void setPosition(int x, int y);
+
+	void setPosition(const sf::Vector2f& pos);
+
+	//	TODO: remove this and implement sf::Transformable/sf::Drawable
 	template <typename F>
 	void apply(F function);
+
+	//	sf::Drawable
+	void draw (sf::RenderTarget& target, sf::RenderStates states) const;
+	//	sf::Transformable (TODO)
 
 private:
 	std::vector<sf::Sprite> frames;

@@ -67,6 +67,40 @@ void Animation::reset()
 {
 	frame = 0;
 }
+//	TODO: optimize
+void Animation::setAngle(float angle)
+{
+	for (sf::Sprite& sprite : frames)
+		sprite.setAngle(angle);
+}
+//	TODO: optimize
+void Animation::setScale(float xscale, float yscale)
+{
+	for (sf::Sprite& sprite : frames)
+		sprite.setScale(xscale, yscale);
+}
+//	TODO: optimize
+void Animation::setPosition(int x, int y)
+{
+	for (sf::Sprite& sprite : frames)
+		sprite.setPosition(x, y);
+}
+
+void Animation::setPosition(const sf::Vector2f& pos)
+{
+	for (sf::Sprite& sprite : frames)
+		sprite.setPosition(pos);
+}
+
+//	sf::Drawable
+
+void Animation::draw(sf::RenderTarget& target, sf::RenderStates states)
+{
+	if (!frames.empty())
+		target.draw(frames[frame], states]);
+}
+
+//	sf::Transformable
 
 void Animation::draw(sf::RenderTarget& target, const sf::RenderStates &states /*= sf::RenderStates::Default*/) const
 {
