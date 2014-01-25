@@ -68,10 +68,10 @@ void Animation::reset()
 	frame = 0;
 }
 //	TODO: optimize
-void Animation::setAngle(float angle)
+void Animation::setRotation(float angle)
 {
 	for (sf::Sprite& sprite : frames)
-		sprite.setAngle(angle);
+		sprite.setRotation(angle);
 }
 //	TODO: optimize
 void Animation::setScale(float xscale, float yscale)
@@ -94,18 +94,12 @@ void Animation::setPosition(const sf::Vector2f& pos)
 
 //	sf::Drawable
 
-void Animation::draw(sf::RenderTarget& target, sf::RenderStates states)
-{
-	if (!frames.empty())
-		target.draw(frames[frame], states]);
-}
-
-//	sf::Transformable
-
-void Animation::draw(sf::RenderTarget& target, const sf::RenderStates &states /*= sf::RenderStates::Default*/) const
+void Animation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (!frames.empty())//frame >= 0 && frame < frames.size())
 		target.draw(frames[frame], states);
 }
+
+//	sf::Transformable
 
 }

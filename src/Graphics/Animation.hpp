@@ -25,10 +25,7 @@ public:
 	 */
 	void reset();
 
-	//	deprecated
-	void draw(sf::RenderTarget& target, const sf::RenderStates &states = sf::RenderStates::Default) const;
-
-	void setAngle(float angle);
+	void setRotation(float angle);
 
 	void setScale(float xscale, float yscale);
 
@@ -41,7 +38,7 @@ public:
 	void apply(F function);
 
 	//	sf::Drawable
-	void draw (sf::RenderTarget& target, sf::RenderStates states) const;
+	void draw (sf::RenderTarget& target, sf::RenderStates states) const override;
 	//	sf::Transformable (TODO)
 
 private:
