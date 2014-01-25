@@ -1,4 +1,4 @@
-#include "Pathing/PathGrid.hpp"
+#include "jam-engine/Pathing/PathGrid.hpp"
 
 namespace je
 {
