@@ -1,6 +1,6 @@
-#include "Graphics/Animation.hpp"
+#include "jam-engine/Graphics/Animation.hpp"
 
-#include "Graphics/TexManager.hpp"
+#include "jam-engine/Graphics/TexManager.hpp"
 
 namespace je
 {

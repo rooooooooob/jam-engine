@@ -1,4 +1,4 @@
-#include "Graphics/TexManager.hpp"
+#include "jam-engine/Graphics/TexManager.hpp"
 
 #ifdef JE_DEBUG
 	#include <iostream>

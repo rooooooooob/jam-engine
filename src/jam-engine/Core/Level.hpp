@@ -7,8 +7,8 @@
 #include <initializer_list>
 #include <SFML/Graphics/RenderStates.hpp>
 #include "rapidxml.hpp"
-#include "Core/Entity.hpp"
-#include "Graphics/TileGrid.hpp"
+#include "jam-engine/Core/Entity.hpp"
+#include "jam-engine/Graphics/TileGrid.hpp"
 
 namespace je
 {

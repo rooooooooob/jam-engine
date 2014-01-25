@@ -1,7 +1,7 @@
-#include "Core/Game.hpp"
+#include "jam-engine/Core/Game.hpp"
 
-#include "Core/Level.hpp"
-#include "Graphics/TexManager.hpp"
+#include "jam-engine/Core/Level.hpp"
+#include "jam-engine/Graphics/TexManager.hpp"
 
 #include <iostream>
 #include <chrono>

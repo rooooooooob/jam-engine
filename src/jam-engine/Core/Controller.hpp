@@ -8,7 +8,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Joystick.hpp>
 #include <SFML/Window/Mouse.hpp>
-#include "Core/Input.hpp"
+#include "jam-engine/Core/Input.hpp"
 
 namespace je
 {

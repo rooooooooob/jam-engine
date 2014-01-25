@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <SFML/System/Vector2.hpp>
-#include "Utility/Grid.hpp"
+#include "jam-engine/Utility/Grid.hpp"
 
 namespace je
 {

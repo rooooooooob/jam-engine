@@ -1,7 +1,7 @@
-#include "Core/Controller.hpp"
+#include "jam-engine/Core/Controller.hpp"
 
 #include <cassert>
-#include "Core/Level.hpp"
+#include "jam-engine/Core/Level.hpp"
 
 namespace je
 {

@@ -1,4 +1,4 @@
-#include "Core/Input.hpp"
+#include "jam-engine/Core/Input.hpp"
 
 #include <cstddef>
 #include <cstdio>

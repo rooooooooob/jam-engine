@@ -1,4 +1,4 @@
-#include "Core/Level.hpp"
+#include "jam-engine/Core/Level.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -6,8 +6,8 @@
 #include <fstream>
 #include <cstring>
 #include <algorithm>
-#include "Graphics/TexManager.hpp"
-#include "Core/Game.hpp"
+#include "jam-engine/Core/Game.hpp"
+#include "jam-engine/Graphics/TexManager.hpp"
 
 namespace je
 {

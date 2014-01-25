@@ -5,8 +5,8 @@
 #include <vector>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "Core/Input.hpp"
-#include "Graphics/TexManager.hpp"
+#include "jam-engine/Core/Input.hpp"
+#include "jam-engine/Graphics/TexManager.hpp"
 
 namespace je
 {
