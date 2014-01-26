@@ -22,7 +22,7 @@ Level::Level(Game * const game, int width, int height)
 	this->init();
 }
 
-Level::Level(Game * const game, const std::string& filename)
+Level::Level(Game * const game)
 	:width(0)
 	,height(0)
 	,game(game)

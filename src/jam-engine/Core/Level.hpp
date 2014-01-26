@@ -26,11 +26,10 @@ public:
 	 */
 	Level(Game * const game, int width, int height);
 	/**
-	 * Constructs a level with the given width and height using the passed in .tmx file
+	 * Constructs an empty level. You should call loadMap() later.
 	 * @param game The game the level belongs to
-	 * @param filename The .tmx file to load assets from
 	 */
-	Level(Game * const game, const std::string& filename);
+	Level(Game * const game);
 
 	virtual ~Level();
 
