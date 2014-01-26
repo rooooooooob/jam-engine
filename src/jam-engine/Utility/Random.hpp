@@ -15,7 +15,7 @@ template <typename T>
 T choose(const std::initializer_list<T>& il)
 {
 	//  May the Lord forgive me
-	return *(il.begin() + (std::size_t) randomf(il.size()));
+	return *(il.begin() + (std::size_t) random(il.size()));
 }
 
 }
