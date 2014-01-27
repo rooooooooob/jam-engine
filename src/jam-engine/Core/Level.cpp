@@ -8,7 +8,9 @@
 #include <algorithm>
 #include "jam-engine/Core/Game.hpp"
 #include "jam-engine/Graphics/TexManager.hpp"
+#include "jam-engine/Utility/Assert.hpp"
 #include "jam-engine/Utility/Math.hpp"
+#include "jam-engine/Utility/Trig.hpp"
 
 namespace je
 {
@@ -198,6 +200,127 @@ void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, 
 	rect.left += xoffset;
 	rect.top += yoffset;
 	this->debugDrawRect(rect, results.empty() ? sf::Color::Yellow : sf::Color::Green);
+}
+
+void Level::findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type)
+{
+	JE_ERROR("Not implemented");
+}
+
+void Level::findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity*)> filter)
+{
+	//	TODO: ADD CULLING
+	results.clear();
+	auto mit = entities.find(type);
+	if (mit != entities.end())
+	{
+		for (Entity *entity : mit->second)
+		{
+			if (entity->getType() == type && entity->intersects(bBox) && filter(entity))
+				results.push_back(entity);
+		}
+	}
+	this->debugDrawRect(bBox, results.empty() ? sf::Color::Yellow : sf::Color::Green);
+}
+
+void findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type)
+{
+	JE_ERROR("Not implemented");
+}
+
+void findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity*)> filter)
+{
+	JE_ERROR("Not implemented");
+}
+
+sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f& veloc, std::function<bool(Entity*)> filter)
+{
+	//	TODO: implement legit
+	std::vector<Entity*> possibleMatches;
+	//	find out the minimal bounding box that covers the entire possible area this cast would query
+	sf::Rect<int> maxBounds = caller->getBounds();
+	if (veloc.x > 0)
+		maxBounds.width += veloc.x;
+	else
+	{
+		maxBounds.width -= veloc.x;
+		maxBounds.left += veloc.x;
+	}
+	if (veloc.y > 0)
+		maxBounds.height += veloc.y;
+	else
+	{
+		maxBounds.height -= veloc.y;
+		maxBounds.top += veloc.y;
+	}
+	findCollisions(possibleMatches, maxBounds, type, filter);
+	sf::Vector2f offset = caller->getPos();
+	sf::Rect<int> queryBox = caller->getBounds();
+	//	find out the largest distance you could travel without skipping through things when moving
+	float jumpDist = min(abs(caller->getDimensions().x), abs(caller->getDimensions().y));
+	int totalDist = distance(veloc);
+	int reps = totalDist / jumpDist + 1;
+	//	create a vector that represents how far the entity will move each jump
+	sf::Vector2f jumpVec(lengthdir((float) totalDist / reps, direction(veloc)));
+	for (int i = 0; i < reps; ++i)
+	{
+		offset += jumpVec;
+		queryBox.left = offset.x;
+		queryBox.top = offset.y;
+		for (Entity *e : possibleMatches)
+		{
+			//	we hit something - now do a cast with smaller jump distances
+			if (e->intersects(queryBox))
+			{
+				float scaleDown = max(abs(jumpVec.x), abs(jumpVec.y));
+				// 	todo: implement
+				break;
+			}
+		}
+	}
+	return offset;
+}
+
+sf::Vector2f Level::rayCastManually(const Entity *caller, Entity::Type type, std::function<bool(Entity*)> filter, const sf::Vector2f& veloc, float stepSize)
+{
+	sf::Vector2f pos = caller->getPos();
+	//	TODO: implement legit
+	std::vector<Entity*> possibleMatches;
+	//	find out the minimal bounding box that covers the entire possible area this cast would query
+	sf::Rect<int> maxBounds = caller->getBounds();
+	if (veloc.x > 0)
+		maxBounds.width += veloc.x;
+	else
+	{
+		maxBounds.width -= veloc.x;
+		maxBounds.left += veloc.x;
+	}
+	if (veloc.y > 0)
+		maxBounds.height += veloc.y;
+	else
+	{
+		maxBounds.height -= veloc.y;
+		maxBounds.top += veloc.y;
+	}
+	findCollisions(possibleMatches, maxBounds, type, filter);
+	sf::Rect<int> queryBox = caller->getBounds();
+	int reps = distance(veloc) / stepSize + 1;
+	sf::Vector2f jumpVec(lengthdir(stepSize, direction(veloc)));
+	for (int i = 0; i < reps; ++i)
+	{
+		pos += jumpVec;
+		queryBox.left = pos.x;
+		queryBox.top = pos.y;
+		for (Entity *e : possibleMatches)
+		{
+			if (e->intersects(queryBox))
+			{
+				pos -= jumpVec;
+				break;
+			}
+		}
+	}
+	return pos;
 }
 
 void Level::addEntity(Entity *instance)
@@ -642,8 +765,8 @@ void Level::fixUpdateOrder()
 
 void Level::limitCamera()
 {
-	je::limit(cameraBounds.left, cameraBounds.width / 2, width - cameraBounds.width / 2);
-	je::limit(cameraBounds.top, cameraBounds.height / 2, height - cameraBounds.height / 2);
+	limit(cameraBounds.left, cameraBounds.width / 2, width - cameraBounds.width / 2);
+	limit(cameraBounds.top, cameraBounds.height / 2, height - cameraBounds.height / 2);
 }
 
 }

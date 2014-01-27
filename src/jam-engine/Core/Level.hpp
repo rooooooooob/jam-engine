@@ -1,10 +1,11 @@
 #ifndef JE_LEVEL_HPP
 #define JE_LEVEL_HPP
 
-#include <vector>
-#include <string>
-#include <map>
+#include <functional>
 #include <initializer_list>
+#include <map>
+#include <string>
+#include <vector>
 #include <SFML/Graphics/RenderStates.hpp>
 #include "rapidxml.hpp"
 #include "jam-engine/Core/Entity.hpp"
@@ -61,6 +62,24 @@ public:
 	 * @Param yoffset The vertical offset away from caller to query at
 	 */
 	void findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
+
+	void findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type);
+
+	void findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity*)> filter);
+
+	/**
+	 * Attempts to move along the velocity vector until it hits an entity of the given type.
+	 * @param caller The Entity to use as a reference to query from
+	 * @param type The type of Entity to stop at
+	 * @param veloc The velocity vector to attempt to move the caller along
+	 * @return The ending point of the Entity
+	 */
+	sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f& veloc);
+
+	sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f& veloc, std::function<bool(Entity*)> filter);
+
+	sf::Vector2f rayCastManually(const Entity *caller, Entity::Type type, std::function<bool(Entity*)> filter, const sf::Vector2f& veloc, float stepSize = 1.f);
+
 
 	/**
 	 * Adds an Entity into the Level. The Level now assumes ownership of the Entity
