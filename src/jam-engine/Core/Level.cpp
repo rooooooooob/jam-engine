@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cstring>
 #include <algorithm>
+#include "jam-engine/Core/Camera.hpp"
 #include "jam-engine/Core/Game.hpp"
 #include "jam-engine/Graphics/TexManager.hpp"
 #include "jam-engine/Utility/Assert.hpp"
@@ -671,6 +672,27 @@ void Level::setSpecificOrderEntitiesPost(std::initializer_list<std::string> orde
 	this->fixUpdateOrder();
 }
 
+void Level::registerCamera(Camera *camera)
+{
+	for (Camera *cam : cameras)
+		if (cam == camera)
+			return;
+	cameras.push_back(camera);
+}
+
+void Level::unregisterCamera(Camera *camera)
+{
+	for (Camera*& cam : cameras)
+	{
+		if (cam == camera)
+		{
+			cam = cameras.back();
+			cameras.pop_back();
+			return;
+		}
+	}
+}
+
 /*		protected			*/
 
 void Level::onUpdate()
@@ -765,8 +787,8 @@ void Level::fixUpdateOrder()
 
 void Level::limitCamera()
 {
-	limit(cameraBounds.left, cameraBounds.width / 2, width - cameraBounds.width / 2);
-	limit(cameraBounds.top, cameraBounds.height / 2, height - cameraBounds.height / 2);
+	limit(cameraBounds.left, cameraBounds.width / 2 + 320, width - cameraBounds.width / 2);
+	limit(cameraBounds.top, cameraBounds.height / 2 + 240, height - cameraBounds.height / 2);
 }
 
 }

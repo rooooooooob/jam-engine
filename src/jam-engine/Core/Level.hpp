@@ -16,6 +16,8 @@ namespace je
 
 class Game;
 
+class Camera;
+
 class Level
 {
 public:
@@ -135,6 +137,11 @@ public:
 	 */
 	void setSpecificOrderEntitiesPost(std::initializer_list<std::string> order);
 
+
+	void registerCamera(Camera *camera);
+
+	void unregisterCamera(Camera *camera);
+
 protected:
 	/**
 	 * Represents the data loaded from a Tiled map file. loadEntities should
@@ -208,6 +215,7 @@ private:
 	std::vector<std::string> specificOrderEntitiesPre;
 	std::vector<std::string> specificOrderEntitiesPost;
 	std::map<std::string, bool> hasSpecificUpdateOrder;
+	std::vector<Camera*> cameras;// maintains no ownership
 #ifdef JE_DEBUG
 	std::vector<sf::RectangleShape> debugDrawRects;
 #endif
