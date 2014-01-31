@@ -56,15 +56,7 @@ int Game::execute()
 		{
 			level->update();
 
-			view.setCenter(level->getCameraPosition());
-
-			window.setView(view);
-
 			level->draw(window);
-
-			window.setView(window.getDefaultView());
-
-			level->drawGUI(window);
 		}
 		oldlevels.clear();
 

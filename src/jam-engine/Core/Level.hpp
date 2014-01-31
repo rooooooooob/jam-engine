@@ -105,15 +105,15 @@ public:
 
 	Game& getGame() const;
 
-	sf::Rect<int> getCameraBounds() const;
+	//sf::Rect<int> getCameraBounds() const;
 
-	void setCameraBounds(const sf::Rect<int>& newBounds);
+	//void setCameraBounds(const sf::Rect<int>& newBounds);
 
-	sf::Vector2f getCameraPosition() const;
+	//sf::Vector2f getCameraPosition() const;
 
-	void setCameraPosition(const sf::Vector2f& cameraPosition);
+	//void setCameraPosition(const sf::Vector2f& cameraPosition);
 
-	void moveCamera(const sf::Vector2f& cameraPosition);
+	//void moveCamera(const sf::Vector2f& cameraPosition);
 
 	sf::Vector2f getCursorPos() const;
 
@@ -138,9 +138,9 @@ public:
 	void setSpecificOrderEntitiesPost(std::initializer_list<std::string> order);
 
 
-	void registerCamera(Camera *camera);
+	void registerCamera(const Camera *camera);
 
-	void unregisterCamera(Camera *camera);
+	void unregisterCamera(const Camera *camera);
 
 protected:
 	/**
@@ -203,11 +203,10 @@ protected:
 private:
 	void init();
 	void fixUpdateOrder();
-	void limitCamera();
+	void drawEntities(sf::RenderTarget& target, const sf::Rect<int>& cameraBounds) const;
 
 
 	std::vector<sf::Sprite> tileSprites;
-	sf::Rect<int> cameraBounds;
 	int width;
 	int height;
 	Game * const game;
@@ -215,7 +214,7 @@ private:
 	std::vector<std::string> specificOrderEntitiesPre;
 	std::vector<std::string> specificOrderEntitiesPost;
 	std::map<std::string, bool> hasSpecificUpdateOrder;
-	std::vector<Camera*> cameras;// maintains no ownership
+	std::vector<const Camera*> cameras;// maintains no ownership
 #ifdef JE_DEBUG
 	std::vector<sf::RectangleShape> debugDrawRects;
 #endif

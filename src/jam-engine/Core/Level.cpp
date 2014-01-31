@@ -41,25 +41,23 @@ Level::~Level()
 
 void Level::draw(sf::RenderTarget& target) const
 {
-	beforeDraw(target);
-	for (Entity *entity : depthBuffer)
+	if (cameras.empty())
 	{
+		target.setView(target.getDefaultView());
+		this->drawEntities(target, sf::Rect<int>(0, 0, width, height));
+	}
+	else
+	{
+		for (const Camera *cam : cameras)
 		{
-			entity->draw(target, states);
+			const sf::View& v = cam->getView();
+			target.setView(v);
+			sf::Rect<int> cameraBounds(sf::Vector2i(v.getCenter() - v.getSize() / 2.f), sf::Vector2i(v.getSize()));
+			this->drawEntities(target, cameraBounds);
 		}
 	}
-	onDraw(target);
-
-#ifdef JE_DEBUG
-	for (auto& p : entities)
-	{
-		for (Entity * entity : p.second)
-			if (cameraBounds.contains(entity->getPos().x + cameraBounds.width / 2, entity->getPos().y + cameraBounds.height / 2))
-				entity->debugDraw(target);
-		for (const sf::RectangleShape& rect : debugDrawRects)
-			target.draw(rect);
-	}
-#endif
+	target.setView(target.getDefaultView());
+	this->drawGUI(target);
 	/*std::cout << "tileSprites.size() = " << tileSprites.size() << "\n";
 	for (int i = 0; i < tileSprites.size(); ++i)
 	{
@@ -126,13 +124,6 @@ void Level::update()
 		}
 	}
 	onUpdate();
-	for (auto& grid : tileLayers)
-	{
-		sf::Rect<int> bounds(cameraBounds);
-		bounds.left -= cameraBounds.width / 2;
-		bounds.top -= cameraBounds.height / 2;
-		grid.second->setVisibleArea(bounds);
-	}
 	//	depth sort
 	depthBuffer.clear();
 	for (auto& p : entities)
@@ -392,39 +383,61 @@ Game& Level::getGame() const
 	return *game;
 }
 
-sf::Rect<int> Level::getCameraBounds() const
-{
-	return sf::Rect<int>(cameraBounds.left - cameraBounds.width / 2, cameraBounds.top - cameraBounds.height / 2, cameraBounds.width, cameraBounds.height);
-}
-
-void Level::setCameraBounds(const sf::Rect<int>& newBounds)
-{
-	cameraBounds = newBounds;
-}
-
-sf::Vector2f Level::getCameraPosition() const
-{
-	return sf::Vector2f(cameraBounds.left, cameraBounds.top);
-}
-
-void Level::setCameraPosition(const sf::Vector2f& cameraPosition)
-{
-	cameraBounds.left = cameraPosition.x;
-	cameraBounds.top = cameraPosition.y;
-	this->limitCamera();
-}
-
-void Level::moveCamera(const sf::Vector2f& cameraPosition)
-{
-	cameraBounds.left += cameraPosition.x;
-	cameraBounds.top += cameraPosition.y;
-	this->limitCamera();
-}
+//sf::Rect<int> Level::getCameraBounds() const
+//{
+//	return sf::Rect<int>(cameraBounds.left - cameraBounds.width / 2, cameraBounds.top - cameraBounds.height / 2, cameraBounds.width, cameraBounds.height);
+//}
+//
+//void Level::setCameraBounds(const sf::Rect<int>& newBounds)
+//{
+//	cameraBounds = newBounds;
+//}
+//
+//sf::Vector2f Level::getCameraPosition() const
+//{
+//	return sf::Vector2f(cameraBounds.left, cameraBounds.top);
+//}
+//
+//void Level::setCameraPosition(const sf::Vector2f& cameraPosition)
+//{
+//	cameraBounds.left = cameraPosition.x;
+//	cameraBounds.top = cameraPosition.y;
+//	this->limitCamera();
+//}
+//
+//void Level::moveCamera(const sf::Vector2f& cameraPosition)
+//{
+//	cameraBounds.left += cameraPosition.x;
+//	cameraBounds.top += cameraPosition.y;
+//	this->limitCamera();
+//}
 
 sf::Vector2f Level::getCursorPos() const
 {
-	sf::Vector2i posI = game->getWindow().mapCoordsToPixel(sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y)) - game->getWindow().getPosition();
-	return sf::Vector2f(posI.x + cameraBounds.left - cameraBounds.width / 2, posI.y + cameraBounds.top - cameraBounds.height / 2);
+	sf::Rect<int> viewBox(0, 0, width, height);
+	sf::Vector2i windowMousePos = game->getWindow().mapCoordsToPixel(sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y)) - game->getWindow().getPosition();
+	// HACK: add the window top bit to the y position because SFML doesn't seem to do it...
+	windowMousePos.x -= 8;
+	windowMousePos.y -= 30;
+	
+	for (const Camera *cam : cameras)
+	{
+		const sf::View& v = cam->getView();
+		viewBox.left = width * v.getViewport().left;
+		viewBox.top = height * v.getViewport().top;
+		viewBox.width = width * v.getViewport().width;
+		viewBox.height = height * v.getViewport().height;
+		if (viewBox.contains(windowMousePos))
+		{
+			// TODO: verify this actually works properly...
+			int vpmx = (windowMousePos.x - viewBox.left);	//	mouse pos relative to the viewport
+			int mx = v.getCenter().x - viewBox.width / 2.f + vpmx * viewBox.width / v.getSize().x;
+			int vpmy = (windowMousePos.x - viewBox.left);	//	mouse pos relative to the viewport
+			int my = v.getCenter().y - viewBox.height / 2.f + vpmy * viewBox.height / v.getSize().y;
+			return sf::Vector2f(mx, my);
+		}
+	}
+	return sf::Vector2f(windowMousePos);
 }
 
 void Level::loadMap(const std::string& filename)
@@ -672,17 +685,17 @@ void Level::setSpecificOrderEntitiesPost(std::initializer_list<std::string> orde
 	this->fixUpdateOrder();
 }
 
-void Level::registerCamera(Camera *camera)
+void Level::registerCamera(const Camera *camera)
 {
-	for (Camera *cam : cameras)
+	for (const Camera *cam : cameras)
 		if (cam == camera)
 			return;
 	cameras.push_back(camera);
 }
 
-void Level::unregisterCamera(Camera *camera)
+void Level::unregisterCamera(const Camera *camera)
 {
-	for (Camera*& cam : cameras)
+	for (const Camera*& cam : cameras)
 	{
 		if (cam == camera)
 		{
@@ -767,8 +780,10 @@ void Level::transformTiles(const std::string& layerName, int tilesAcross, int ti
 void Level::init()
 {
 	tileSprites.push_back(sf::Sprite());	//	empty tile (0)
-	this->setCameraBounds(sf::Rect<int>(0, 0, getWidth(), getHeight()));
-	this->setCameraPosition(sf::Vector2f(getWidth() / 2, getHeight() / 2));
+	// TODO: figure out what to do with cameras when the level inits
+	cameras.clear();
+	//this->setCameraBounds(sf::Rect<int>(0, 0, getWidth(), getHeight()));
+	//this->setCameraPosition(sf::Vector2f(getWidth() / 2, getHeight() / 2));
 }
 
 void Level::fixUpdateOrder()
@@ -785,10 +800,31 @@ void Level::fixUpdateOrder()
 	}
 }
 
-void Level::limitCamera()
+void Level::drawEntities(sf::RenderTarget& target, const sf::Rect<int>& cameraBounds) const
 {
-	limit(cameraBounds.left, cameraBounds.width / 2 + 320, width - cameraBounds.width / 2);
-	limit(cameraBounds.top, cameraBounds.height / 2 + 240, height - cameraBounds.height / 2);
+	auto& tiles = const_cast<decltype(tileLayers)&>(tileLayers);
+	for (auto& grid : tiles)
+	{
+		grid.second->setVisibleArea(cameraBounds);
+	}
+
+	this->beforeDraw(target);
+	for (Entity *entity : depthBuffer)
+	{
+		entity->draw(target, states);
+	}
+	this->onDraw(target);
+
+#ifdef JE_DEBUG
+	for (auto& p : entities)
+	{
+		for (Entity * entity : p.second)
+			if (cameraBounds.contains(entity->getPos().x + cameraBounds.width / 2, entity->getPos().y + cameraBounds.height / 2))
+				entity->debugDraw(target);
+		for (const sf::RectangleShape& rect : debugDrawRects)
+			target.draw(rect);
+	}
+#endif
 }
 
 }
