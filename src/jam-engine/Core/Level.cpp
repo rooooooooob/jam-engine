@@ -250,7 +250,7 @@ sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f
 	sf::Rect<int> queryBox = caller->getBounds();
 	//	find out the largest distance you could travel without skipping through things when moving
 	float jumpDist = min(abs(caller->getDimensions().x), abs(caller->getDimensions().y));
-	int totalDist = distance(veloc);
+	int totalDist = length(veloc);
 	int reps = totalDist / jumpDist + 1;
 	//	create a vector that represents how far the entity will move each jump
 	sf::Vector2f jumpVec(lengthdir((float) totalDist / reps, direction(veloc)));
@@ -296,7 +296,7 @@ sf::Vector2f Level::rayCastManually(const Entity *caller, Entity::Type type, std
 	}
 	findCollisions(possibleMatches, maxBounds, type, filter);
 	sf::Rect<int> queryBox = caller->getBounds();
-	int reps = distance(veloc) / stepSize + 1;
+	int reps = length(veloc) / stepSize + 1;
 	sf::Vector2f jumpVec(lengthdir(stepSize, direction(veloc)));
 	for (int i = 0; i < reps; ++i)
 	{
