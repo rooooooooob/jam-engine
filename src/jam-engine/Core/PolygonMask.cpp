@@ -1,5 +1,6 @@
 #include "jam-engine/Core/PolygonMask.hpp"
 
+#include "jam-engine/Core/CollisionCheckingImplementation.hpp"
 #include "jam-engine/Utility/Trig.hpp"
 
 namespace je
@@ -25,55 +26,37 @@ void PolygonMask::projectAgainstHyerplane(int& min, int& max, float angle) const
 	}
 }
 
-bool PolygonMask::intersects(const PolygonMask& other) const
+bool PolygonMask::intersects(const DetailedMask& other) const
 {
-	int thisMin = 0, thisMax = 0, otherMin = 0, otherMax = 0;
-
-	float angle = 0;
-
-	int size = points.size();
-	for (int i = 0; i < size; ++i)
+	switch (other.type)
 	{
-		angle = pointDirection(points[i], points[(i + 1) % size]);
-		this->projectAgainstHyerplane(thisMin, thisMax, angle);
-		other.projectAgainstHyerplane(otherMin, otherMax, angle);
-		if (thisMin >= otherMax || thisMax < otherMin)
-			return false;
+		case Type::Polygon:
+			return intersectsPolygonOnPolygon(*this, other);
+		case Type::Circle:
+			return true;
+		case Type::Pixel:
+			return true;
 	}
-
-	size = other.points.size();
-	for (int i = 0; i < size; ++i)
-	{
-		angle = pointDirection(other.points[i], other.points[(i + 1) % size]);
-		this->projectAgainstHyerplane(thisMin, thisMax, angle);
-		other.projectAgainstHyerplane(otherMin, otherMax, angle);
-		if (thisMin >= otherMax || thisMax < otherMin)
-			return false;
-	}
-
-	return true;
+	return false;
 }
 
-void PolygonMask::getAABB(sf::Rect<int>& out) const
+void PolygonMask::getAABB(int& minX, int& maxX, int& minY, int& maxY) const
 {
-	int maxX = out.left = points.front().x;
-	int maxY = out.top = points.front().y;
-	out.width = 0;
-	out.height = 0;
+	maxX = minX = points.front().x;
+	maxY = minY = points.front().y;
 	//	skip the first point since we already did that
 	for (std::vector<sf::Vector2i>::const_iterator it = points.begin() + 1, end = points.end(); it != end; ++it)
 	{
 		if (it->x > maxX)
 			maxX = it->x;
-		if (it->x < out.left)
-			out.left = it->x;
+		else if (it->x < minX)
+			minX = it->x;
+
 		if (it->y > maxY)
 			maxY = it->y;
-		if (it->y < out.top)
-			out.top = it->y;
+		else if (it->y < minY)
+			minY = it->y;
 	}
-	out.width = maxX - out.left;
-	out.height = maxY - out.top;
 }
 
 }
