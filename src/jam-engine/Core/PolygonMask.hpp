@@ -19,24 +19,26 @@ class CircleMask;
 class PolygonMask : public DetailedMask
 {
 public:
-	template <typename T>
-	PolygonMask(const T& container)
-		:DetailedMask(Type::Polygon)
-		,points()
-		,pointsOriginal()
-#ifdef JE_DEBUG
-		,debugDrawPoints(sf::PrimitiveType::LinesStrip)
-#endif
-	{
-		for (const auto& p : container)
-		{
-			points.push_back(sf::Vector2f(p));
-			pointsOriginal.push_back(sf::Vector2f(p));
-#ifdef JE_DEBUG
-			debugDrawPoints.append(sf::Vertex(sf::Vector2f(p), sf::Color::Blue));
-#endif
-		}
-	}
+//	template <typename T>
+//	PolygonMask(const T& container)
+//		:DetailedMask(Type::Polygon)
+//		,points()
+//		,pointsOriginal()
+//#ifdef JE_DEBUG
+//		,debugDrawPoints(sf::PrimitiveType::LinesStrip)
+//#endif
+//	{
+//		for (const auto& p : container)
+//		{
+//			points.push_back(sf::Vector2f(p));
+//			pointsOriginal.push_back(sf::Vector2f(p));
+//#ifdef JE_DEBUG
+//			debugDrawPoints.append(sf::Vertex(sf::Vector2f(p), sf::Color::Blue));
+//#endif
+//		}
+//	}
+
+	PolygonMask(int width, int height);
 
 	void projectAgainstHyerplane(int& min, int& max, float angle) const;
 
@@ -44,7 +46,7 @@ public:
 
 	void getAABB(int& minX, int& maxX, int& minY, int& maxY) const override;
 
-	void updateTransforms() override;
+	void updateTransform(const sf::Transform& transform) override;
 
 #ifdef JE_DEBUG
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

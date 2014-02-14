@@ -2,8 +2,11 @@
 #define JE_ENTITY_HPP
 
 #include <string>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+
+#include "jam-engine/Core/CollisionMask.hpp"
 
 namespace je
 {
@@ -40,20 +43,23 @@ public:
 
 	bool intersects(const sf::Rect<int>& bBox) const;
 
-	bool intersects(const Entity& other, float xoffset = 0, float yoffset = 0) const;
+	inline bool intersects(const Entity& other, float xoffset = 0, float yoffset = 0) const;
 
-	void setOffset(int x, int y);
+	//void setOffset(int x, int y);
 
-	sf::Vector2i getOffset () const;
+	sf::Vector2i getOffset() const;
 
-	void setDimensions(int width, int height);
+	//void setDimensions(int width, int height);
 
-	sf::Vector2i getDimensions () const;
+	sf::Vector2i getDimensions() const;
 
 	sf::Rect<int> getBounds() const;
 
 protected:
 	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset = sf::Vector2i(0, 0));
+	
+	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, std::unique_ptr<DetailedMask>& mask);
+	
 	virtual void onUpdate() = 0;
 
 	//!The level the Entity is currently in
@@ -66,18 +72,28 @@ protected:
 
 	void addAutoCollisionCheck(const std::string& type);
 
+
+
 private:
 	bool dead;
 	const Type type;
-	//!These are the physical dimensions of the Entity
-	sf::Vector2i dim;
-	//!This is the offset from pos that the Entity's physical bounds is offset by for collisions
-	sf::Vector2i offset;
+	////!These are the physical dimensions of the Entity
+	//sf::Vector2i dim;
+	////!This is the offset from pos that the Entity's physical bounds is offset by for collisions
+	//sf::Vector2i offset;
 #ifdef JE_DEBUG
 	sf::RectangleShape debugBounds;
 #endif
 	std::vector<std::string> autoCollisionChecks;
+
+	CollisionMask collisionMask;
 };
+
+/*			inline implementation			*/
+bool Entity::intersects(const Entity& other, float xoffset, float yoffset) const
+{
+	return collisionMask.intersects(other.collisionMask);
+}
 
 }
 

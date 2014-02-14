@@ -1,6 +1,7 @@
 #include "jam-engine/Core/Entity.hpp"
 
 #include "jam-engine/Core/Level.hpp"
+#include "jam-engine/Core/PolygonMask.hpp"
 
 namespace je
 {
@@ -10,13 +11,12 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
 	,type(type)
 	,pos(startPos)
 	,prevPos(startPos)
-	,dim(dim)
 	,depth(0)
-	,offset(offset)
 	,dead(false)
 #ifdef JE_DEBUG
 	,debugBounds()
 #endif // JE_DEBUG
+	,collisionMask(new PolygonMask(dim.x, dim.y))
 {
 #ifdef JE_DEBUG
 	debugBounds.setFillColor(sf::Color::Transparent);
@@ -34,8 +34,9 @@ Entity::~Entity()
 #ifdef JE_DEBUG
 void Entity::debugDraw(sf::RenderTarget& target)
 {
-	debugBounds.setPosition(pos.x + offset.x, pos.y + offset.y);
-	target.draw(debugBounds);
+	debugBounds.setPosition(pos.x, pos.y);
+	//target.draw(debugBounds);
+	collisionMask.draw(target, sf::RenderStates::Default);
 }
 #endif
 
@@ -93,49 +94,40 @@ void Entity::destroy()
 bool Entity::intersects(const sf::Rect<int>& bBox) const
 {
 	//	maybe optimize this later
-	return sf::Rect<int>(pos.x + offset.x, pos.y + offset.y, dim.x, dim.y).intersects(bBox);
+	return false;
 }
 
-bool Entity::intersects(const Entity& other, float xoffset, float yoffset) const
-{
-	const int left	  = pos.x + offset.x + xoffset,	 oleft   = other.pos.x + other.offset.x;
-	const int right	 = left + dim.x,				   oright  = oleft + other.dim.x;
-	const int top	   = pos.y + offset.y + yoffset,	 otop	= other.pos.y + other.offset.y;
-	const int bottom	= top + dim.y,					obottom = otop + other.dim.y;
-	return (left <= oright && right > oleft && top <= obottom && bottom > otop);
-}
-
-void Entity::setOffset(int x, int y)
-{
-	offset.x = x;
-	offset.y = y;
-#ifdef JE_DEBUG
-	debugBounds.setPosition(pos.x - offset.x, pos.y - offset.y);
-#endif // JE_DEBUG
-}
-
-void Entity::setDimensions(int width, int height)
-{
-	dim.x = width;
-	dim.y = height;
-#ifdef JE_DEBUG
-	debugBounds.setSize(sf::Vector2f(dim.x, dim.y));
-#endif // JE_DEBUG
-}
+//void Entity::setOffset(int x, int y)
+//{
+//	offset.x = x;
+//	offset.y = y;
+//#ifdef JE_DEBUG
+//	debugBounds.setPosition(pos.x - offset.x, pos.y - offset.y);
+//#endif // JE_DEBUG
+//}
+//
+//void Entity::setDimensions(int width, int height)
+//{
+//	dim.x = width;
+//	dim.y = height;
+//#ifdef JE_DEBUG
+//	debugBounds.setSize(sf::Vector2f(dim.x, dim.y));
+//#endif // JE_DEBUG
+//}
 
 sf::Vector2i Entity::getOffset() const
 {
-	return offset;
+	return sf::Vector2i();
 }
 
 sf::Vector2i Entity::getDimensions() const
 {
-	return dim;
+	return sf::Vector2i(0, 0);
 }
 
 sf::Rect<int> Entity::getBounds() const
 {
-	return sf::Rect<int>(pos.x + offset.x, pos.y + offset.y, dim.x, dim.y);
+	return sf::Rect<int>(pos.x - 100, pos.y - 100, 200, 200);
 }
 
 /*		protected		*/

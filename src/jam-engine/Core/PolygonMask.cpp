@@ -6,6 +6,22 @@
 namespace je
 {
 
+PolygonMask::PolygonMask(int width, int height)
+	:DetailedMask(Type::Polygon)
+	,points(4)
+	,pointsOriginal(4)
+#ifdef JE_DEBUG
+	,debugDrawPoints(sf::PrimitiveType::LinesStrip, 4)
+#endif
+{
+	points[0] = pointsOriginal[0] = sf::Vector2f(0, 0);
+	points[0] = pointsOriginal[0] = sf::Vector2f(width, 0);
+	points[0] = pointsOriginal[0] = sf::Vector2f(width, height);
+	points[0] = pointsOriginal[0] = sf::Vector2f(0, height);
+	for (const sf::Vector2f& vec : points)
+		debugDrawPoints.append(sf::Vertex(vec, sf::Color::Blue));
+}
+
 void PolygonMask::projectAgainstHyerplane(int& min, int& max, float angle) const
 {
 	//	if we rotate the points by -angle, then our projection against the hyperplane (angle)
@@ -31,7 +47,7 @@ bool PolygonMask::intersects(const DetailedMask& other) const
 	switch (other.type)
 	{
 		case Type::Polygon:
-			return intersectsPolygonOnPolygon(*this, other);
+			return intersectsPolygonOnPolygon(*this, (const PolygonMask&) other);
 		case Type::Circle:
 			return true;
 		case Type::Pixel:
@@ -59,10 +75,9 @@ void PolygonMask::getAABB(int& minX, int& maxX, int& minY, int& maxY) const
 	}
 }
 
-void PolygonMask::updateTransforms()
+void PolygonMask::updateTransform(const sf::Transform& transform)
 {
 	const int size = pointsOriginal.size();
-	const sf::Transform& transform = this->getTransform();
 	for (int i = 0; i < size; ++i)
 	{
 		points[i] = transform.transformPoint(pointsOriginal[i]);
@@ -72,7 +87,6 @@ void PolygonMask::updateTransforms()
 #ifdef JE_DEBUG
 void PolygonMask::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform *= this->getTransform();
 	target.draw(debugDrawPoints, states);
 }
 
