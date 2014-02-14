@@ -16,7 +16,7 @@ void PolygonMask::projectAgainstHyerplane(int& min, int& max, float angle) const
 	const float cosAngle = cos(angle);
 	min = max = cosAngle * points.front().x + sinAngle * points.front().y;
 	//	skip the first point since we already did that
-	for (std::vector<sf::Vector2i>::const_iterator it = points.begin() + 1, end = points.end(); it != end; ++it)
+	for (std::vector<sf::Vector2f>::const_iterator it = points.begin() + 1, end = points.end(); it != end; ++it)
 	{
 		const int projectionX = cosAngle * it->x + sinAngle * it->y;
 		if (projectionX < min)
@@ -45,7 +45,7 @@ void PolygonMask::getAABB(int& minX, int& maxX, int& minY, int& maxY) const
 	maxX = minX = points.front().x;
 	maxY = minY = points.front().y;
 	//	skip the first point since we already did that
-	for (std::vector<sf::Vector2i>::const_iterator it = points.begin() + 1, end = points.end(); it != end; ++it)
+	for (std::vector<sf::Vector2f>::const_iterator it = points.begin() + 1, end = points.end(); it != end; ++it)
 	{
 		if (it->x > maxX)
 			maxX = it->x;
@@ -58,5 +58,30 @@ void PolygonMask::getAABB(int& minX, int& maxX, int& minY, int& maxY) const
 			minY = it->y;
 	}
 }
+
+void PolygonMask::updateTransforms()
+{
+	const int size = pointsOriginal.size();
+	const sf::Transform& transform = this->getTransform();
+	for (int i = 0; i < size; ++i)
+	{
+		points[i] = transform.transformPoint(pointsOriginal[i]);
+	}
+}
+
+#ifdef JE_DEBUG
+void PolygonMask::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	states.transform *= this->getTransform();
+	target.draw(debugDrawPoints, states);
+}
+
+void PolygonMask::setColor(sf::Color color)
+{
+	const int size = debugDrawPoints.getVertexCount();
+	for (int i = 0; i < size; ++i)
+		debugDrawPoints[i].color = color;
+}
+#endif
 
 }
