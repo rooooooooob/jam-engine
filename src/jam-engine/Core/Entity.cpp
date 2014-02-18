@@ -9,7 +9,6 @@ namespace je
 Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset)
 	:level(level)
 	,type(type)
-	,pos(startPos)
 	,prevPos(startPos)
 	,depth(0)
 	,dead(false)
@@ -17,13 +16,38 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
 	,debugBounds()
 #endif // JE_DEBUG
 	,collisionMask(new PolygonMask(dim.x, dim.y))
+	,transformable()
+	,isTransformValid(true)
 {
+	transform().setPosition(startPos);
+	transform().setOrigin(-offset.x, -offset.y);
 #ifdef JE_DEBUG
 	debugBounds.setFillColor(sf::Color::Transparent);
 	debugBounds.setOutlineColor(sf::Color::Red);
 	debugBounds.setOutlineThickness(1);
 	debugBounds.setSize(sf::Vector2f(dim.x, dim.y));
-	debugBounds.setPosition(sf::Vector2f(pos.x - offset.x, pos.y - offset.y));
+	debugBounds.setPosition(sf::Vector2f(startPos.x - offset.x, startPos.y - offset.y));
+#endif // JE_DEBUG
+}
+
+Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, std::unique_ptr<DetailedMask>& mask)
+	:level(level)
+	,type(type)
+	,prevPos(startPos)
+	,depth(0)
+	,dead(false)
+#ifdef JE_DEBUG
+	,debugBounds()
+#endif // JE_DEBUG
+	,collisionMask(mask.release())
+	,transformable()
+	,isTransformValid(true)
+{
+	transform().setPosition(startPos);
+#ifdef JE_DEBUG
+	debugBounds.setFillColor(sf::Color::Transparent);
+	debugBounds.setOutlineColor(sf::Color::Red);
+	debugBounds.setOutlineThickness(1);
 #endif // JE_DEBUG
 }
 
@@ -33,26 +57,30 @@ Entity::~Entity()
 
 #ifdef JE_DEBUG
 void Entity::debugDraw(sf::RenderTarget& target)
-{
-	debugBounds.setPosition(pos.x, pos.y);
-	//target.draw(debugBounds);
-	collisionMask.draw(target, sf::RenderStates::Default);
+{	
+	debugBounds.setPosition(2.f * transform().getPosition() - transform().getOrigin() - sf::Vector2f(collisionMask.minX + collisionMask.getWidth(), collisionMask.minY + collisionMask.getHeight()));
+	debugBounds.setSize(sf::Vector2f(collisionMask.getWidth(), collisionMask.getHeight()));
+	target.draw(debugBounds);
+	sf::RenderStates states = sf::RenderStates::Default;
+	//states.transform *= transform().getTransform();
+	collisionMask.draw(target, states);
 }
 #endif
 
 void Entity::update()
 {
+	this->updateMask();
 	this->onUpdate();
 
 	for (const std::string typeName : autoCollisionChecks)
 	{
 		if (level->testCollision(this, typeName, 0, 0))
 		{
-			pos = prevPos;
+			transform().setPosition(prevPos);
 			break;
 		}
 	}
-	prevPos = pos;
+	prevPos = getPos();
 }
 
 const std::string& Entity::getType() const
@@ -75,17 +103,6 @@ void Entity::setDepth(int depth)
 	this->depth = depth;
 }
 
-const sf::Vector2f& Entity::getPos() const
-{
-	return pos;
-}
-
-void Entity::setPos(const sf::Vector2f& pos)
-{
-	this->pos = pos;
-	//	do I need to update anything else here..?
-}
-
 void Entity::destroy()
 {
 	dead = true;
@@ -94,40 +111,17 @@ void Entity::destroy()
 bool Entity::intersects(const sf::Rect<int>& bBox) const
 {
 	//	maybe optimize this later
-	return false;
-}
-
-//void Entity::setOffset(int x, int y)
-//{
-//	offset.x = x;
-//	offset.y = y;
-//#ifdef JE_DEBUG
-//	debugBounds.setPosition(pos.x - offset.x, pos.y - offset.y);
-//#endif // JE_DEBUG
-//}
-//
-//void Entity::setDimensions(int width, int height)
-//{
-//	dim.x = width;
-//	dim.y = height;
-//#ifdef JE_DEBUG
-//	debugBounds.setSize(sf::Vector2f(dim.x, dim.y));
-//#endif // JE_DEBUG
-//}
-
-sf::Vector2i Entity::getOffset() const
-{
-	return sf::Vector2i();
+	return true;
 }
 
 sf::Vector2i Entity::getDimensions() const
 {
-	return sf::Vector2i(0, 0);
+	return sf::Vector2i(collisionMask.getWidth(), collisionMask.getHeight());
 }
 
 sf::Rect<int> Entity::getBounds() const
 {
-	return sf::Rect<int>(pos.x - 100, pos.y - 100, 200, 200);
+	return sf::Rect<int>(sf::Vector2i(getPos() - transform().getOrigin()), getDimensions());
 }
 
 /*		protected		*/
@@ -137,6 +131,16 @@ void Entity::addAutoCollisionCheck(const std::string& type)
 		if (str == type)
 			return;
 	autoCollisionChecks.push_back(type);
+}
+
+/*		private			*/
+void Entity::updateMask()
+{
+	if (!isTransformValid)
+	{
+		collisionMask.updateTransform(transform().getTransform());
+		isTransformValid = true;
+	}
 }
 
 }

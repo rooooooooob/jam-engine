@@ -3,21 +3,25 @@
 
 #include <memory>
 
-#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/Transform.hpp>
 
 #include "jam-engine/Core/DetailedMask.hpp"
 
 namespace je
 {
 
-class CollisionMask : sf::Transformable
+class CollisionMask
 {
 public:
 	CollisionMask(DetailedMask* mask);
 
 	inline bool intersects(const CollisionMask& other) const;
 
-	void updateTransform();
+	void updateTransform(const sf::Transform& transform);
+
+	// TODO : remove?
+	int getWidth() const { return maxX - minX; }
+	int getHeight() const { return maxY - minY; }
 
 #ifdef JE_DEBUG
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -25,7 +29,8 @@ public:
 	void setColor(sf::Color color);
 #endif
 
-private:
+//private:
+
 	int minX, maxX;
 	int minY, maxY;
 	std::unique_ptr<DetailedMask> detailedMask;

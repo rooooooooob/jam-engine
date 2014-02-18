@@ -11,30 +11,31 @@ PolygonMask::PolygonMask(int width, int height)
 	,points(4)
 	,pointsOriginal(4)
 #ifdef JE_DEBUG
-	,debugDrawPoints(sf::PrimitiveType::LinesStrip, 4)
+	,debugDrawPoints(sf::PrimitiveType::LinesStrip)
 #endif
 {
 	points[0] = pointsOriginal[0] = sf::Vector2f(0, 0);
-	points[0] = pointsOriginal[0] = sf::Vector2f(width, 0);
-	points[0] = pointsOriginal[0] = sf::Vector2f(width, height);
-	points[0] = pointsOriginal[0] = sf::Vector2f(0, height);
+	points[1] = pointsOriginal[1] = sf::Vector2f(width, 0);
+	points[2] = pointsOriginal[2] = sf::Vector2f(width, height);
+	points[3] = pointsOriginal[3] = sf::Vector2f(0, height);
 	for (const sf::Vector2f& vec : points)
-		debugDrawPoints.append(sf::Vertex(vec, sf::Color::Blue));
+		debugDrawPoints.append(sf::Vertex(vec, sf::Color::Cyan));
+	debugDrawPoints.append(debugDrawPoints[0]);
 }
 
-void PolygonMask::projectAgainstHyerplane(int& min, int& max, float angle) const
+void PolygonMask::projectAgainstHyerplane(double& min, double& max, double angle) const
 {
 	//	if we rotate the points by -angle, then our projection against the hyperplane (angle)
 	//	becomes projecting against the x-asis, which lets use just take the x value of the
 	//	transformed vector instead of having to actually project the vector and since y is 0
 	//	for the transformed vector (and we don't use it anyway), we don't even need to transform it!
-	const float sinAngle = sin(angle);
-	const float cosAngle = cos(angle);
+	const double sinAngle = sin(-angle * 3.14159265 / 180.f);
+	const double cosAngle = cos(-angle * 3.14159265 / 180.f);
 	min = max = cosAngle * points.front().x + sinAngle * points.front().y;
 	//	skip the first point since we already did that
 	for (std::vector<sf::Vector2f>::const_iterator it = points.begin() + 1, end = points.end(); it != end; ++it)
 	{
-		const int projectionX = cosAngle * it->x + sinAngle * it->y;
+		const double projectionX = cosAngle * it->x + sinAngle * it->y;
 		if (projectionX < min)
 			min = projectionX;
 		if (projectionX > max)
@@ -81,7 +82,9 @@ void PolygonMask::updateTransform(const sf::Transform& transform)
 	for (int i = 0; i < size; ++i)
 	{
 		points[i] = transform.transformPoint(pointsOriginal[i]);
+		debugDrawPoints[i].position = points[i];
 	}
+	debugDrawPoints[size] = debugDrawPoints[0];
 }
 
 #ifdef JE_DEBUG

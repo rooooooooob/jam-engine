@@ -9,16 +9,15 @@ CollisionMask::CollisionMask(DetailedMask *mask)
 	mask->getAABB(minX, maxX, minY, maxY);
 }
 
-void CollisionMask::updateTransform()
+void CollisionMask::updateTransform(const sf::Transform& transform)
 {
-	detailedMask->updateTransform(this->getTransform());
+	detailedMask->updateTransform(transform);
 	detailedMask->getAABB(minX, maxX, minY, maxY);
 }
 
 #ifdef JE_DEBUG
 void CollisionMask::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform *= this->getTransform();
 	detailedMask->draw(target, states);
 }
 

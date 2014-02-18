@@ -53,7 +53,7 @@ public:
 	 * @Param yoffset The vertical offset away from caller to query at
 	 * @return The first Entity found that collides, or nullptr if none were found
 	 */
-	Entity* testCollision(const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
+	Entity* testCollision(Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
 
 	/**
 	 * Queries the level for collisions
@@ -198,7 +198,7 @@ protected:
 
 	std::map<std::string, std::vector<Entity*> > entities;
 	std::map<std::string, TileGrid*> tileLayers;
-	sf::RenderStates states;
+	mutable sf::RenderStates states;
 
 private:
 	void init();

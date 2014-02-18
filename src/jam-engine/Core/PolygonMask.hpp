@@ -10,7 +10,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "jam-engine/Core/DetailedMask.hpp"
-
+#include <initializer_list>
 namespace je
 {
 
@@ -19,28 +19,28 @@ class CircleMask;
 class PolygonMask : public DetailedMask
 {
 public:
-//	template <typename T>
-//	PolygonMask(const T& container)
-//		:DetailedMask(Type::Polygon)
-//		,points()
-//		,pointsOriginal()
-//#ifdef JE_DEBUG
-//		,debugDrawPoints(sf::PrimitiveType::LinesStrip)
-//#endif
-//	{
-//		for (const auto& p : container)
-//		{
-//			points.push_back(sf::Vector2f(p));
-//			pointsOriginal.push_back(sf::Vector2f(p));
-//#ifdef JE_DEBUG
-//			debugDrawPoints.append(sf::Vertex(sf::Vector2f(p), sf::Color::Blue));
-//#endif
-//		}
-//	}
+	PolygonMask(const std::initializer_list<sf::Vector2f>& container)
+		:DetailedMask(Type::Polygon)
+		,points()
+		,pointsOriginal()
+#ifdef JE_DEBUG
+		,debugDrawPoints(sf::PrimitiveType::LinesStrip)
+#endif
+	{
+		for (const auto& p : container)
+		{
+			points.push_back(sf::Vector2f(p));
+			pointsOriginal.push_back(sf::Vector2f(p));
+#ifdef JE_DEBUG
+			debugDrawPoints.append(sf::Vertex(sf::Vector2f(p), sf::Color::Blue));
+#endif
+		}
+		debugDrawPoints.append(debugDrawPoints[0]);
+	}
 
 	PolygonMask(int width, int height);
 
-	void projectAgainstHyerplane(int& min, int& max, float angle) const;
+	void projectAgainstHyerplane(double& min, double& max, double angle) const;
 
 	bool intersects(const DetailedMask& other) const override;
 

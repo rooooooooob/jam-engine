@@ -59,8 +59,7 @@ void TileGrid::setPos(int x, int y)
 		left = x;
 		top = y;
 
-		pos.x = x;
-		pos.y = y;
+		transform().setPosition(x, y);
 
 		this->recalculateVisibleTiles();
 	}

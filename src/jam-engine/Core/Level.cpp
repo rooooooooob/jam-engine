@@ -43,7 +43,9 @@ void Level::draw(sf::RenderTarget& target) const
 {
 	if (cameras.empty())
 	{
-		target.setView(target.getDefaultView());
+		sf::View view = target.getDefaultView();
+		//view.zoom(2.f);
+		target.setView(view);
 		this->drawEntities(target, sf::Rect<int>(0, 0, width, height));
 	}
 	else
@@ -153,8 +155,9 @@ Entity* Level::testCollision(const sf::Rect<int>& bBox, Entity::Type type)
 	return retVal;
 }
 
-Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoffset, float yoffset)
+Entity* Level::testCollision(Entity *caller, Entity::Type type, float xoffset, float yoffset)
 {
+	caller->transform().move(xoffset, yoffset);
 	Entity *retVal = nullptr;
 	auto mit = entities.find(type);
 	if (mit != entities.end())
@@ -168,10 +171,11 @@ Entity* Level::testCollision(const Entity *caller, Entity::Type type, float xoff
 			}
 		}
 	}
-	sf::Rect<int> rect = caller->getBounds();
-	rect.left += xoffset;
-	rect.top += yoffset;
-	this->debugDrawRect(rect, !retVal ? sf::Color::Yellow : sf::Color::Green);
+	//sf::Rect<int> rect = caller->getBounds();
+	//rect.left += xoffset;
+	//rect.top += yoffset;
+	//this->debugDrawRect(rect, !retVal ? sf::Color::Yellow : sf::Color::Green);
+	caller->transform().move(-xoffset, -yoffset);
 	return retVal;
 }
 
@@ -188,10 +192,10 @@ void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, 
 				results.push_back(entity);
 		}
 	}
-	sf::Rect<int> rect = caller->getBounds();
-	rect.left += xoffset;
-	rect.top += yoffset;
-	this->debugDrawRect(rect, results.empty() ? sf::Color::Yellow : sf::Color::Green);
+	//sf::Rect<int> rect = caller->getBounds();
+	//rect.left += xoffset;
+	//rect.top += yoffset;
+	//this->debugDrawRect(rect, results.empty() ? sf::Color::Yellow : sf::Color::Green);
 }
 
 void Level::findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type)
@@ -246,7 +250,7 @@ sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f
 		maxBounds.top += veloc.y;
 	}
 	findCollisions(possibleMatches, maxBounds, type, filter);
-	sf::Vector2f offset = caller->getPos();
+	sf::Vector2f offset = caller->transform().getPosition();
 	sf::Rect<int> queryBox = caller->getBounds();
 	//	find out the largest distance you could travel without skipping through things when moving
 	float jumpDist = min(abs(caller->getDimensions().x), abs(caller->getDimensions().y));
@@ -811,6 +815,7 @@ void Level::drawEntities(sf::RenderTarget& target, const sf::Rect<int>& cameraBo
 	this->beforeDraw(target);
 	for (Entity *entity : depthBuffer)
 	{
+		//states.transform *= entity->transform().getTransform();
 		entity->draw(target, states);
 	}
 	this->onDraw(target);
@@ -819,7 +824,7 @@ void Level::drawEntities(sf::RenderTarget& target, const sf::Rect<int>& cameraBo
 	for (auto& p : entities)
 	{
 		for (Entity * entity : p.second)
-			if (cameraBounds.contains(entity->getPos().x + cameraBounds.width / 2, entity->getPos().y + cameraBounds.height / 2))
+			//if (cameraBounds.contains(entity->getPos().x + cameraBounds.width / 2, entity->getPos().y + cameraBounds.height / 2))
 				entity->debugDraw(target);
 		for (const sf::RectangleShape& rect : debugDrawRects)
 			target.draw(rect);
