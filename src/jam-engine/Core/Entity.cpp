@@ -1,7 +1,7 @@
 #include "jam-engine/Core/Entity.hpp"
 
 #include "jam-engine/Core/Level.hpp"
-#include "jam-engine/Core/PolygonMask.hpp"
+#include "jam-engine/Physics/PolygonMask.hpp"
 
 namespace je
 {
@@ -15,7 +15,7 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
 #ifdef JE_DEBUG
 	,debugBounds()
 #endif // JE_DEBUG
-	,collisionMask(new PolygonMask(dim.x, dim.y))
+	,collisionMask(std::move(DetailedMask::MaskRef(new PolygonMask(dim.x, dim.y))))
 	,transformable()
 	,isTransformValid(true)
 {
@@ -30,7 +30,7 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
 #endif // JE_DEBUG
 }
 
-Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, std::unique_ptr<DetailedMask>& mask)
+Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, DetailedMask::MaskRef mask)
 	:level(level)
 	,type(type)
 	,prevPos(startPos)
@@ -39,7 +39,7 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
 #ifdef JE_DEBUG
 	,debugBounds()
 #endif // JE_DEBUG
-	,collisionMask(mask.release())
+	,collisionMask(std::move(mask))
 	,transformable()
 	,isTransformValid(true)
 {

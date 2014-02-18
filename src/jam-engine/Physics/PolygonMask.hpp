@@ -9,7 +9,7 @@
 #endif
 #include <SFML/System/Vector2.hpp>
 
-#include "jam-engine/Core/DetailedMask.hpp"
+#include "jam-engine/Physics/DetailedMask.hpp"
 #include <initializer_list>
 namespace je
 {
@@ -40,6 +40,8 @@ public:
 
 	PolygonMask(int width, int height);
 
+	PolygonMask(const PolygonMask& other);
+
 	void projectAgainstHyerplane(double& min, double& max, double angle) const;
 
 	bool intersects(const DetailedMask& other) const override;
@@ -47,6 +49,8 @@ public:
 	void getAABB(int& minX, int& maxX, int& minY, int& maxY) const override;
 
 	void updateTransform(const sf::Transform& transform) override;
+
+	DetailedMask::MaskRef clone() const override;
 
 #ifdef JE_DEBUG
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

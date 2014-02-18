@@ -18,6 +18,8 @@ Game::Game(int width, int height, int framerate)
 	,view(sf::Vector2f(width / 2, height / 2), sf::Vector2f(width, height))
 	,level()
 	,input(window)
+	,texMan()
+	,maskManager()
 	,focused(true)
 	,currentFPS(0)
 	,exactFPS(0.f)
@@ -123,6 +125,16 @@ Input& Game::getInput()
 TexManager& Game::getTexManager()
 {
 	return texMan;
+}
+
+CollisionMaskManager& Game::masks()
+{
+	return maskManager;
+}
+
+const CollisionMaskManager& Game::masks() const
+{
+	return maskManager;
 }
 
 sf::RenderWindow& Game::getWindow()

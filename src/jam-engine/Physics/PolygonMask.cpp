@@ -1,6 +1,6 @@
-#include "jam-engine/Core/PolygonMask.hpp"
+#include "jam-engine/Physics/PolygonMask.hpp"
 
-#include "jam-engine/Core/CollisionCheckingImplementation.hpp"
+#include "jam-engine/Physics/CollisionCheckingImplementation.hpp"
 #include "jam-engine/Utility/Trig.hpp"
 
 namespace je
@@ -21,6 +21,16 @@ PolygonMask::PolygonMask(int width, int height)
 	for (const sf::Vector2f& vec : points)
 		debugDrawPoints.append(sf::Vertex(vec, sf::Color::Cyan));
 	debugDrawPoints.append(debugDrawPoints[0]);
+}
+
+PolygonMask::PolygonMask(const PolygonMask& other)
+	:DetailedMask(Type::Polygon)
+	,points(other.pointsOriginal)
+	,pointsOriginal(other.pointsOriginal)
+#ifdef JE_DEBUG
+	,debugDrawPoints(other.debugDrawPoints)
+#endif
+{
 }
 
 void PolygonMask::projectAgainstHyerplane(double& min, double& max, double angle) const
@@ -85,6 +95,11 @@ void PolygonMask::updateTransform(const sf::Transform& transform)
 		debugDrawPoints[i].position = points[i];
 	}
 	debugDrawPoints[size] = debugDrawPoints[0];
+}
+
+DetailedMask::MaskRef PolygonMask::clone() const
+{
+	return DetailedMask::MaskRef(new PolygonMask(*this));
 }
 
 #ifdef JE_DEBUG

@@ -5,7 +5,7 @@
 
 #include <SFML/Graphics/Transform.hpp>
 
-#include "jam-engine/Core/DetailedMask.hpp"
+#include "jam-engine/Physics/DetailedMask.hpp"
 
 namespace je
 {
@@ -13,7 +13,7 @@ namespace je
 class CollisionMask
 {
 public:
-	CollisionMask(DetailedMask* mask);
+	CollisionMask(DetailedMask::MaskRef mask);
 
 	inline bool intersects(const CollisionMask& other) const;
 

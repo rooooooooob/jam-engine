@@ -7,7 +7,7 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 
-#include "jam-engine/Core/CollisionMask.hpp"
+#include "jam-engine/Physics/CollisionMask.hpp"
 
 namespace je
 {
@@ -56,7 +56,7 @@ public:
 protected:
 	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset = sf::Vector2i(0, 0));
 	
-	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, std::unique_ptr<DetailedMask>& mask);
+	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, DetailedMask::MaskRef mask);
 	
 	virtual void onUpdate() = 0;
 

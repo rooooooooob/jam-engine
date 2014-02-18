@@ -1,6 +1,6 @@
-#include "jam-engine/Core/CollisionCheckingImplementation.hpp"
+#include "jam-engine/Physics/CollisionCheckingImplementation.hpp"
 
-#include "jam-engine/Core/PolygonMask.hpp"
+#include "jam-engine/Physics/PolygonMask.hpp"
 #include "jam-engine/Utility/Trig.hpp"
 
 namespace je

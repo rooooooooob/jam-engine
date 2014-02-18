@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "jam-engine/Core/Input.hpp"
 #include "jam-engine/Graphics/TexManager.hpp"
+#include "jam-engine/Physics/CollisionMaskManager.hpp"
 
 namespace je
 {
@@ -41,6 +42,10 @@ public:
 
 	TexManager& getTexManager();
 
+	CollisionMaskManager& masks();
+
+	const CollisionMaskManager& masks() const;
+
 	sf::RenderWindow& getWindow();
 
 private:
@@ -53,6 +58,7 @@ private:
 	int FPSCap;
 	Input input;
 	TexManager texMan;
+	CollisionMaskManager maskManager;
 	bool focused;
 	std::vector<std::unique_ptr<Level> > oldlevels;
 };

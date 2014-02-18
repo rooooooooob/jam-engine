@@ -1,12 +1,12 @@
-#include "jam-engine/Core/CollisionMask.hpp"
+#include "jam-engine/Physics/CollisionMask.hpp"
 
 namespace je
 {
 
-CollisionMask::CollisionMask(DetailedMask *mask)
+CollisionMask::CollisionMask(DetailedMask::MaskRef mask)
 	:detailedMask(std::move(mask))
 {
-	mask->getAABB(minX, maxX, minY, maxY);
+	detailedMask->getAABB(minX, maxX, minY, maxY);
 }
 
 void CollisionMask::updateTransform(const sf::Transform& transform)
