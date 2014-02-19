@@ -57,8 +57,9 @@ Entity::~Entity()
 
 #ifdef JE_DEBUG
 void Entity::debugDraw(sf::RenderTarget& target)
-{	
-	debugBounds.setPosition(2.f * transform().getPosition() - transform().getOrigin() - sf::Vector2f(collisionMask.minX + collisionMask.getWidth(), collisionMask.minY + collisionMask.getHeight()));
+{
+	//- transform().getOrigin()
+	debugBounds.setPosition(collisionMask.minX, collisionMask.minY);
 	debugBounds.setSize(sf::Vector2f(collisionMask.getWidth(), collisionMask.getHeight()));
 	target.draw(debugBounds);
 	sf::RenderStates states = sf::RenderStates::Default;

@@ -27,12 +27,30 @@ public:
 		,debugDrawPoints(sf::PrimitiveType::LinesStrip)
 #endif
 	{
-		for (const auto& p : container)
+		bool first = true;
+		sf::Vector2f min;
+		//for (const auto& p : container)
+		//{
+		//	if (first)
+		//	{
+		//		min = p;
+		//		first = false;
+		//	}
+		//	else
+		//	{
+		//		if (p.x < min.x)
+		//			min.x = p.x;
+		//		if (p.y < min.y)
+		//			min.y = p.y;
+		//	}
+		//}
+		for (auto p : container)
 		{
-			points.push_back(sf::Vector2f(p));
-			pointsOriginal.push_back(sf::Vector2f(p));
+			p -= min;
+			points.push_back(p);
+			pointsOriginal.push_back(p);
 #ifdef JE_DEBUG
-			debugDrawPoints.append(sf::Vertex(sf::Vector2f(p), sf::Color::Blue));
+			debugDrawPoints.append(sf::Vertex(p, sf::Color::Blue));
 #endif
 		}
 		debugDrawPoints.append(debugDrawPoints[0]);
