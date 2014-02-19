@@ -18,9 +18,11 @@ PolygonMask::PolygonMask(int width, int height)
 	points[1] = pointsOriginal[1] = sf::Vector2f(width, 0);
 	points[2] = pointsOriginal[2] = sf::Vector2f(width, height);
 	points[3] = pointsOriginal[3] = sf::Vector2f(0, height);
+#ifdef JE_DEBUG
 	for (const sf::Vector2f& vec : points)
 		debugDrawPoints.append(sf::Vertex(vec, sf::Color::Cyan));
 	debugDrawPoints.append(debugDrawPoints[0]);
+#endif
 }
 
 PolygonMask::PolygonMask(const PolygonMask& other)
@@ -92,9 +94,13 @@ void PolygonMask::updateTransform(const sf::Transform& transform)
 	for (int i = 0; i < size; ++i)
 	{
 		points[i] = transform.transformPoint(pointsOriginal[i]);
+#ifdef JE_DEBUG
 		debugDrawPoints[i].position = points[i];
+#endif
 	}
+#ifdef JE_DEBUG
 	debugDrawPoints[size] = debugDrawPoints[0];
+#endif
 }
 
 DetailedMask::MaskRef PolygonMask::clone() const

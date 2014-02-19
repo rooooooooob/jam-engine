@@ -6,6 +6,7 @@
 #ifdef JE_DEBUG
 	#include <SFML/Graphics/RenderTarget.hpp>
 #endif
+#include <SFML/Graphics/Transform.hpp>
 
 namespace je
 {

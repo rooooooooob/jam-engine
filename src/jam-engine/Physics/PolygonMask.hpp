@@ -53,7 +53,9 @@ public:
 			debugDrawPoints.append(sf::Vertex(p, sf::Color::Blue));
 #endif
 		}
+#ifdef JE_DEBUG
 		debugDrawPoints.append(debugDrawPoints[0]);
+#endif
 	}
 
 	PolygonMask(int width, int height);
