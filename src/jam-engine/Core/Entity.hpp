@@ -53,6 +53,8 @@ public:
 	//	equivalent to transform().getPosition(), but shorter
 	inline const sf::Vector2f& getPos() const;
 
+	inline const CollisionMask& getMask() const;
+
 protected:
 	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset = sf::Vector2i(0, 0));
 	
@@ -113,6 +115,11 @@ const sf::Transformable& Entity::transform() const
 const sf::Vector2f& Entity::getPos() const
 {
 	return transformable.getPosition();
+}
+
+const CollisionMask& Entity::getMask() const
+{
+	return collisionMask;
 }
 
 }

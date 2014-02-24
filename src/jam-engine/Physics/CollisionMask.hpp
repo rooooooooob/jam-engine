@@ -19,6 +19,8 @@ public:
 
 	void updateTransform(const sf::Transform& transform);
 
+	inline const DetailedMask& getDetails() const;
+
 	// TODO : remove?
 	int getWidth() const { return maxX - minX; }
 	int getHeight() const { return maxY - minY; }
@@ -43,6 +45,11 @@ bool CollisionMask::intersects(const CollisionMask& other) const
 	if (minX >= other.maxX || maxX < other.minX || minY >= other.maxY || maxY < other.minY)
 		return false;
 	return detailedMask->intersects(*other.detailedMask);
+}
+
+const DetailedMask& CollisionMask::getDetails() const
+{
+	return *detailedMask;
 }
 
 
