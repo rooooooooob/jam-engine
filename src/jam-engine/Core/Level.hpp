@@ -55,6 +55,8 @@ public:
 	 */
 	Entity* testCollision(Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
 
+	Entity* testCollision(Entity *caller, Entity::Type type, std::function<bool(const Entity*)> filter, float xoffset = 0, float yoffset = 0);
+
 	/**
 	 * Queries the level for collisions
 	 * @param results The vector to which the collisions are stored in. (the vector is cleared at the start)

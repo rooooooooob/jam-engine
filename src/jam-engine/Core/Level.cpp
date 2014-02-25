@@ -155,6 +155,8 @@ Entity* Level::testCollision(const sf::Rect<int>& bBox, Entity::Type type)
 	return retVal;
 }
 
+
+
 Entity* Level::testCollision(Entity *caller, Entity::Type type, float xoffset, float yoffset)
 {
 	caller->transform().move(xoffset, yoffset);
@@ -165,6 +167,30 @@ Entity* Level::testCollision(Entity *caller, Entity::Type type, float xoffset, f
 		for (Entity *entity : mit->second)
 		{
 			if (entity != caller && entity->getType() == type && caller->intersects(*entity, xoffset, yoffset))
+			{
+				retVal = entity;
+				break;
+			}
+		}
+	}
+	//sf::Rect<int> rect = caller->getBounds();
+	//rect.left += xoffset;
+	//rect.top += yoffset;
+	//this->debugDrawRect(rect, !retVal ? sf::Color::Yellow : sf::Color::Green);
+	caller->transform().move(-xoffset, -yoffset);
+	return retVal;
+}
+
+Entity* Level::testCollision(Entity *caller, Entity::Type type, std::function<bool(const Entity*)> filter, float xoffset, float yoffset)
+{
+	caller->transform().move(xoffset, yoffset);
+	Entity *retVal = nullptr;
+	auto mit = entities.find(type);
+	if (mit != entities.end())
+	{
+		for (Entity *entity : mit->second)
+		{
+			if (entity != caller && entity->getType() == type && filter(entity) && caller->intersects(*entity, xoffset, yoffset))
 			{
 				retVal = entity;
 				break;
