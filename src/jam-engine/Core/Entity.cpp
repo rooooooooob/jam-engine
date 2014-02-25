@@ -1,5 +1,6 @@
 #include "jam-engine/Core/Entity.hpp"
 
+#include "jam-engine/Core/Game.hpp"
 #include "jam-engine/Core/Level.hpp"
 #include "jam-engine/Physics/PolygonMask.hpp"
 
@@ -59,12 +60,19 @@ Entity::~Entity()
 void Entity::debugDraw(sf::RenderTarget& target)
 {
 	//- transform().getOrigin()
-	debugBounds.setPosition(collisionMask.minX, collisionMask.minY);
-	debugBounds.setSize(sf::Vector2f(collisionMask.getWidth(), collisionMask.getHeight()));
-	target.draw(debugBounds);
-	sf::RenderStates states = sf::RenderStates::Default;
-	//states.transform *= transform().getTransform();
-	collisionMask.draw(target, states);
+	const Game& game = level->getGame();
+	if (game.getDebugCollisionDrawAABB())
+	{
+		debugBounds.setPosition(collisionMask.minX, collisionMask.minY);
+		debugBounds.setSize(sf::Vector2f(collisionMask.getWidth(), collisionMask.getHeight()));
+		target.draw(debugBounds);
+	}
+	if (game.getDebugCollisionDrawDetails())
+	{
+		sf::RenderStates states = sf::RenderStates::Default;
+		//states.transform *= transform().getTransform();
+		collisionMask.draw(target, states);
+	}
 }
 #endif
 

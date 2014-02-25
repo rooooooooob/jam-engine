@@ -23,6 +23,10 @@ Game::Game(int width, int height, int framerate)
 	,focused(true)
 	,currentFPS(0)
 	,exactFPS(0.f)
+#ifdef JE_DEBUG
+	,debugDrawAABB(false)
+	,debugDrawDetails(true)
+#endif
 {
 	this->setFPSCap(framerate);
 }
@@ -141,5 +145,27 @@ sf::RenderWindow& Game::getWindow()
 {
 	return window;
 }
+
+#ifdef JE_DEBUG
+void Game::setDebugCollisionDrawAABB(bool enabled)
+{
+	debugDrawAABB = enabled;
+}
+
+void Game::setDebugCollisionDrawDetails(bool enabled)
+{
+	debugDrawDetails = enabled;
+}
+
+bool Game::getDebugCollisionDrawAABB() const
+{
+	return debugDrawAABB;
+}
+
+bool Game::getDebugCollisionDrawDetails() const
+{
+	return debugDrawDetails;
+}
+#endif
 
 }

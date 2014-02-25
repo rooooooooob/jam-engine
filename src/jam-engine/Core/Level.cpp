@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cstring>
 #include <algorithm>
+
 #include "jam-engine/Core/Camera.hpp"
 #include "jam-engine/Core/Game.hpp"
 #include "jam-engine/Graphics/TexManager.hpp"

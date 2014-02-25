@@ -48,6 +48,16 @@ public:
 
 	sf::RenderWindow& getWindow();
 
+#ifdef JE_DEBUG
+	void setDebugCollisionDrawAABB(bool enabled);
+
+	void setDebugCollisionDrawDetails(bool enabled);
+
+	bool getDebugCollisionDrawAABB() const;
+
+	bool getDebugCollisionDrawDetails() const;
+#endif
+
 private:
 	sf::RenderWindow window;
 	sf::View view;
@@ -61,6 +71,10 @@ private:
 	CollisionMaskManager maskManager;
 	bool focused;
 	std::vector<std::unique_ptr<Level> > oldlevels;
+#ifdef JE_DEBUG
+	bool debugDrawAABB;
+	bool debugDrawDetails;
+#endif
 };
 
 }
