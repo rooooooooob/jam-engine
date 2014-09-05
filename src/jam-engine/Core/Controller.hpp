@@ -44,6 +44,7 @@ public:
 		{
 			Mouse,
 			JoyAxis,
+			Buttons,
 			Invalid
 		};
 		enum class MouseAxis
@@ -61,6 +62,7 @@ public:
 		 * Invalid bind. Used when nothing is bound
 		 */
 		AxisBind();
+
 		/**
 		 * Binds mice axes
 		 * @param axis Which mouse axis to use for axis
@@ -69,6 +71,7 @@ public:
 		 * @param pos The position to use as the origin (this reference is used later, so don't pass temporaries!)
 		 */
 		AxisBind(MouseAxis axis, bool rev, Interval interval, const float *pos);
+
 		/**
 		 * Binds joystick axes
 		 * @param axis Which axis to use for X asis
@@ -77,11 +80,24 @@ public:
 		 */
 		AxisBind(sf::Joystick::Axis axis, bool rev = false, Interval = Interval());
 
+		/**
+		 * Binds generic button bindings to an axis
+		 * @param negative The bind which pulls negatively on the position
+		 * @param positive The bind which pulls positively on the position
+		 */
+		AxisBind(const Bind& negative, const Bind& positive);
+
 		const Device device;
+		struct ButtonAxis
+		{
+			Bind neg;
+			Bind pos;
+		};
 		const union
 		{
 			MouseAxis mAxis;
 			sf::Joystick::Axis jAxis;
+			ButtonAxis bAxis;
 		};
 		const bool reversed;
 		const Interval interval;
@@ -114,6 +130,18 @@ private:
 	unsigned int joyID;
 	std::map<std::string, std::vector<Bind> > binds;
 	std::map<std::string, AxisBind> boundAxes;
+};
+
+class Axes
+{
+public:
+	Axes(Controller& controller, const std::string& xAxis, const std::string& yAxis);
+
+	sf::Vector2f getPos(const sf::Vector2f& origin = sf::Vector2f(), je::Level *level = nullptr) const;
+private:
+	Controller& controller;
+	std::string xAxis;
+	std::string yAxis;
 };
 
 }

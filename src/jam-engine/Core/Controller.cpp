@@ -1,7 +1,10 @@
 #include "jam-engine/Core/Controller.hpp"
 
 #include <cassert>
+
 #include "jam-engine/Core/Level.hpp"
+#include "jam-engine/Utility/Math.hpp"
+#include "jam-engine/Utility/Trig.hpp"
 
 namespace je
 {
@@ -196,7 +199,9 @@ float Controller::axisPos(const std::string& axis, float origin, je::Level *leve
 {
 	auto it = boundAxes.find(axis);
 	if (it == boundAxes.end())
+	{
 		return 0;
+	}
 	else
 	{
 		float ret = 0;
@@ -274,4 +279,22 @@ Controller::AxisBind Controller::getLastAxisMovementAsBind() const
 	return AxisBind();
 }
 
+/*			axes			*/
+Axes::Axes(Controller& controller, const std::string& xAxis, const std::string& yAxis)
+	:controller(controller)
+	,xAxis(xAxis)
+	,yAxis(yAxis)
+{
 }
+
+sf::Vector2f Axes::getPos(const sf::Vector2f& origin, je::Level *level) const
+{
+	sf::Vector2f pos(controller.axisPos(xAxis, origin.x, level), controller.axisPos(yAxis, origin.y, level));
+	if (je::abs(je::length(pos)) > 1.f)
+	{
+		return je::lengthdir(1.f, je::direction(pos));
+	}
+	return pos;
+}
+
+} // je
