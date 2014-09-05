@@ -17,6 +17,11 @@ public:
 
 	inline bool intersects(const CollisionMask& other) const;
 
+	inline bool intersects(const sf::Rect<int>& bBox) const
+	{
+		return bBox.left < maxX && bBox.left + bBox.width >= minX && bBox.top < maxY && bBox.top + bBox.height >= minY;
+	}
+
 	void updateTransform(const sf::Transform& transform);
 
 	inline const DetailedMask& getDetails() const;

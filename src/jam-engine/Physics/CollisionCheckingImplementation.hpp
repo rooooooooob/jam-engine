@@ -12,6 +12,8 @@ bool intersectsPolygonOnPolygon(const PolygonMask& a, const PolygonMask& b);
 
 bool intersectsPolygonOnCircle(const PolygonMask& polygon, const CircleMask& circle);
 
-}
+bool intersectsCircleOnCircle(const CircleMask& a, const CircleMask& b);
+
+} // je
 
 #endif

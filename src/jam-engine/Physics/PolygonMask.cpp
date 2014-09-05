@@ -1,6 +1,7 @@
 #include "jam-engine/Physics/PolygonMask.hpp"
 
 #include "jam-engine/Physics/CollisionCheckingImplementation.hpp"
+#include "jam-engine/Physics/CircleMask.hpp"
 #include "jam-engine/Utility/Trig.hpp"
 
 namespace je
@@ -41,8 +42,8 @@ void PolygonMask::projectAgainstHyerplane(double& min, double& max, double angle
 	//	becomes projecting against the x-asis, which lets use just take the x value of the
 	//	transformed vector instead of having to actually project the vector and since y is 0
 	//	for the transformed vector (and we don't use it anyway), we don't even need to transform it!
-	const double sinAngle = sin(-angle * 3.14159265 / 180.f);
-	const double cosAngle = cos(-angle * 3.14159265 / 180.f);
+	const double sinAngle = sin(-angle * pi / 180.f);
+	const double cosAngle = cos(-angle * pi / 180.f);
 	min = max = cosAngle * points.front().x + sinAngle * points.front().y;
 	//	skip the first point since we already did that
 	for (std::vector<sf::Vector2f>::const_iterator it = points.begin() + 1, end = points.end(); it != end; ++it)
@@ -60,9 +61,9 @@ bool PolygonMask::intersects(const DetailedMask& other) const
 	switch (other.type)
 	{
 		case Type::Polygon:
-			return intersectsPolygonOnPolygon(*this, (const PolygonMask&) other);
+			return intersectsPolygonOnPolygon(*this, static_cast<const PolygonMask&>(other));
 		case Type::Circle:
-			return true;
+			return intersectsPolygonOnCircle(*this, static_cast<const CircleMask&>(other));
 		case Type::Pixel:
 			return true;
 	}

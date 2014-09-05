@@ -11,6 +11,7 @@
 
 #include "jam-engine/Physics/DetailedMask.hpp"
 #include <initializer_list>
+
 namespace je
 {
 
@@ -86,7 +87,7 @@ private:
 #endif
 
 	friend bool intersectsPolygonOnPolygon(const PolygonMask&, const PolygonMask&);
-	friend bool intersectsPOlygonOnCircle(const PolygonMask&, const CircleMask&);
+	friend bool intersectsPolygonOnCircle(const PolygonMask&, const CircleMask&);
 };
 
 }
