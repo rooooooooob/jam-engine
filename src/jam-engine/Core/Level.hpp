@@ -82,7 +82,7 @@ public:
 
 	sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f& veloc, std::function<bool(Entity*)> filter);
 
-	sf::Vector2f rayCastManually(const Entity *caller, Entity::Type type, std::function<bool(Entity*)> filter, const sf::Vector2f& veloc, float stepSize = 1.f);
+	sf::Vector2f rayCastManually(bool& hit, const Entity *caller, std::initializer_list<Entity::Type> types, std::function<bool(Entity*)> filter, const sf::Vector2f& veloc, float stepSize = 1.f);
 
 
 	/**

@@ -67,12 +67,6 @@ inline float pointDirection(const VecTypeA& a, const VecTypeB& b)
 	return angle;
 }
 
-template <typename VecType>
-inline float direction(const VecType& vec)
-{
-	return pointDirection(0, 0, vec.x, vec.y);
-}
-
 inline float pointDirection(float x1, float y1, float x2, float y2)
 {
 	float angle;
@@ -91,6 +85,12 @@ inline float pointDirection(float x1, float y1, float x2, float y2)
 	else if (x2 - x1 > 0 && y2 - y1 > 0)
 		angle += 360;
 	return angle;
+}
+
+template <typename VecType>
+inline float direction(const VecType& vec)
+{
+	return pointDirection(0, 0, vec.x, vec.y);
 }
 
 }

@@ -209,7 +209,6 @@ Entity* Level::testCollision(Entity *caller, Entity::Type type, std::function<bo
 void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset, float yoffset)
 {
 	//	TODO: ADD CULLING
-	results.clear();
 	auto mit = entities.find(type);
 	if (mit != entities.end())
 	{
@@ -233,7 +232,6 @@ void Level::findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& b
 void Level::findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity*)> filter)
 {
 	//	TODO: ADD CULLING
-	results.clear();
 	auto mit = entities.find(type);
 	if (mit != entities.end())
 	{
@@ -297,14 +295,14 @@ sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f
 			{
 				float scaleDown = max(abs(jumpVec.x), abs(jumpVec.y));
 				// 	todo: implement
-				break;
+				return offset;
 			}
 		}
 	}
 	return offset;
 }
 
-sf::Vector2f Level::rayCastManually(const Entity *caller, Entity::Type type, std::function<bool(Entity*)> filter, const sf::Vector2f& veloc, float stepSize)
+sf::Vector2f Level::rayCastManually(bool& hit, const Entity *caller, std::initializer_list<Entity::Type> types, std::function<bool(Entity*)> filter, const sf::Vector2f& veloc, float stepSize)
 {
 	sf::Vector2f pos = caller->getPos();
 	//	TODO: implement legit
@@ -325,7 +323,8 @@ sf::Vector2f Level::rayCastManually(const Entity *caller, Entity::Type type, std
 		maxBounds.height -= veloc.y;
 		maxBounds.top += veloc.y;
 	}
-	findCollisions(possibleMatches, maxBounds, type, filter);
+	for (const Entity::Type& type : types)
+		findCollisions(possibleMatches, maxBounds, type, filter);
 	sf::Rect<int> queryBox = caller->getBounds();
 	int reps = length(veloc) / stepSize + 1;
 	sf::Vector2f jumpVec(lengthdir(stepSize, direction(veloc)));
@@ -336,13 +335,15 @@ sf::Vector2f Level::rayCastManually(const Entity *caller, Entity::Type type, std
 		queryBox.top = pos.y;
 		for (Entity *e : possibleMatches)
 		{
-			if (e->intersects(queryBox))
+			if (e != caller && e->intersects(queryBox))
 			{
 				pos -= jumpVec;
-				break;
+				hit = true;
+				return pos;
 			}
 		}
 	}
+	hit = false;
 	return pos;
 }
 
@@ -450,7 +451,7 @@ sf::Vector2f Level::getCursorPos() const
 	// HACK: add the window top bit to the y position because SFML doesn't seem to do it...
 	windowMousePos.x -= 8;
 	windowMousePos.y -= 30;
-	
+
 	for (const Camera *cam : cameras)
 	{
 		const sf::View& v = cam->getView();

@@ -119,8 +119,7 @@ void Entity::destroy()
 
 bool Entity::intersects(const sf::Rect<int>& bBox) const
 {
-	//	maybe optimize this later
-	return true;
+	return collisionMask.intersects(bBox);
 }
 
 sf::Vector2i Entity::getDimensions() const
