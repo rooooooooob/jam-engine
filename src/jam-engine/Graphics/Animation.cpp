@@ -6,35 +6,33 @@ namespace je
 {
 
 Animation::Animation(const sf::Texture& texture, int width, int height, int time, bool repeat)
-	:frameProgress(0)
+	:sprite(texture, sf::IntRect(0, 0, width, height))
+	,frameProgress(0)
 	,frame(0)
 	,repeating(repeat)
 {
-	int length = texture.getSize().x / width;
+	const int length = texture.getSize().x / width;
 	for (int i = 0, x = 0; i < length; ++i, x += width)
 	{
 		lengths.push_back(time);
-		frames.push_back(sf::Sprite(texture, sf::IntRect(x, 0, width, height)));
 	}
 }
 
 Animation::Animation(const sf::Texture& texture, int width, int height, std::initializer_list<unsigned int> times, bool repeat)
-	:frameProgress(0)
+	:sprite(texture, sf::IntRect(0, 0, width, height))
+	,frameProgress(0)
 	,frame(0)
 	,repeating(repeat)
 {
-	int x = 0;
 	for (unsigned int length : times)
 	{
 		lengths.push_back(length);
-		frames.push_back(sf::Sprite(texture, sf::IntRect(x, 0, width, height)));
-		x += width;
 	}
 }
 
 bool Animation::isFinished() const
 {
-	return !repeating && frame == frames.size() - 1;
+	return !repeating && (frame == lengths.size() - 1);
 }
 
 bool Animation::advanceFrame()
@@ -67,39 +65,105 @@ void Animation::reset()
 {
 	frame = 0;
 }
-//	TODO: optimize
-void Animation::setRotation(float angle)
-{
-	for (sf::Sprite& sprite : frames)
-		sprite.setRotation(angle);
-}
-//	TODO: optimize
-void Animation::setScale(float xscale, float yscale)
-{
-	for (sf::Sprite& sprite : frames)
-		sprite.setScale(xscale, yscale);
-}
-//	TODO: optimize
-void Animation::setPosition(int x, int y)
-{
-	for (sf::Sprite& sprite : frames)
-		sprite.setPosition(x, y);
-}
-
-void Animation::setPosition(const sf::Vector2f& pos)
-{
-	for (sf::Sprite& sprite : frames)
-		sprite.setPosition(pos);
-}
 
 //	sf::Drawable
 
 void Animation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (!frames.empty())//frame >= 0 && frame < frames.size())
-		target.draw(frames[frame], states);
+	states.transform *= getTransform();
+	if (!lengths.empty())//frame >= 0 && frame < lengths.size())
+		target.draw(sprite, states);
 }
 
 //	sf::Transformable
+//void Animation::setRotation(float angle)
+//{
+//	sprite.setRotation(float angle);
+//}
+//
+//void Animation::setScale(float xscale, float yscale)
+//{
+//	sprite.setScale(xscale, yscale);
+//}
+//
+//void Animation::setScale(sf::Vector2f& factors)
+//{
+//	sprite.setScale(factors);
+//}
+//
+//void Animation::setPosition(int x, int y)
+//{
+//	sprite.setPosition(x, y);
+//}
+//
+//void Animation::setPosition(const sf::Vector2f& pos)
+//{
+//	sprite.setPosition(pos);
+//}
+//
+//void Animation::setOrigin(float x, float y)
+//{
+//	sprite.setOrigin(x, y);
+//}
+//
+//void Animation::setOrigin(const sf::Vector2f& origin)
+//{
+//	sprite.setOrigin(origin);
+//}
+//
+//const sf::Vector2f& Animation::getPosition() const
+//{
+//	return sprite.getPosition();
+//}
+//
+//float Animation::getRotation() const
+//{
+//	return sprite.getRotation();
+//}
+//
+//const sf::Vector2f& Animation::getScale() const
+//{
+//	sprite.getScale();
+//}
+//
+//const sf::Vector2f& Animation::getOrigin() const
+//{
+//	return sprite.getOrigin();
+//}
+//
+//void Animation::move(float x, float y)
+//{
+//	sprite.move(x, y);
+//}
+//
+//void Animation::move(const sf::Vector2f& offset)
+//{
+//	sprite.move(offset);
+//}
+//
+//void Animation::rotate(float angle)
+//{
+//	sprite.rotate(angle);
+//}
+//
+//void Animation::scale(float x, float y)
+//{
+//	sprite.scale(x, y);
+//}
+//
+//void Animation::scale(const sf::Vector2f& factors)
+//{
+//	sprite.scale(factors);
+//}
+//
+//const sf::Transform& Animation::getTransform() const
+//{
+//	return sprite.getTransform();
+//}
+//
+//const sf::Transform& Animation::getInverseTransform() const
+//{
+//	return sprite.getInverseTransform();
+//}
 
-}
+} // je

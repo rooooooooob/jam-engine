@@ -9,7 +9,7 @@
 namespace je
 {
 //	TODO: make not shit
-class Animation : public sf::Drawable
+class Animation : public sf::Drawable, public sf::Transformable
 {
 public:
 	Animation(const sf::Texture& texture, int width, int height, int time, bool repeat = true);
@@ -25,36 +25,53 @@ public:
 	 */
 	void reset();
 
-	void setRotation(float angle);
-
-	void setScale(float xscale, float yscale);
-
-	void setPosition(int x, int y);
-
-	void setPosition(const sf::Vector2f& pos);
-
-	//	TODO: remove this and implement sf::Transformable/sf::Drawable
-	template <typename F>
-	void apply(F function);
-
 	//	sf::Drawable
 	void draw (sf::RenderTarget& target, sf::RenderStates states) const override;
-	//	sf::Transformable (TODO)
+	//	sf::Transformable
+//	void setRotation(float angle) override;
+//
+//	void setScale(float xscale, float yscale) override;
+//
+//	void setScale(sf::Vector2f& factors) override;
+//
+//	void setPosition(int x, int y) override;
+//
+//	void setPosition(const sf::Vector2f& pos) override;
+//
+//	void setOrigin(float x, float y) override;
+//
+//	void setOrigin(const sf::Vector2f& origin) override;
+//
+//	const sf::Vector2f& getPosition() const override;
+//
+//	float getRotation() const override;
+//
+//	const sf::Vector2f& getScale() const override;
+//
+//	const sf::Vector2f& getOrigin() const override;
+//
+//	void move(float x, float y) override;
+//
+//	void move(const sf::Vector2f& offset) override;
+//
+//	void rotate(float angle) override;
+//
+//	void scale(float x, float y) override;
+//
+//	void scale(const sf::Vector2f& factors) override;
+//
+//	const sf::Transform& getTransform() const override;
+//
+//	const sf::Transform& getInverseTransform() const override;
 
 private:
-	std::vector<sf::Sprite> frames;
+
+	sf::Sprite sprite;
 	std::vector<unsigned int> lengths;
 	unsigned int frameProgress;
 	unsigned int frame;
 	bool repeating;
 };
-
-template <typename F>
-void Animation::apply(F function)
-{
-	for (sf::Sprite& sprite : frames)
-		function(sprite);
-}
 
 }
 
