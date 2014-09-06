@@ -63,7 +63,7 @@ void Entity::debugDraw(sf::RenderTarget& target)
 	const Game& game = level->getGame();
 	if (game.getDebugCollisionDrawAABB())
 	{
-		debugBounds.setPosition(collisionMask.minX, collisionMask.minY);
+		debugBounds.setPosition(collisionMask.getDebugDrawPos());
 		debugBounds.setSize(sf::Vector2f(collisionMask.getWidth(), collisionMask.getHeight()));
 		target.draw(debugBounds);
 	}

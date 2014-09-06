@@ -34,6 +34,8 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	void setColor(sf::Color color);
+
+	sf::Vector2f getDebugDrawPos() const { return sf::Vector2f(minX, minY); };
 #endif
 
 	CollisionMask& operator=(const CollisionMask& rhs);
