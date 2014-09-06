@@ -65,12 +65,15 @@ public:
 //	const sf::Transform& getInverseTransform() const override;
 
 private:
+	void updateTextureRect();
 
 	sf::Sprite sprite;
 	std::vector<unsigned int> lengths;
 	unsigned int frameProgress;
 	unsigned int frame;
 	bool repeating;
+	int width;
+	int height;
 };
 
 }

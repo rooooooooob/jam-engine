@@ -10,6 +10,8 @@ Animation::Animation(const sf::Texture& texture, int width, int height, int time
 	,frameProgress(0)
 	,frame(0)
 	,repeating(repeat)
+	,width(width)
+	,height(height)
 {
 	const int length = texture.getSize().x / width;
 	for (int i = 0, x = 0; i < length; ++i, x += width)
@@ -23,6 +25,8 @@ Animation::Animation(const sf::Texture& texture, int width, int height, std::ini
 	,frameProgress(0)
 	,frame(0)
 	,repeating(repeat)
+	,width(width)
+	,height(height)
 {
 	for (unsigned int length : times)
 	{
@@ -43,6 +47,7 @@ bool Animation::advanceFrame()
 		{
 			frameProgress -= lengths[frame];
 			++frame;
+			updateTextureRect();
 			return true;
 		}
 		else
@@ -51,6 +56,7 @@ bool Animation::advanceFrame()
 			{
 				frameProgress -= lengths[frame];
 				frame = 0;
+				updateTextureRect();
 			}
 			else
 			{
@@ -64,6 +70,7 @@ bool Animation::advanceFrame()
 void Animation::reset()
 {
 	frame = 0;
+	updateTextureRect();
 }
 
 //	sf::Drawable
@@ -165,5 +172,11 @@ void Animation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 //{
 //	return sprite.getInverseTransform();
 //}
+
+/*					private					*/
+void Animation::updateTextureRect()
+{
+	sprite.setTextureRect(sf::IntRect(width * frame, 0, width, height));
+}
 
 } // je
