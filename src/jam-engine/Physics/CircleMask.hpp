@@ -6,6 +6,8 @@
 	#include <SFML/Graphics/CircleShape.hpp>
 #endif
 
+#include <SFML/Graphics/Transformable.hpp>
+
 #include "jam-engine/Physics/DetailedMask.hpp"
 
 namespace je

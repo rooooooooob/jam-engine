@@ -36,7 +36,9 @@ public:
 	void setColor(sf::Color color);
 #endif
 
-//private:
+	CollisionMask& operator=(const CollisionMask& rhs);
+
+private:
 
 	int minX, maxX;
 	int minY, maxY;
