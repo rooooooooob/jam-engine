@@ -132,6 +132,11 @@ sf::Rect<int> Entity::getBounds() const
 	return sf::Rect<int>(sf::Vector2i(getPos() - transform().getOrigin()), getDimensions());
 }
 
+void Entity::setMask(DetailedMask::MaskRef maskDetails)
+{
+	collisionMask = CollisionMask(std::move(maskDetails));
+}
+
 /*		protected		*/
 void Entity::addAutoCollisionCheck(const std::string& type)
 {

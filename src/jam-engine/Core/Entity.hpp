@@ -54,14 +54,16 @@ public:
 	inline const sf::Vector2f& getPos() const;
 
 	inline const sf::Vector2f& getPrevPos() const;
-	
+
 	inline const CollisionMask& getMask() const;
+
+	void setMask(DetailedMask::MaskRef maskDetails);
 
 protected:
 	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset = sf::Vector2i(0, 0));
-	
+
 	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, DetailedMask::MaskRef mask);
-	
+
 	virtual void onUpdate() = 0;
 
 	//!The level the Entity is currently in
@@ -129,6 +131,6 @@ const CollisionMask& Entity::getMask() const
 	return collisionMask;
 }
 
-}
+} // or5
 
 #endif
