@@ -46,8 +46,14 @@ void Camera::update(const sf::Vector2f& target)
 		if (len > maxSpeed)
 			veloc *= maxSpeed / len;
 
-		if (length(veloc) > dist)	pos = target; //don't overshoot
-		else						pos += veloc;
+		if (length(veloc) > dist)
+		{
+			pos = target; //don't overshoot
+		}
+		else
+		{
+			pos += veloc;
+		}
 	}
 	this->limitBounds();
 	view.setCenter(pos);
@@ -90,8 +96,10 @@ const sf::Vector2f& Camera::getPosition() const
 /*		private			*/
 void Camera::limitBounds()
 {
-	limit(pos.x, cameraBounds.left, cameraBounds.width + cameraBounds.left);
-	limit(pos.y, cameraBounds.top, cameraBounds.height + cameraBounds.top);
+	const int halfWidth = cameraBounds.width / 2;
+	limit(pos.x, halfWidth, level->getWidth() - halfWidth);
+	const int halfHeight = cameraBounds.height / 2;
+	limit(pos.y, halfHeight, level->getHeight() - halfHeight);
 }
 
 }
