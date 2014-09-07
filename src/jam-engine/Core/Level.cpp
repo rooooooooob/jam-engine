@@ -446,7 +446,7 @@ Game& Level::getGame() const
 
 sf::Vector2f Level::getCursorPos() const
 {
-	sf::Rect<int> viewBox(0, 0, width, height);
+	sf::FloatRect viewBox(0, 0, width, height);
 	sf::Vector2i windowMousePos = game->getWindow().mapCoordsToPixel(sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y)) - game->getWindow().getPosition();
 	// HACK: add the window top bit to the y position because SFML doesn't seem to do it...
 	windowMousePos.x -= 8;
@@ -455,18 +455,16 @@ sf::Vector2f Level::getCursorPos() const
 	for (const Camera *cam : cameras)
 	{
 		const sf::View& v = cam->getView();
-		viewBox.left = width * v.getViewport().left;
-		viewBox.top = height * v.getViewport().top;
-		viewBox.width = width * v.getViewport().width;
-		viewBox.height = height * v.getViewport().height;
-		if (viewBox.contains(windowMousePos))
+		viewBox = cam->getScreenRect();
+		if (viewBox.contains(sf::Vector2f(windowMousePos.x, windowMousePos.y)));
 		{
 			// TODO: verify this actually works properly...
-			int vpmx = (windowMousePos.x - viewBox.left);	//	mouse pos relative to the viewport
+			/*int vpmx = (windowMousePos.x - viewBox.left);	//	mouse pos relative to the viewport
 			int mx = v.getCenter().x - viewBox.width / 2.f + vpmx * viewBox.width / v.getSize().x;
 			int vpmy = (windowMousePos.y - viewBox.top);	//	mouse pos relative to the viewport
 			int my = v.getCenter().y - viewBox.height / 2.f + vpmy * viewBox.height / v.getSize().y;
-			return sf::Vector2f(mx, my);
+			return sf::Vector2f(mx, my);*/
+			return sf::Vector2f(windowMousePos.x + viewBox.left, windowMousePos.y + viewBox.top);
 		}
 	}
 	return sf::Vector2f(windowMousePos);
