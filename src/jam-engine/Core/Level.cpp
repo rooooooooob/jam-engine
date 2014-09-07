@@ -464,7 +464,7 @@ sf::Vector2f Level::getCursorPos() const
 			// TODO: verify this actually works properly...
 			int vpmx = (windowMousePos.x - viewBox.left);	//	mouse pos relative to the viewport
 			int mx = v.getCenter().x - viewBox.width / 2.f + vpmx * viewBox.width / v.getSize().x;
-			int vpmy = (windowMousePos.x - viewBox.left);	//	mouse pos relative to the viewport
+			int vpmy = (windowMousePos.y - viewBox.top);	//	mouse pos relative to the viewport
 			int my = v.getCenter().y - viewBox.height / 2.f + vpmy * viewBox.height / v.getSize().y;
 			return sf::Vector2f(mx, my);
 		}
