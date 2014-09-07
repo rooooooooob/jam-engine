@@ -13,26 +13,28 @@ class Level;
 class Camera
 {
 public:
-	Camera(Level *level, float maxSpeed, float acceleration, int depth = 0);
+	Camera(Level *level, float maxSpeed, float acceleration, const sf::Rect<int>& bounds, int depth = 0);
 	~Camera();
 
 	void update(const sf::Vector2f& target);
 
 	void snap(const sf::Vector2f& target);
 
-	sf::View& getView();
+	sf::View& getView(); // don't use this
 
 	const sf::View& getView() const;
 
 	int getDepth() const;
 
-	sf::Rect<int> getScreenRect() const;
+	sf::FloatRect getScreenRect() const;
+
+	const sf::Vector2f& getPosition() const;
 
 private:
 	void limitBounds();
 
-
 	Level *level;
+	sf::Rect<int> cameraBounds;
 	sf::View view;
 	sf::Vector2f pos;
 	sf::Vector2f veloc;

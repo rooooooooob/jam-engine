@@ -8,10 +8,11 @@
 namespace je
 {
 
-Camera::Camera(Level *level, float maxSpeed, float acceleration, int depth)
+Camera::Camera(Level *level, float maxSpeed, float acceleration, const sf::Rect<int>& bounds, int depth)
 	:level(level)
+	,cameraBounds(bounds.left, bounds.top, bounds.width, bounds.height)
 	,view()
-	,pos(0, 0)
+	,pos(level->getWidth()/2.f, level->getHeight()/2.f)
 	,veloc(0, 0)
 	,maxSpeed(maxSpeed)
 	,acceleration(acceleration)
@@ -44,7 +45,9 @@ void Camera::update(const sf::Vector2f& target)
 		float len = length(veloc);
 		if (len > maxSpeed)
 			veloc *= maxSpeed / len;
-		pos += veloc;
+
+		if (length(veloc) > dist)	pos = target; //don't overshoot
+		else						pos += veloc;
 	}
 	this->limitBounds();
 	view.setCenter(pos);
@@ -72,19 +75,23 @@ int Camera::getDepth() const
 	return depth;
 }
 
-sf::Rect<int> Camera::getScreenRect() const
+sf::FloatRect Camera::getScreenRect() const
 {
-	return sf::Rect<int>();
+	sf::Vector2f viewCenter = view.getCenter();
+	sf::Vector2f viewSize = view.getSize();
+	return sf::FloatRect(viewCenter.x - (viewSize.x/2), viewCenter.y - (viewSize.y/2), viewSize.x, viewSize.y);
 }
 
+const sf::Vector2f& Camera::getPosition() const
+{
+	return pos;
+}
 
 /*		private			*/
 void Camera::limitBounds()
 {
-	const float halfViewWidth = view.getSize().x / 2.f;
-	limit(pos.x, halfViewWidth, level->getWidth() - halfViewWidth);
-	const float halfViewHeight = view.getSize().y / 2.f;
-	limit(pos.y, halfViewHeight, level->getHeight() - halfViewHeight);
+	limit(pos.x, cameraBounds.left, cameraBounds.width + cameraBounds.left);
+	limit(pos.y, cameraBounds.top, cameraBounds.height + cameraBounds.top);
 }
 
 }
