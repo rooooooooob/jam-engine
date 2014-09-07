@@ -75,10 +75,11 @@ protected:
 
 	void addAutoCollisionCheck(const std::string& type);
 
+	void updateMask();
+
 
 
 private:
-	void updateMask();
 
 
 	bool dead;

@@ -146,7 +146,6 @@ void Entity::addAutoCollisionCheck(const std::string& type)
 	autoCollisionChecks.push_back(type);
 }
 
-/*		private			*/
 void Entity::updateMask()
 {
 	if (!isTransformValid)
@@ -155,5 +154,7 @@ void Entity::updateMask()
 		isTransformValid = true;
 	}
 }
+
+/*		private			*/
 
 }
