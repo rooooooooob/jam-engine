@@ -151,6 +151,8 @@ private:
 class AxesSet
 {
 public:
+	AxesSet(); // always returns (0.f, 0.f)
+
 	AxesSet(std::initializer_list<Axes> axesList);
 
 	sf::Vector2f getPos(const sf::Vector2f& origin = sf::Vector2f(), je::Level *level = nullptr) const;

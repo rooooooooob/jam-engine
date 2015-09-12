@@ -70,6 +70,15 @@ Controller::AxisBind::AxisBind(sf::Joystick::Axis axis, bool rev, Interval inter
 {
 }
 
+Controller::AxisBind::AxisBind(const Bind& negative, const Bind& positive)
+	:device(Device::Buttons)
+	,bAxis({negative, positive})
+	,reversed(false)
+	,interval()
+	,pos(nullptr)
+{
+}
+
 Controller::AxisBind::Interval::Interval()
 	:min(-1.f)
 	,max(1.f)
@@ -299,6 +308,11 @@ sf::Vector2f Axes::getPos(const sf::Vector2f& origin, je::Level *level) const
 
 
 /*			axesset			*/
+AxesSet::AxesSet()
+	:lastUsedIndex(-1)
+{
+}
+
 AxesSet::AxesSet(std::initializer_list<Axes> axesList)
 	:lastUsedIndex(0)
 	,lastValues(axesList.size()) // (0.f, 0.f)
@@ -311,6 +325,10 @@ AxesSet::AxesSet(std::initializer_list<Axes> axesList)
 
 sf::Vector2f AxesSet::getPos(const sf::Vector2f& origin, je::Level *level) const
 {
+	if (axesList.empty())
+	{
+		return sf::Vector2f(0.f, 0.f);
+	}
 	sf::Vector2f result;
 	for (std::size_t i = 0; i < axesList.size(); ++i)
 	{
