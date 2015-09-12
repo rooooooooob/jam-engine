@@ -226,7 +226,8 @@ void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, 
 
 void Level::findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type)
 {
-	JE_ERROR("Not implemented");
+	// TOOD: don't hack aroundlike this
+	findCollisions(results, bBox, type, [](Entity*) -> bool { return true; });
 }
 
 void Level::findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity*)> filter)
