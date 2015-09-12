@@ -144,6 +144,23 @@ private:
 	std::string yAxis;
 };
 
-}
+/**
+ * A collection of Axes which uses the most-recently used Axes
+ * as the Axes that gets used. (Good for supporting both keyboard + gamepay)
+ */
+class AxesSet
+{
+public:
+	AxesSet(std::initializer_list<Axes> axesList);
+
+	sf::Vector2f getPos(const sf::Vector2f& origin = sf::Vector2f(), je::Level *level = nullptr) const;
+
+private:
+	mutable std::size_t lastUsedIndex;
+	mutable std::vector<sf::Vector2f> lastValues;
+	std::vector<Axes> axesList;
+};
+
+} // je
 
 #endif

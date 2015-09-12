@@ -297,4 +297,33 @@ sf::Vector2f Axes::getPos(const sf::Vector2f& origin, je::Level *level) const
 	return pos;
 }
 
+
+/*			axesset			*/
+AxesSet::AxesSet(std::initializer_list<Axes> axesList)
+	:lastUsedIndex(0)
+	,lastValues(axesList.size()) // (0.f, 0.f)
+{
+	for (const Axes& axes : axesList)
+	{
+		this->axesList.push_back(axes);
+	}
+}
+
+sf::Vector2f AxesSet::getPos(const sf::Vector2f& origin, je::Level *level) const
+{
+	sf::Vector2f result;
+	for (std::size_t i = 0; i < axesList.size(); ++i)
+	{
+		result = axesList[i].getPos(origin, level);
+		if (result != lastValues[i])
+		{
+			lastUsedIndex = i;
+			lastValues[i] = result;
+			break;
+		}
+	}
+	return lastValues[lastUsedIndex];
+}
+
+
 } // je
