@@ -109,6 +109,7 @@ public:
 	bool isActionPressed(const std::string& action) const;
 	bool isActionReleased(const std::string& action) const;
 	bool isActionHeld(const std::string& action) const;
+	bool isBindHeld(const Bind& bind) const;
 
 	void addKeybind(const std::string& action, Bind bind);
 	void setKeybinds(const std::string& action, std::initializer_list<Bind> binds);

@@ -139,16 +139,22 @@ bool Controller::isActionHeld(const std::string& action) const
 	auto it = binds.find(action);
 	if (it != binds.end())
 	{
+
 		for (const Bind& bind : it->second)
 		{
-			if ((bind.device == Bind::Device::Keyboard && input.isKeyHeld((sf::Keyboard::Key) bind.key)) ||
-				(bind.device == Bind::Device::Mouse && input.isButtonHeld((sf::Mouse::Button) bind.key)) ||
-				(bind.device == Bind::Device::Joystick && input.isJoyButtonHeld(joyID, bind.key)) ||
-				(bind.device == Bind::Device::JoyAxis && input.isJoyAxisHeld(joyID, (sf::Joystick::Axis) bind.key, bind.reversed)))
+			if (isBindHeld(bind))
 				return true;
 		}
 	}
 	return false;
+}
+
+bool Controller::isBindHeld(const Bind& bind) const
+{
+	return (bind.device == Bind::Device::Keyboard && input.isKeyHeld((sf::Keyboard::Key) bind.key)) ||
+		   (bind.device == Bind::Device::Mouse && input.isButtonHeld((sf::Mouse::Button) bind.key)) ||
+	       (bind.device == Bind::Device::Joystick && input.isJoyButtonHeld(joyID, bind.key)) ||
+	       (bind.device == Bind::Device::JoyAxis && input.isJoyAxisHeld(joyID, (sf::Joystick::Axis) bind.key, bind.reversed));
 }
 
 
@@ -234,6 +240,18 @@ float Controller::axisPos(const std::string& axis, float origin, je::Level *leve
 				break;
 			case AxisBind::Device::JoyAxis:
 				ret = input.axisPos(joyID, bind.jAxis);
+				break;
+			case AxisBind::Device::Buttons:
+				{
+					const bool negHeld = isBindHeld(bind.bAxis.neg);
+					const bool posHeld = isBindHeld(bind.bAxis.pos);
+					if (posHeld && !negHeld)
+						ret = 1.f;//bind.interval.max;
+					else if (negHeld && !posHeld)
+						ret = -1.f;//bind.interval.min;
+					else
+						ret = 0.f;//(bind.interval.max - bind.interval.min) / 2;
+				}
 				break;
 			default:
 				ret = 0;
