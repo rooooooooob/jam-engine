@@ -8,7 +8,7 @@ namespace je
 {
 
 TexManager::TexManager()
-	:path("img")
+	:path("img/")
 {
 }
 
