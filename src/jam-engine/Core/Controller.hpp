@@ -20,7 +20,7 @@ class Controller
 public:
 	struct Bind
 	{
-		enum class Device
+		enum class Device : char
 		{
 			Keyboard,
 			Mouse,
@@ -90,15 +90,23 @@ public:
 		const Device device;
 		struct ButtonAxis
 		{
+			ButtonAxis()
+			{
+			}
+			ButtonAxis(const Bind& neg, const Bind& pos)
+				:neg(neg)
+				,pos(pos)
+			{
+			}
 			Bind neg;
 			Bind pos;
 		};
 		const union
 		{
 			MouseAxis mAxis;
-			sf::Joystick::Axis jAxis;
-			ButtonAxis bAxis;
+			sf::Joystick::Axis jAxis;	
 		};
+		ButtonAxis bAxis;
 		const bool reversed;
 		const Interval interval;
 		const float *pos;//used for mice
@@ -140,7 +148,7 @@ public:
 
 	sf::Vector2f getPos(const sf::Vector2f& origin = sf::Vector2f(), je::Level *level = nullptr) const;
 private:
-	Controller& controller;
+	Controller *controller;
 	std::string xAxis;
 	std::string yAxis;
 };

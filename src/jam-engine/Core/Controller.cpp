@@ -308,7 +308,7 @@ Controller::AxisBind Controller::getLastAxisMovementAsBind() const
 
 /*			axes			*/
 Axes::Axes(Controller& controller, const std::string& xAxis, const std::string& yAxis)
-	:controller(controller)
+	:controller(&controller)
 	,xAxis(xAxis)
 	,yAxis(yAxis)
 {
@@ -316,7 +316,7 @@ Axes::Axes(Controller& controller, const std::string& xAxis, const std::string& 
 
 sf::Vector2f Axes::getPos(const sf::Vector2f& origin, je::Level *level) const
 {
-	sf::Vector2f pos(controller.axisPos(xAxis, origin.x, level), controller.axisPos(yAxis, origin.y, level));
+	sf::Vector2f pos(controller->axisPos(xAxis, origin.x, level), controller->axisPos(yAxis, origin.y, level));
 	if (je::abs(je::length(pos)) > 1.f)
 	{
 		return je::lengthdir(1.f, je::direction(pos));
