@@ -9,6 +9,7 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include "rapidxml.hpp"
 #include "jam-engine/Core/Entity.hpp"
+#include "jam-engine/Core/Ref.hpp"
 #include "jam-engine/Graphics/TileGrid.hpp"
 
 namespace je
@@ -43,7 +44,7 @@ public:
 
 	void update();
 
-	Entity* testCollision(const sf::Rect<int>& bBox, Entity::Type type);
+	Ref<Entity> testCollision(const sf::Rect<int>& bBox, Entity::Type type);
 
 	/**
 	 * Queries the level for collisions and stops after the first one
@@ -53,9 +54,9 @@ public:
 	 * @Param yoffset The vertical offset away from caller to query at
 	 * @return The first Entity found that collides, or nullptr if none were found
 	 */
-	Entity* testCollision(Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
+	Ref<Entity> testCollision(Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
 
-	Entity* testCollision(Entity *caller, Entity::Type type, std::function<bool(const Entity*)> filter, float xoffset = 0, float yoffset = 0);
+	Ref<Entity> testCollision(Entity *caller, Entity::Type type, std::function<bool(const Entity&)> filter, float xoffset = 0, float yoffset = 0);
 
 	/**
 	 * Queries the level for collisions
@@ -65,11 +66,11 @@ public:
 	 * @param xoffset The horizontal offset away from caller to query at
 	 * @Param yoffset The vertical offset away from caller to query at
 	 */
-	void findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
+	void findCollisions(std::vector<Ref<Entity>>& results, const Entity *caller, Entity::Type type, float xoffset = 0, float yoffset = 0);
 
-	void findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type);
+	void findCollisions(std::vector<Ref<Entity>>& results, const sf::Rect<int>& bBox, Entity::Type type);
 
-	void findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity*)> filter);
+	void findCollisions(std::vector<Ref<Entity>>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity&)> filter);
 
 	/**
 	 * Attempts to move along the velocity vector until it hits an entity of the given type.
@@ -80,15 +81,19 @@ public:
 	 */
 	sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f& veloc);
 
-	sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f& veloc, std::function<bool(Entity*)> filter);
+	sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f& veloc, std::function<bool(Entity&)> filter);
 
-	sf::Vector2f rayCastManually(bool& hit, const Entity *caller, std::initializer_list<Entity::Type> types, std::function<bool(Entity*)> filter, const sf::Vector2f& veloc, float stepSize = 1.f);
+	sf::Vector2f rayCastManually(bool& hit, const Entity *caller, std::initializer_list<Entity::Type> types, std::function<bool(Entity&)> filter, const sf::Vector2f& veloc, float stepSize = 1.f);
 
 
 	/**
 	 * Adds an Entity into the Level. The Level now assumes ownership of the Entity
 	 * @param instance The Entity to add
+	 * @return Reference to the entitiy added
 	 */
+	Ref<Entity> addEntity(std::unique_ptr<Entity> instance);
+
+	// DEPRECATED !!!
 	void addEntity(Entity *instance);
 
 	/**
@@ -198,7 +203,7 @@ protected:
 
 
 
-	std::map<std::string, std::vector<Entity*> > entities;
+	std::map<std::string, std::vector<std::unique_ptr<Entity>>> entities;
 	std::map<std::string, TileGrid*> tileLayers;
 	mutable sf::RenderStates states;
 

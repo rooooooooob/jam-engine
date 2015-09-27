@@ -84,8 +84,7 @@ void Level::update()
 			entityList[i]->update();
 			if (entityList[i]->isDead())
 			{
-				delete entityList[i];
-				entityList[i] = entityList.back();
+				entityList[i] = std::move(entityList.back());
 				entityList.pop_back();
 			}
 			else
@@ -102,8 +101,7 @@ void Level::update()
 			p.second[i]->update();
 			if (p.second[i]->isDead())
 			{
-				delete p.second[i];
-				p.second[i] = p.second.back();
+				p.second[i] = std::move(p.second.back());
 				p.second.pop_back();
 			}
 			else
@@ -118,8 +116,7 @@ void Level::update()
 			entityList[i]->update();
 			if (entityList[i]->isDead())
 			{
-				delete entityList[i];
-				entityList[i] = entityList.back();
+				entityList[i] = std::move(entityList.back());
 				entityList.pop_back();
 			}
 			else
@@ -130,46 +127,46 @@ void Level::update()
 	//	depth sort
 	depthBuffer.clear();
 	for (auto& p : entities)
-		for (Entity *entity : p.second)
-			depthBuffer.push_back(entity);
+		for (std::unique_ptr<Entity>& entity : p.second)
+			depthBuffer.push_back(entity.get());
 	std::sort(depthBuffer.begin(), depthBuffer.end(), [](const Entity *a, const Entity *b) -> bool {
 		return a->getDepth() == b->getDepth() ? (int) a > (int) b : a->getDepth() > b->getDepth();
 	});
 }
 
-Entity* Level::testCollision(const sf::Rect<int>& bBox, Entity::Type type)
+Ref<Entity> Level::testCollision(const sf::Rect<int>& bBox, Entity::Type type)
 {
 	Entity *retVal = nullptr;
 	auto mit = entities.find(type);
 	if (mit != entities.end())
 	{
-		for (Entity *entity : mit->second)
+		for (std::unique_ptr<Entity>& entity : mit->second)
 		{
 			if (entity->getType() == type && entity->intersects(bBox))
 			{
-				retVal = entity;
+				retVal = entity.get();
 				break;
 			}
 		}
 	}
 	this->debugDrawRect(bBox, !retVal ? sf::Color::Yellow : sf::Color::Green);
-	return retVal;
+	return retVal ? Ref<Entity>(*retVal) : Ref<Entity>();
 }
 
 
 
-Entity* Level::testCollision(Entity *caller, Entity::Type type, float xoffset, float yoffset)
+Ref<Entity> Level::testCollision(Entity *caller, Entity::Type type, float xoffset, float yoffset)
 {
 	caller->transform().move(xoffset, yoffset);
 	Entity *retVal = nullptr;
 	auto mit = entities.find(type);
 	if (mit != entities.end())
 	{
-		for (Entity *entity : mit->second)
+		for (std::unique_ptr<Entity>& entity : mit->second)
 		{
-			if (entity != caller && entity->getType() == type && caller->intersects(*entity, xoffset, yoffset))
+			if (entity.get() != caller && entity->getType() == type && caller->intersects(*entity, xoffset, yoffset))
 			{
-				retVal = entity;
+				retVal = entity.get();
 				break;
 			}
 		}
@@ -179,21 +176,21 @@ Entity* Level::testCollision(Entity *caller, Entity::Type type, float xoffset, f
 	//rect.top += yoffset;
 	//this->debugDrawRect(rect, !retVal ? sf::Color::Yellow : sf::Color::Green);
 	caller->transform().move(-xoffset, -yoffset);
-	return retVal;
+	return retVal ? Ref<Entity>(*retVal) : Ref<Entity>();
 }
 
-Entity* Level::testCollision(Entity *caller, Entity::Type type, std::function<bool(const Entity*)> filter, float xoffset, float yoffset)
+Ref<Entity> Level::testCollision(Entity *caller, Entity::Type type, std::function<bool(const Entity&)> filter, float xoffset, float yoffset)
 {
 	caller->transform().move(xoffset, yoffset);
 	Entity *retVal = nullptr;
 	auto mit = entities.find(type);
 	if (mit != entities.end())
 	{
-		for (Entity *entity : mit->second)
+		for (std::unique_ptr<Entity>& entity : mit->second)
 		{
-			if (entity != caller && entity->getType() == type && filter(entity) && caller->intersects(*entity, xoffset, yoffset))
+			if (entity.get() != caller && entity->getType() == type && filter(*entity) && caller->intersects(*entity, xoffset, yoffset))
 			{
-				retVal = entity;
+				retVal = entity.get();
 				break;
 			}
 		}
@@ -203,19 +200,19 @@ Entity* Level::testCollision(Entity *caller, Entity::Type type, std::function<bo
 	//rect.top += yoffset;
 	//this->debugDrawRect(rect, !retVal ? sf::Color::Yellow : sf::Color::Green);
 	caller->transform().move(-xoffset, -yoffset);
-	return retVal;
+	return retVal ? Ref<Entity>(*retVal) : Ref<Entity>();
 }
 
-void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, Entity::Type type, float xoffset, float yoffset)
+void Level::findCollisions(std::vector<Ref<Entity>>& results, const Entity *caller, Entity::Type type, float xoffset, float yoffset)
 {
 	//	TODO: ADD CULLING
 	auto mit = entities.find(type);
 	if (mit != entities.end())
 	{
-		for (Entity *entity : mit->second)
+		for (std::unique_ptr<Entity>& entity : mit->second)
 		{
-			if (entity != caller && entity->getType() == type && caller->intersects(*entity, xoffset, yoffset))
-				results.push_back(entity);
+			if (entity.get() != caller && entity->getType() == type && caller->intersects(*entity, xoffset, yoffset))
+				results.push_back(Ref<Entity>(*entity));
 		}
 	}
 	//sf::Rect<int> rect = caller->getBounds();
@@ -224,41 +221,41 @@ void Level::findCollisions(std::vector<Entity*>& results, const Entity *caller, 
 	//this->debugDrawRect(rect, results.empty() ? sf::Color::Yellow : sf::Color::Green);
 }
 
-void Level::findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type)
+void Level::findCollisions(std::vector<Ref<Entity>>& results, const sf::Rect<int>& bBox, Entity::Type type)
 {
 	// TOOD: don't hack aroundlike this
-	findCollisions(results, bBox, type, [](Entity*) -> bool { return true; });
+	findCollisions(results, bBox, type, [](Entity&) -> bool { return true; });
 }
 
-void Level::findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity*)> filter)
+void Level::findCollisions(std::vector<Ref<Entity>>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity&)> filter)
 {
 	//	TODO: ADD CULLING
 	auto mit = entities.find(type);
 	if (mit != entities.end())
 	{
-		for (Entity *entity : mit->second)
+		for (std::unique_ptr<Entity>& entity : mit->second)
 		{
-			if (entity->getType() == type && entity->intersects(bBox) && filter(entity))
-				results.push_back(entity);
+			if (entity->getType() == type && entity->intersects(bBox) && filter(*entity))
+				results.push_back(Ref<Entity>(*entity));
 		}
 	}
 	this->debugDrawRect(bBox, results.empty() ? sf::Color::Yellow : sf::Color::Green);
 }
 
-void findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type)
+void findCollisions(std::vector<Ref<Entity>>& results, const sf::Rect<int>& bBox, Entity::Type type)
 {
 	JE_ERROR("Not implemented");
 }
 
-void findCollisions(std::vector<Entity*>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity*)> filter)
+void findCollisions(std::vector<Ref<Entity>>& results, const sf::Rect<int>& bBox, Entity::Type type, std::function<bool(Entity&)> filter)
 {
 	JE_ERROR("Not implemented");
 }
 
-sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f& veloc, std::function<bool(Entity*)> filter)
+sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f& veloc, std::function<bool(Entity&)> filter)
 {
 	//	TODO: implement legit
-	std::vector<Entity*> possibleMatches;
+	std::vector<Ref<Entity>> possibleMatches;
 	//	find out the minimal bounding box that covers the entire possible area this cast would query
 	sf::Rect<int> maxBounds = caller->getBounds();
 	if (veloc.x > 0)
@@ -289,7 +286,7 @@ sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f
 		offset += jumpVec;
 		queryBox.left = offset.x;
 		queryBox.top = offset.y;
-		for (Entity *e : possibleMatches)
+		for (const Ref<Entity>& e : possibleMatches)
 		{
 			//	we hit something - now do a cast with smaller jump distances
 			if (e->intersects(queryBox))
@@ -303,11 +300,11 @@ sf::Vector2f rayCast(const Entity *caller, Entity::Type type, const sf::Vector2f
 	return offset;
 }
 
-sf::Vector2f Level::rayCastManually(bool& hit, const Entity *caller, std::initializer_list<Entity::Type> types, std::function<bool(Entity*)> filter, const sf::Vector2f& veloc, float stepSize)
+sf::Vector2f Level::rayCastManually(bool& hit, const Entity *caller, std::initializer_list<Entity::Type> types, std::function<bool(Entity&)> filter, const sf::Vector2f& veloc, float stepSize)
 {
 	sf::Vector2f pos = caller->getPos();
 	//	TODO: implement legit
-	std::vector<Entity*> possibleMatches;
+	std::vector<Ref<Entity>> possibleMatches;
 	//	find out the minimal bounding box that covers the entire possible area this cast would query
 	sf::Rect<int> maxBounds = caller->getBounds();
 	if (veloc.x > 0)
@@ -334,7 +331,7 @@ sf::Vector2f Level::rayCastManually(bool& hit, const Entity *caller, std::initia
 		pos += jumpVec;
 		queryBox.left = pos.x;
 		queryBox.top = pos.y;
-		for (Entity *e : possibleMatches)
+		for (const Ref<Entity>& e : possibleMatches)
 		{
 			if (e != caller && e->intersects(queryBox))
 			{
@@ -348,19 +345,23 @@ sf::Vector2f Level::rayCastManually(bool& hit, const Entity *caller, std::initia
 	return pos;
 }
 
+Ref<Entity> Level::addEntity(std::unique_ptr<Entity> instance)
+{
+	auto& vec = entities[instance->getType()];
+	vec.push_back(std::move(instance));
+	return Ref<Entity>(*vec.back());
+}
+
 void Level::addEntity(Entity *instance)
 {
-	entities[instance->getType()].push_back(instance);
+	entities[instance->getType()].push_back(std::unique_ptr<Entity>(instance));
 }
+
+
 
 void Level::clear()
 {
-	for (auto& p : entities)
-	{
-		for (Entity *entity : p.second)
-			delete entity;
-		p.second.clear();
-	}
+	entities.clear();
 	tileLayers.clear();
 	tileSprites.clear();
 }
@@ -377,7 +378,7 @@ void Level::clearEntities()
 				isTile = false;
 				for (auto& it : tileLayers)
 				{
-					if (p.second[i] == it.second)
+					if (p.second[i].get() == it.second)
 					{
 						isTile = true;
 						break;
@@ -385,8 +386,7 @@ void Level::clearEntities()
 				}
 				if (!isTile)
 				{
-					delete p.second[i];
-					p.second[i] = p.second.back();
+					p.second[i] = std::move(p.second.back());
 					p.second.pop_back();
 					--i;
 				}
@@ -394,8 +394,6 @@ void Level::clearEntities()
 		}
 		else
 		{
-			for (Entity *entity : p.second)
-				delete entity;
 			p.second.clear();
 		}
 	}
@@ -457,7 +455,7 @@ sf::Vector2f Level::getCursorPos() const
 	{
 		const sf::View& v = cam->getView();
 		viewBox = cam->getScreenRect();
-		if (viewBox.contains(sf::Vector2f(windowMousePos.x, windowMousePos.y)));
+		if (viewBox.contains(sf::Vector2f(windowMousePos.x, windowMousePos.y)))
 		{
 			// TODO: verify this actually works properly...
 			/*int vpmx = (windowMousePos.x - viewBox.left);	//	mouse pos relative to the viewport
@@ -762,8 +760,8 @@ void Level::drawGUI(sf::RenderTarget& target) const
 void Level::loadTiles(const std::string& layerName, int tileWidth, int tileHeight, int tilesAcross, int tilesHigh, unsigned int const * const * tiles)
 {
 	//	TODO: create tilemaps here
-	tileLayers[layerName] = new TileGrid(this, 0, 0, tilesAcross, tilesHigh, tileWidth, tileHeight);
-	TileGrid* grid = tileLayers[layerName];
+	std::unique_ptr<TileGrid> grid(new TileGrid(this, 0, 0, tilesAcross, tilesHigh, tileWidth, tileHeight));
+	tileLayers[layerName] = grid.get();
 	for (int x = 0; x < tilesAcross; ++x)
 	{
 		for (int y = 0; y < tilesHigh; ++y)
@@ -774,7 +772,7 @@ void Level::loadTiles(const std::string& layerName, int tileWidth, int tileHeigh
 				grid->setTexture(x, y, tileSprites[tiles[x][y]]);
 		}
 	}
-	this->addEntity(grid);
+	this->addEntity(std::move(grid));
 }
 
 void Level::loadEntities(const std::string& layerName, const std::vector<EntityPrototype>& prototypes)
@@ -850,7 +848,7 @@ void Level::drawEntities(sf::RenderTarget& target, const sf::Rect<int>& cameraBo
 #ifdef JE_DEBUG
 	for (auto& p : entities)
 	{
-		for (Entity * entity : p.second)
+		for (const std::unique_ptr<Entity>& entity : p.second)
 			//if (cameraBounds.contains(entity->getPos().x + cameraBounds.width / 2, entity->getPos().y + cameraBounds.height / 2))
 				entity->debugDraw(target);
 		for (const sf::RectangleShape& rect : debugDrawRects)
@@ -859,4 +857,4 @@ void Level::drawEntities(sf::RenderTarget& target, const sf::Rect<int>& cameraBo
 #endif
 }
 
-}
+} // je

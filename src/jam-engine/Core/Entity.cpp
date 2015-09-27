@@ -19,6 +19,7 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
 	,collisionMask(std::move(DetailedMask::MaskRef(new PolygonMask(dim.x, dim.y))))
 	,transformable()
 	,isTransformValid(true)
+	,ref(new bool(true))
 {
 	transform().setPosition(startPos);
 	transform().setOrigin(-offset.x, -offset.y);
@@ -43,6 +44,7 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
 	,collisionMask(std::move(mask))
 	,transformable()
 	,isTransformValid(true)
+	,ref(new bool(true))
 {
 	transform().setPosition(startPos);
 #ifdef JE_DEBUG
@@ -54,6 +56,7 @@ Entity::Entity(Level * const level, const Type& type, const sf::Vector2f& startP
 
 Entity::~Entity()
 {
+	*ref = false;
 }
 
 #ifdef JE_DEBUG
@@ -135,6 +138,11 @@ sf::Rect<int> Entity::getBounds() const
 void Entity::setMask(DetailedMask::MaskRef maskDetails)
 {
 	collisionMask = CollisionMask(std::move(maskDetails));
+}
+
+std::shared_ptr<bool> Entity::aliveRef() const
+{
+	return ref;
 }
 
 /*		protected		*/

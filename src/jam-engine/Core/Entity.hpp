@@ -59,6 +59,8 @@ public:
 
 	void setMask(DetailedMask::MaskRef maskDetails);
 
+	std::shared_ptr<bool> aliveRef() const;
+
 protected:
 	Entity(Level * const level, const Type& type, const sf::Vector2f& startPos, const sf::Vector2i& dim, const sf::Vector2i offset = sf::Vector2i(0, 0));
 
@@ -96,6 +98,8 @@ private:
 	CollisionMask collisionMask;
 	sf::Transformable transformable;
 	bool isTransformValid;
+
+	std::shared_ptr<bool> ref;
 };
 
 /*			inline implementation			*/
