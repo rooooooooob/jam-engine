@@ -70,7 +70,7 @@ private:
 	TexManager texMan;
 	CollisionMaskManager maskManager;
 	bool focused;
-	std::vector<std::unique_ptr<Level> > oldlevels;
+	std::vector<std::unique_ptr<Level>> oldlevels;
 #ifdef JE_DEBUG
 	bool debugDrawAABB;
 	bool debugDrawDetails;

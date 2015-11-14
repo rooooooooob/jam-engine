@@ -1,9 +1,12 @@
-#ifndef TEXMANAGER_HPP
-#define TEXMANAGER_HPP
+#ifndef JE_TEXMANAGER_HPP
+#define JE_TEXMANAGER_HPP
 
 #include <SFML/Graphics.hpp>
-#include <unordered_map>
+
+#include <memory>
 #include <string>
+#include <unordered_map>
+
 
 namespace je
 {
@@ -12,7 +15,6 @@ class TexManager
 {
 public:
 	TexManager();
-	~TexManager();
 
 	const sf::Texture& get(const std::string& id);
 
@@ -20,11 +22,11 @@ public:
 
 private:
 
-	std::unordered_map<std::string, sf::Texture*> textures;
+	std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
 
 	std::string path;
 };
 
-}
+} // je
 
-#endif
+#endif // JE_TEXMANAGER_HPP
