@@ -14,6 +14,10 @@
 #include "jam-engine/Utility/Math.hpp"
 #include "jam-engine/Utility/Trig.hpp"
 
+#ifdef JE_XML_LEVELS
+	#include "rapidxml.hpp"
+#endif // JE_XML_LEVELS
+
 namespace je
 {
 
@@ -469,7 +473,8 @@ sf::Vector2f Level::getCursorPos() const
 	return sf::Vector2f(windowMousePos);
 }
 
-void Level::loadMap(const std::string& filename)
+#ifdef JE_XML_LEVELS
+void Level::loadXMLMap(const std::string& filename)
 {
 	using namespace rapidxml;
 	std::ifstream mapFile (filename);
@@ -685,6 +690,7 @@ void Level::loadMap(const std::string& filename)
 			std::cerr << "couldn't open map\n";
 		}
 }
+#endif // JE_XML_LEVELS
 
 void Level::debugDrawRect(const sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor, int outlineThickness)
 {

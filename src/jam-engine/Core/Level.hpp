@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 #include <SFML/Graphics/RenderStates.hpp>
-#include "rapidxml.hpp"
 #include "jam-engine/Core/Entity.hpp"
 #include "jam-engine/Core/Ref.hpp"
 #include "jam-engine/Graphics/TileGrid.hpp"
@@ -124,7 +123,9 @@ public:
 
 	sf::Vector2f getCursorPos() const;
 
-	void loadMap(const std::string& filename);
+#ifdef JE_XML_LEVELS
+	void loadXMLMap(const std::string& filename);
+#endif / /JE_XML_LEVELS
 
 	void debugDrawRect(const sf::Rect<int>& rect, sf::Color outlineColor, sf::Color fillColor = sf::Color::Transparent, int outlineThickness = 1);
 
@@ -227,6 +228,6 @@ private:
 #endif
 };
 
-}
+} // je
 
-#endif
+#endif // JE_LEVEL_HPP
