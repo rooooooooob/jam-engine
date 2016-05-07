@@ -19,7 +19,7 @@ CircleMask::CircleMask(float radius)
 {
 	JE_ASSERT(radius >= 0.f);
 #ifdef JE_DEBUG
-	debugCircle.setFillColor(sf::Color(0, 128, 256, 64));
+	debugCircle.setFillColor(sf::Color(0, 128, 255, 64));
 	debugCircle.setOutlineColor(sf::Color::Cyan);
 	debugCircle.setOutlineThickness(1.f);
 #endif
